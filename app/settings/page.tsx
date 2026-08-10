@@ -21,21 +21,38 @@ const translations = {
     settings: "Settings",
     subtitle: "Manage your Mandal settings.",
     back: "← Back to Dashboard",
+
     language: "Language",
     languageText: "Choose your preferred language.",
+
     account: "Account",
     accountText: "Your Mandal account information.",
+    editAccount: "Edit Account",
+    saveChanges: "Save Changes",
+    cancel: "Cancel",
+    saving: "Saving...",
+    accountUpdated: "Account updated successfully.",
+    accountUpdateError: "Account update failed.",
+
     mandal: "Mandal",
     leader: "Leader",
     mobile: "Mobile",
     location: "Location",
+    city: "City",
+    state: "State",
+
     noAccount: "No account information found.",
+
     notifications: "Notifications",
     notificationText: "Manage notification preferences.",
+
     about: "About",
     aboutText: "Mandal Management System",
     aboutSubText:
       "Manage members, collections, expenses and events.",
+    aboutDetails:
+      "MandalMitra helps Mandals manage members, collections, receipts, expenses, events and reports in one place.",
+
     logo: "Mandal Logo",
     logoText:
       "Upload your Mandal logo. It will be used on receipts.",
@@ -52,21 +69,38 @@ const translations = {
     settings: "सेटिंग्ज",
     subtitle: "तुमच्या मंडळाची सेटिंग्ज व्यवस्थापित करा.",
     back: "← डॅशबोर्डवर जा",
+
     language: "भाषा",
     languageText: "तुमची आवडती भाषा निवडा.",
+
     account: "खाते",
     accountText: "तुमच्या मंडळाची माहिती.",
+    editAccount: "खाते संपादित करा",
+    saveChanges: "बदल जतन करा",
+    cancel: "रद्द करा",
+    saving: "जतन होत आहे...",
+    accountUpdated: "खात्याची माहिती यशस्वीरित्या अपडेट झाली.",
+    accountUpdateError: "खात्याची माहिती अपडेट करता आली नाही.",
+
     mandal: "मंडळ",
     leader: "प्रमुख",
     mobile: "मोबाईल",
     location: "ठिकाण",
+    city: "शहर",
+    state: "राज्य",
+
     noAccount: "खात्याची माहिती उपलब्ध नाही.",
+
     notifications: "सूचना",
     notificationText: "सूचनांची सेटिंग व्यवस्थापित करा.",
+
     about: "माहिती",
     aboutText: "मंडळ व्यवस्थापन प्रणाली",
     aboutSubText:
       "सदस्य, वर्गणी, खर्च आणि कार्यक्रम व्यवस्थापित करा.",
+    aboutDetails:
+      "मंडलमित्रच्या मदतीने मंडळातील सदस्य, वर्गणी, पावत्या, खर्च, कार्यक्रम आणि रिपोर्ट एकाच ठिकाणी व्यवस्थापित करता येतात.",
+
     logo: "मंडळाचा लोगो",
     logoText:
       "तुमच्या मंडळाचा लोगो अपलोड करा. तो पावतीवर वापरला जाईल.",
@@ -83,21 +117,38 @@ const translations = {
     settings: "सेटिंग्स",
     subtitle: "अपने मंडल की सेटिंग्स प्रबंधित करें।",
     back: "← डैशबोर्ड पर जाएं",
+
     language: "भाषा",
     languageText: "अपनी पसंदीदा भाषा चुनें।",
+
     account: "खाता",
     accountText: "आपके मंडल की जानकारी।",
+    editAccount: "खाता संपादित करें",
+    saveChanges: "बदलाव सेव करें",
+    cancel: "रद्द करें",
+    saving: "सेव हो रहा है...",
+    accountUpdated: "खाते की जानकारी सफलतापूर्वक अपडेट हो गई।",
+    accountUpdateError: "खाते की जानकारी अपडेट नहीं हो सकी।",
+
     mandal: "मंडल",
     leader: "प्रमुख",
     mobile: "मोबाइल",
     location: "स्थान",
+    city: "शहर",
+    state: "राज्य",
+
     noAccount: "खाते की जानकारी उपलब्ध नहीं है।",
+
     notifications: "सूचनाएं",
     notificationText: "सूचना सेटिंग प्रबंधित करें।",
+
     about: "जानकारी",
     aboutText: "मंडल प्रबंधन प्रणाली",
     aboutSubText:
       "सदस्य, संग्रह, खर्च और कार्यक्रम प्रबंधित करें।",
+    aboutDetails:
+      "मंडलमित्र की मदद से मंडल के सदस्य, संग्रह, रसीद, खर्च, कार्यक्रम और रिपोर्ट एक ही जगह पर प्रबंधित किए जा सकते हैं।",
+
     logo: "मंडल का लोगो",
     logoText:
       "अपने मंडल का लोगो अपलोड करें। इसका उपयोग रसीद पर किया जाएगा।",
@@ -121,6 +172,24 @@ export default function SettingsPage() {
 
   const [account, setAccount] =
     useState<Account | null>(null);
+
+  const [editingAccount, setEditingAccount] =
+    useState(false);
+
+  const [editAccount, setEditAccount] =
+    useState<Account | null>(null);
+
+  const [savingAccount, setSavingAccount] =
+    useState(false);
+
+  const [accountMessage, setAccountMessage] =
+    useState("");
+
+  const [accountError, setAccountError] =
+    useState("");
+
+  const [aboutOpen, setAboutOpen] =
+    useState(false);
 
   const [logoUrl, setLogoUrl] = useState("");
 
@@ -169,13 +238,16 @@ export default function SettingsPage() {
       }
 
       if (mandal) {
-        setAccount({
+        const accountData = {
           mandalName: mandal.mandal_name || "",
           leaderName: mandal.leader_name || "",
           mobile: mandal.mobile || "",
           city: mandal.city || "",
           state: mandal.state || "",
-        });
+        };
+
+        setAccount(accountData);
+        setEditAccount(accountData);
 
         setLogoUrl(mandal.logo_url || "");
 
@@ -249,6 +321,89 @@ export default function SettingsPage() {
     setSavingLanguage(false);
   }
 
+  function startEditAccount() {
+    if (!account) {
+      return;
+    }
+
+    setEditAccount({
+      ...account,
+    });
+
+    setAccountMessage("");
+    setAccountError("");
+    setEditingAccount(true);
+  }
+
+  function cancelEditAccount() {
+    if (account) {
+      setEditAccount({
+        ...account,
+      });
+    }
+
+    setAccountMessage("");
+    setAccountError("");
+    setEditingAccount(false);
+  }
+
+  async function saveAccount() {
+    if (!editAccount) {
+      return;
+    }
+
+    setAccountMessage("");
+    setAccountError("");
+    setSavingAccount(true);
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      setSavingAccount(false);
+      router.replace("/login");
+      return;
+    }
+
+    const { error } = await supabase
+      .from("mandals")
+      .update({
+        mandal_name: editAccount.mandalName,
+        leader_name: editAccount.leaderName,
+        mobile: editAccount.mobile,
+        city: editAccount.city,
+        state: editAccount.state,
+      })
+      .eq("user_id", user.id);
+
+    if (error) {
+      console.error(
+        "ACCOUNT UPDATE ERROR:",
+        error
+      );
+
+      setAccountError(
+        t.accountUpdateError
+      );
+
+      setSavingAccount(false);
+      return;
+    }
+
+    setAccount({
+      ...editAccount,
+    });
+
+    setEditAccount({
+      ...editAccount,
+    });
+
+    setEditingAccount(false);
+    setAccountMessage(t.accountUpdated);
+    setSavingAccount(false);
+  }
+
   async function uploadLogo(
     event: React.ChangeEvent<HTMLInputElement>
   ) {
@@ -276,6 +431,7 @@ export default function SettingsPage() {
         setLogoError(
           "Please select an image file."
         );
+
         setUploadingLogo(false);
         return;
       }
@@ -284,6 +440,7 @@ export default function SettingsPage() {
         setLogoError(
           "Logo size must be less than 5 MB."
         );
+
         setUploadingLogo(false);
         return;
       }
@@ -405,7 +562,6 @@ export default function SettingsPage() {
       <div className="mx-auto max-w-4xl">
 
         {/* BACK */}
-
         <button
           type="button"
           onClick={() =>
@@ -417,7 +573,6 @@ export default function SettingsPage() {
         </button>
 
         {/* HEADER */}
-
         <h1 className="text-3xl font-bold text-gray-900">
           {t.settings}
         </h1>
@@ -429,7 +584,6 @@ export default function SettingsPage() {
         <div className="mt-8 space-y-4">
 
           {/* LOGO */}
-
           <div className="rounded-2xl border bg-white p-6 shadow-sm">
 
             <h2 className="text-lg font-bold">
@@ -480,7 +634,8 @@ export default function SettingsPage() {
             ) : (
               <div className="mt-5">
 
-                <label className="inline-block cursor-pointer rounded-xl bg-orange-500 px-5 py-3 font-semibold text-white transition hover:bg-orange-600">
+                <label className="inline-block cursor-pointer rounded-xl bg-orange-500 px-5 py-3 font-semibold text-white">
+
                   {uploadingLogo
                     ? t.uploading
                     : t.chooseLogo}
@@ -492,6 +647,7 @@ export default function SettingsPage() {
                     className="hidden"
                     disabled={uploadingLogo}
                   />
+
                 </label>
 
               </div>
@@ -518,7 +674,6 @@ export default function SettingsPage() {
           </div>
 
           {/* LANGUAGE */}
-
           <div className="rounded-2xl border bg-white p-6 shadow-sm">
 
             <h2 className="text-lg font-bold">
@@ -567,42 +722,199 @@ export default function SettingsPage() {
           </div>
 
           {/* ACCOUNT */}
-
           <div className="rounded-2xl border bg-white p-6 shadow-sm">
 
-            <h2 className="text-lg font-bold">
-              👤 {t.account}
-            </h2>
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 
-            <p className="mt-1 text-sm text-gray-500">
-              {t.accountText}
-            </p>
+              <div>
+                <h2 className="text-lg font-bold">
+                  👤 {t.account}
+                </h2>
+
+                <p className="mt-1 text-sm text-gray-500">
+                  {t.accountText}
+                </p>
+              </div>
+
+              {account && !editingAccount && (
+                <button
+                  type="button"
+                  onClick={startEditAccount}
+                  className="rounded-xl bg-orange-500 px-5 py-3 font-semibold text-white transition hover:bg-orange-600"
+                >
+                  ✏️ {t.editAccount}
+                </button>
+              )}
+
+            </div>
+
+            {accountMessage && (
+              <p className="mt-4 rounded-xl bg-green-50 px-4 py-3 text-sm text-green-600">
+                {accountMessage}
+              </p>
+            )}
+
+            {accountError && (
+              <p className="mt-4 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-500">
+                {accountError}
+              </p>
+            )}
 
             {account ? (
-              <div className="mt-4 space-y-2 text-sm">
+              editingAccount && editAccount ? (
 
-                <p>
-                  <b>{t.mandal}:</b>{" "}
-                  {account.mandalName}
-                </p>
+                <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2">
 
-                <p>
-                  <b>{t.leader}:</b>{" "}
-                  {account.leaderName}
-                </p>
+                  {/* MANDAL NAME */}
+                  <div>
+                    <label className="mb-2 block text-sm font-semibold text-gray-700">
+                      {t.mandal}
+                    </label>
 
-                <p>
-                  <b>{t.mobile}:</b>{" "}
-                  {account.mobile}
-                </p>
+                    <input
+                      type="text"
+                      value={editAccount.mandalName}
+                      onChange={(e) =>
+                        setEditAccount({
+                          ...editAccount,
+                          mandalName: e.target.value,
+                        })
+                      }
+                      className="w-full rounded-xl border px-4 py-3 outline-none focus:border-orange-500"
+                    />
+                  </div>
 
-                <p>
-                  <b>{t.location}:</b>{" "}
-                  {account.city},{" "}
-                  {account.state}
-                </p>
+                  {/* LEADER */}
+                  <div>
+                    <label className="mb-2 block text-sm font-semibold text-gray-700">
+                      {t.leader}
+                    </label>
 
-              </div>
+                    <input
+                      type="text"
+                      value={editAccount.leaderName}
+                      onChange={(e) =>
+                        setEditAccount({
+                          ...editAccount,
+                          leaderName: e.target.value,
+                        })
+                      }
+                      className="w-full rounded-xl border px-4 py-3 outline-none focus:border-orange-500"
+                    />
+                  </div>
+
+                  {/* MOBILE */}
+                  <div>
+                    <label className="mb-2 block text-sm font-semibold text-gray-700">
+                      {t.mobile}
+                    </label>
+
+                    <input
+                      type="tel"
+                      value={editAccount.mobile}
+                      onChange={(e) =>
+                        setEditAccount({
+                          ...editAccount,
+                          mobile: e.target.value,
+                        })
+                      }
+                      className="w-full rounded-xl border px-4 py-3 outline-none focus:border-orange-500"
+                    />
+                  </div>
+
+                  {/* CITY */}
+                  <div>
+                    <label className="mb-2 block text-sm font-semibold text-gray-700">
+                      {t.city}
+                    </label>
+
+                    <input
+                      type="text"
+                      value={editAccount.city}
+                      onChange={(e) =>
+                        setEditAccount({
+                          ...editAccount,
+                          city: e.target.value,
+                        })
+                      }
+                      className="w-full rounded-xl border px-4 py-3 outline-none focus:border-orange-500"
+                    />
+                  </div>
+
+                  {/* STATE */}
+                  <div>
+                    <label className="mb-2 block text-sm font-semibold text-gray-700">
+                      {t.state}
+                    </label>
+
+                    <input
+                      type="text"
+                      value={editAccount.state}
+                      onChange={(e) =>
+                        setEditAccount({
+                          ...editAccount,
+                          state: e.target.value,
+                        })
+                      }
+                      className="w-full rounded-xl border px-4 py-3 outline-none focus:border-orange-500"
+                    />
+                  </div>
+
+                  {/* BUTTONS */}
+                  <div className="flex flex-wrap gap-3 md:col-span-2">
+
+                    <button
+                      type="button"
+                      onClick={saveAccount}
+                      disabled={savingAccount}
+                      className="rounded-xl bg-orange-500 px-6 py-3 font-semibold text-white transition hover:bg-orange-600 disabled:opacity-60"
+                    >
+                      {savingAccount
+                        ? t.saving
+                        : t.saveChanges}
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={cancelEditAccount}
+                      disabled={savingAccount}
+                      className="rounded-xl border px-6 py-3 font-semibold text-gray-700 transition hover:bg-gray-50 disabled:opacity-60"
+                    >
+                      {t.cancel}
+                    </button>
+
+                  </div>
+
+                </div>
+
+              ) : (
+
+                <div className="mt-5 space-y-3 text-sm">
+
+                  <p>
+                    <b>{t.mandal}:</b>{" "}
+                    {account.mandalName}
+                  </p>
+
+                  <p>
+                    <b>{t.leader}:</b>{" "}
+                    {account.leaderName}
+                  </p>
+
+                  <p>
+                    <b>{t.mobile}:</b>{" "}
+                    {account.mobile}
+                  </p>
+
+                  <p>
+                    <b>{t.location}:</b>{" "}
+                    {account.city},{" "}
+                    {account.state}
+                  </p>
+
+                </div>
+
+              )
             ) : (
               <p className="mt-4 text-sm text-gray-400">
                 {t.noAccount}
@@ -612,11 +924,9 @@ export default function SettingsPage() {
           </div>
 
           {/* NOTIFICATIONS */}
-
           <div className="flex items-center justify-between rounded-2xl border bg-white p-6 shadow-sm">
 
             <div>
-
               <h2 className="text-lg font-bold">
                 🔔 {t.notifications}
               </h2>
@@ -624,7 +934,6 @@ export default function SettingsPage() {
               <p className="mt-1 text-sm text-gray-500">
                 {t.notificationText}
               </p>
-
             </div>
 
             <button
@@ -644,20 +953,47 @@ export default function SettingsPage() {
           </div>
 
           {/* ABOUT */}
-
           <div className="rounded-2xl border bg-white p-6 shadow-sm">
 
-            <h2 className="text-lg font-bold">
-              ℹ️ {t.about}
-            </h2>
+            <button
+              type="button"
+              onClick={() =>
+                setAboutOpen(!aboutOpen)
+              }
+              className="flex w-full items-center justify-between text-left"
+            >
+              <div>
+                <h2 className="text-lg font-bold">
+                  ℹ️ {t.about}
+                </h2>
 
-            <p className="mt-2 text-gray-500">
-              {t.aboutText}
-            </p>
+                <p className="mt-2 text-gray-500">
+                  {t.aboutText}
+                </p>
+              </div>
 
-            <p className="mt-1 text-sm text-gray-400">
-              {t.aboutSubText}
-            </p>
+              <span className="text-xl text-gray-500">
+                {aboutOpen ? "▲" : "▼"}
+              </span>
+            </button>
+
+            {aboutOpen && (
+              <div className="mt-4 rounded-xl bg-gray-50 p-4">
+
+                <p className="text-sm text-gray-500">
+                  {t.aboutSubText}
+                </p>
+
+                <p className="mt-3 text-sm leading-6 text-gray-600">
+                  {t.aboutDetails}
+                </p>
+
+                <div className="mt-4 border-t pt-4 text-sm text-gray-400">
+                  MandalMitra
+                </div>
+
+              </div>
+            )}
 
           </div>
 
