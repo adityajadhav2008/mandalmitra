@@ -163,8 +163,12 @@ export default function CreateReceiptPage() {
 
   const receiptRef = useRef<HTMLDivElement | null>(null);
 
-  const [language, setLanguage] = useState<Language>("Marathi");
-  const [mandalName, setMandalName] = useState("मंडळ");
+  const [language, setLanguage] =
+    useState<Language>("Marathi");
+
+  const [mandalName, setMandalName] =
+    useState("मंडळ");
+
   const [logo, setLogo] = useState("");
   const [memberName, setMemberName] = useState("");
   const [mobile, setMobile] = useState("");
@@ -172,8 +176,11 @@ export default function CreateReceiptPage() {
   const [purpose, setPurpose] = useState("");
   const [date, setDate] = useState("");
   const [note, setNote] = useState("");
-  const [receiptNumber, setReceiptNumber] = useState("");
-  const [generating, setGenerating] = useState(false);
+  const [receiptNumber, setReceiptNumber] =
+    useState("");
+
+  const [generating, setGenerating] =
+    useState(false);
 
   const t = translations[language];
 
@@ -199,7 +206,9 @@ export default function CreateReceiptPage() {
       if (!active) return;
 
       if (mandal) {
-        setMandalName(mandal.mandal_name || "मंडळ");
+        setMandalName(
+          mandal.mandal_name || "मंडळ"
+        );
 
         if (
           mandal.language === "English" ||
@@ -210,18 +219,25 @@ export default function CreateReceiptPage() {
         }
       }
 
-      const savedLogo = localStorage.getItem("mandalLogo");
+      const savedLogo =
+        localStorage.getItem("mandalLogo");
 
       if (savedLogo) {
         setLogo(savedLogo);
       }
 
-      const today = new Date().toISOString().split("T")[0];
+      const today =
+        new Date()
+          .toISOString()
+          .split("T")[0];
 
       setDate(today);
 
       setReceiptNumber(
-        "MR-" + Date.now().toString().slice(-6)
+        "MR-" +
+          Date.now()
+            .toString()
+            .slice(-6)
       );
     }
 
@@ -251,7 +267,10 @@ export default function CreateReceiptPage() {
 
       setLogo(result);
 
-      localStorage.setItem("mandalLogo", result);
+      localStorage.setItem(
+        "mandalLogo",
+        result
+      );
     };
 
     reader.readAsDataURL(file);
@@ -260,7 +279,9 @@ export default function CreateReceiptPage() {
   function formatDate(value: string) {
     if (!value) return "";
 
-    const d = new Date(`${value}T00:00:00`);
+    const d = new Date(
+      `${value}T00:00:00`
+    );
 
     return d.toLocaleDateString(
       language === "Marathi"
@@ -305,7 +326,9 @@ export default function CreateReceiptPage() {
     blob: Blob;
   }> {
     if (!receiptRef.current) {
-      throw new Error("Receipt preview not found.");
+      throw new Error(
+        "Receipt preview not found."
+      );
     }
 
     await new Promise((resolve) =>
@@ -324,13 +347,14 @@ export default function CreateReceiptPage() {
       }
     );
 
-    const dataUrl = canvas.toDataURL(
-      "image/png"
-    );
+    const dataUrl =
+      canvas.toDataURL("image/png");
 
-    const response = await fetch(dataUrl);
+    const response =
+      await fetch(dataUrl);
 
-    const blob = await response.blob();
+    const blob =
+      await response.blob();
 
     return {
       dataUrl,
@@ -412,7 +436,11 @@ ${mandalName} ची पावती
 उद्देश: ${purpose}
 तारीख: ${formatDate(date)}
 
-आपल्या योगदानाबद्दल धन्यवाद!`;
+आपल्या योगदानाबद्दल मनःपूर्वक धन्यवाद! 🙏
+
+ही पावती MandalMitra द्वारे तयार करण्यात आली आहे.
+
+https://mandalmitra.vercel.app`;
       } else if (language === "Hindi") {
         message = `नमस्ते,
 
@@ -424,7 +452,11 @@ ${mandalName} की रसीद
 उद्देश्य: ${purpose}
 तारीख: ${formatDate(date)}
 
-आपके योगदान के लिए धन्यवाद!`;
+आपके योगदान के लिए हार्दिक धन्यवाद! 🙏
+
+यह रसीद MandalMitra द्वारा बनाई गई है।
+
+https://mandalmitra.vercel.app`;
       } else {
         message = `Hello,
 
@@ -436,49 +468,43 @@ Amount: ₹${amount}
 Purpose: ${purpose}
 Date: ${formatDate(date)}
 
-Thank you for your contribution!`;
+Thank you for your valuable contribution! 🙏
+
+This receipt was created using MandalMitra.
+
+https://mandalmitra.vercel.app`;
       }
 
-      const encodedMessage =
-        encodeURIComponent(message);
-
-      const whatsappUrl =
-        formattedMobile.length >= 12
-          ? `https://wa.me/${formattedMobile}?text=${encodedMessage}`
-          : `https://wa.me/?text=${encodedMessage}`;
-
       /*
-       * Try native share first.
-       * This allows the PNG to be attached
-       * on supported browsers/devices.
+       * Mobile:
+       * Native share sheet will open.
+       * User selects WhatsApp.
+       * Receipt image + message are shared together.
        */
       if (
         typeof navigator !== "undefined" &&
-        navigator.share
+        navigator.share &&
+        navigator.canShare &&
+        navigator.canShare({
+          files: [file],
+        })
       ) {
         try {
-          const canShareFile =
-            navigator.canShare
-              ? navigator.canShare({
-                  files: [file],
-                })
-              : false;
+          await navigator.share({
+            title: `${mandalName} Receipt`,
+            text: message,
+            files: [file],
+          });
 
-          if (canShareFile) {
-            await navigator.share({
-              title: `${mandalName} Receipt`,
-              text: message,
-              files: [file],
-            });
-
+          return;
+        } catch (shareError) {
+          if (
+            shareError instanceof DOMException &&
+            shareError.name === "AbortError"
+          ) {
             return;
           }
-        } catch (shareError) {
-          /*
-           * User cancelled share or browser
-           * does not support file sharing.
-           * Continue to WhatsApp fallback.
-           */
+
           console.log(
             "Native share unavailable:",
             shareError
@@ -487,8 +513,8 @@ Thank you for your contribution!`;
       }
 
       /*
-       * Fallback:
-       * Download the generated receipt first.
+       * Desktop / unsupported browser:
+       * Download receipt image and open WhatsApp.
        */
       const downloadUrl =
         URL.createObjectURL(blob);
@@ -507,20 +533,28 @@ Thank you for your contribution!`;
 
       document.body.removeChild(link);
 
-      URL.revokeObjectURL(downloadUrl);
+      const encodedMessage =
+        encodeURIComponent(message);
 
-      /*
-       * Then open WhatsApp with the receipt
-       * information in the message.
-       */
+      const whatsappUrl =
+        formattedMobile.length >= 12
+          ? `https://wa.me/${formattedMobile}?text=${encodedMessage}`
+          : `https://wa.me/?text=${encodedMessage}`;
+
       window.open(
         whatsappUrl,
         "_blank",
         "noopener,noreferrer"
       );
 
+      setTimeout(() => {
+        URL.revokeObjectURL(
+          downloadUrl
+        );
+      }, 1000);
+
       alert(
-        "Receipt image download झाली आहे. WhatsApp मध्ये message उघडला आहे. Image attach करून Send करा."
+        "Receipt photo download झाली आहे. WhatsApp उघडला आहे. Photo attach करून Send करा."
       );
     } catch (error) {
       console.error(
@@ -613,7 +647,8 @@ Thank you for your contribution!`;
           <div
             style={{
               backgroundColor: "#ffffff",
-              border: "1px solid #e5e7eb",
+              border:
+                "1px solid #e5e7eb",
               borderRadius: "24px",
               padding: "24px",
               boxShadow:
@@ -648,11 +683,13 @@ Thank you for your contribution!`;
                 }
                 style={{
                   width: "100%",
-                  padding: "12px 16px",
+                  padding:
+                    "12px 16px",
                   borderRadius: "12px",
                   border:
                     "1px solid #d1d5db",
-                  backgroundColor: "#ffffff",
+                  backgroundColor:
+                    "#ffffff",
                   color: "#111827",
                   fontSize: "15px",
                   outline: "none",
@@ -720,7 +757,8 @@ Thank you for your contribution!`;
                       width: "80px",
                       height: "80px",
                       display: "flex",
-                      alignItems: "center",
+                      alignItems:
+                        "center",
                       justifyContent:
                         "center",
                       border:
@@ -794,12 +832,15 @@ Thank you for your contribution!`;
                 placeholder={t.enterName}
                 style={{
                   width: "100%",
-                  boxSizing: "border-box",
-                  padding: "12px 16px",
+                  boxSizing:
+                    "border-box",
+                  padding:
+                    "12px 16px",
                   borderRadius: "12px",
                   border:
                     "1px solid #d1d5db",
-                  backgroundColor: "#ffffff",
+                  backgroundColor:
+                    "#ffffff",
                   color: "#111827",
                   fontSize: "15px",
                   outline: "none",
@@ -838,12 +879,15 @@ Thank you for your contribution!`;
                 placeholder={t.enterMobile}
                 style={{
                   width: "100%",
-                  boxSizing: "border-box",
-                  padding: "12px 16px",
+                  boxSizing:
+                    "border-box",
+                  padding:
+                    "12px 16px",
                   borderRadius: "12px",
                   border:
                     "1px solid #d1d5db",
-                  backgroundColor: "#ffffff",
+                  backgroundColor:
+                    "#ffffff",
                   color: "#111827",
                   fontSize: "15px",
                   outline: "none",
@@ -879,15 +923,20 @@ Thank you for your contribution!`;
                     e.target.value
                   )
                 }
-                placeholder={t.enterAmount}
+                placeholder={
+                  t.enterAmount
+                }
                 style={{
                   width: "100%",
-                  boxSizing: "border-box",
-                  padding: "12px 16px",
+                  boxSizing:
+                    "border-box",
+                  padding:
+                    "12px 16px",
                   borderRadius: "12px",
                   border:
                     "1px solid #d1d5db",
-                  backgroundColor: "#ffffff",
+                  backgroundColor:
+                    "#ffffff",
                   color: "#111827",
                   fontSize: "15px",
                   outline: "none",
@@ -923,7 +972,8 @@ Thank you for your contribution!`;
                 }
                 style={{
                   width: "100%",
-                  padding: "12px 16px",
+                  padding:
+                    "12px 16px",
                   borderRadius: "12px",
                   border:
                     "1px solid #d1d5db",
@@ -993,8 +1043,10 @@ Thank you for your contribution!`;
                 }
                 style={{
                   width: "100%",
-                  boxSizing: "border-box",
-                  padding: "12px 16px",
+                  boxSizing:
+                    "border-box",
+                  padding:
+                    "12px 16px",
                   borderRadius: "12px",
                   border:
                     "1px solid #d1d5db",
@@ -1037,15 +1089,21 @@ Thank you for your contribution!`;
               <textarea
                 value={note}
                 onChange={(e) =>
-                  setNote(e.target.value)
+                  setNote(
+                    e.target.value
+                  )
                 }
-                placeholder={t.enterNote}
+                placeholder={
+                  t.enterNote
+                }
                 rows={3}
                 style={{
                   width: "100%",
-                  boxSizing: "border-box",
+                  boxSizing:
+                    "border-box",
                   resize: "none",
-                  padding: "12px 16px",
+                  padding:
+                    "12px 16px",
                   borderRadius: "12px",
                   border:
                     "1px solid #d1d5db",
@@ -1062,7 +1120,9 @@ Thank you for your contribution!`;
 
             <button
               type="button"
-              onClick={downloadReceipt}
+              onClick={
+                downloadReceipt
+              }
               disabled={generating}
               style={{
                 width: "100%",
@@ -1079,7 +1139,8 @@ Thank you for your contribution!`;
                 cursor: generating
                   ? "not-allowed"
                   : "pointer",
-                marginBottom: "12px",
+                marginBottom:
+                  "12px",
               }}
             >
               {generating
@@ -1091,7 +1152,9 @@ Thank you for your contribution!`;
 
             <button
               type="button"
-              onClick={sendWhatsApp}
+              onClick={
+                sendWhatsApp
+              }
               disabled={generating}
               style={{
                 width: "100%",
@@ -1138,24 +1201,25 @@ Thank you for your contribution!`;
                 borderRadius: "28px",
                 backgroundColor:
                   "#ffffff",
-                boxSizing: "border-box",
+                boxSizing:
+                  "border-box",
               }}
             >
               {/* RECEIPT HEADER */}
 
               <div
                 style={{
-                  position: "relative",
+                  position:
+                    "relative",
                   padding:
                     "32px 28px",
-                  textAlign: "center",
+                  textAlign:
+                    "center",
                   backgroundColor:
                     "#f97316",
                   color: "#ffffff",
                 }}
               >
-                {/* DECORATION */}
-
                 <div
                   style={{
                     position:
@@ -1226,7 +1290,8 @@ Thank you for your contribution!`;
                     fontSize: "30px",
                     lineHeight: 1.2,
                     fontWeight: 900,
-                    color: "#ffffff",
+                    color:
+                      "#ffffff",
                   }}
                 >
                   {mandalName}
@@ -1238,14 +1303,16 @@ Thank you for your contribution!`;
                       "relative",
                     display:
                       "inline-block",
-                    marginTop: "16px",
+                    marginTop:
+                      "16px",
                     padding:
                       "10px 32px",
                     borderRadius:
                       "999px",
                     backgroundColor:
                       "#ffffff",
-                    color: "#f97316",
+                    color:
+                      "#f97316",
                     fontSize:
                       "14px",
                     fontWeight: 900,
@@ -1289,7 +1356,8 @@ Thank you for your contribution!`;
                         fontSize:
                           "11px",
                         fontWeight: 700,
-                        color: "#9ca3af",
+                        color:
+                          "#9ca3af",
                       }}
                     >
                       {t.receiptNo}
@@ -1302,7 +1370,8 @@ Thank you for your contribution!`;
                         fontSize:
                           "16px",
                         fontWeight: 900,
-                        color: "#1f2937",
+                        color:
+                          "#1f2937",
                       }}
                     >
                       {receiptNumber}
@@ -1321,7 +1390,8 @@ Thank you for your contribution!`;
                         fontSize:
                           "11px",
                         fontWeight: 700,
-                        color: "#9ca3af",
+                        color:
+                          "#9ca3af",
                       }}
                     >
                       {t.date}
@@ -1334,7 +1404,8 @@ Thank you for your contribution!`;
                         fontSize:
                           "16px",
                         fontWeight: 900,
-                        color: "#1f2937",
+                        color:
+                          "#1f2937",
                       }}
                     >
                       {formatDate(
@@ -1366,7 +1437,8 @@ Thank you for your contribution!`;
                       fontSize:
                         "11px",
                       fontWeight: 700,
-                      color: "#f97316",
+                      color:
+                        "#f97316",
                       textTransform:
                         "uppercase",
                     }}
@@ -1382,7 +1454,8 @@ Thank you for your contribution!`;
                         "24px",
                       lineHeight: 1.2,
                       fontWeight: 900,
-                      color: "#111827",
+                      color:
+                        "#111827",
                       wordBreak:
                         "break-word",
                     }}
@@ -1398,7 +1471,8 @@ Thank you for your contribution!`;
                           "6px 0 0",
                         fontSize:
                           "14px",
-                        color: "#6b7280",
+                        color:
+                          "#6b7280",
                       }}
                     >
                       📱 {mobile}
@@ -1431,7 +1505,8 @@ Thank you for your contribution!`;
                         fontSize:
                           "11px",
                         fontWeight: 700,
-                        color: "#9ca3af",
+                        color:
+                          "#9ca3af",
                       }}
                     >
                       {t.purpose}
@@ -1444,7 +1519,8 @@ Thank you for your contribution!`;
                         fontSize:
                           "18px",
                         fontWeight: 900,
-                        color: "#1f2937",
+                        color:
+                          "#1f2937",
                       }}
                     >
                       {purpose ||
@@ -1505,7 +1581,8 @@ Thank you for your contribution!`;
                       fontSize:
                         "14px",
                       fontWeight: 600,
-                      color: "#ffffff",
+                      color:
+                        "#ffffff",
                     }}
                   >
                     {t.amountLabel}
@@ -1521,7 +1598,8 @@ Thank you for your contribution!`;
                         "48px",
                       lineHeight: 1.1,
                       fontWeight: 900,
-                      color: "#ffffff",
+                      color:
+                        "#ffffff",
                     }}
                   >
                     ₹{amount || "0"}
@@ -1548,7 +1626,8 @@ Thank you for your contribution!`;
                         fontSize:
                           "11px",
                         fontWeight: 700,
-                        color: "#9ca3af",
+                        color:
+                          "#9ca3af",
                       }}
                     >
                       {t.note}
@@ -1560,7 +1639,8 @@ Thank you for your contribution!`;
                           "4px 0 0",
                         fontSize:
                           "14px",
-                        color: "#4b5563",
+                        color:
+                          "#4b5563",
                         wordBreak:
                           "break-word",
                       }}
@@ -1591,7 +1671,8 @@ Thank you for your contribution!`;
                         fontSize:
                           "14px",
                         fontWeight: 700,
-                        color: "#374151",
+                        color:
+                          "#374151",
                       }}
                     >
                       {t.thankYou}
@@ -1603,7 +1684,8 @@ Thank you for your contribution!`;
                           "4px 0 0",
                         fontSize:
                           "11px",
-                        color: "#9ca3af",
+                        color:
+                          "#9ca3af",
                       }}
                     >
                       {mandalName}
@@ -1632,7 +1714,8 @@ Thank you for your contribution!`;
                         margin: 0,
                         fontSize:
                           "11px",
-                        color: "#6b7280",
+                        color:
+                          "#6b7280",
                       }}
                     >
                       {t.authorized}
