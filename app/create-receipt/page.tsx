@@ -28,10 +28,11 @@ type Translation = {
   other: string;
   note: string;
   optional: string;
-  download: string;
-  whatsapp: string;
+  save: string;
+  share: string;
+  done: string;
   generating: string;
-  sending: string;
+  sharing: string;
   receipt: string;
   receivedFrom: string;
   amountLabel: string;
@@ -42,12 +43,13 @@ type Translation = {
   enterMobile: string;
   enterAmount: string;
   enterNote: string;
+  shareError: string;
 };
 
 const translations: Record<Language, Translation> = {
   English: {
     title: "Create Receipt",
-    subtitle: "Create an attractive Mandal receipt",
+    subtitle: "Create a professional Mandal receipt",
     back: "← Back to Dashboard",
     logo: "Mandal Logo",
     uploadLogo: "Upload Logo",
@@ -66,13 +68,14 @@ const translations: Record<Language, Translation> = {
     other: "Other",
     note: "Note",
     optional: "Optional",
-    download: "Download Receipt Photo",
-    whatsapp: "Send on WhatsApp",
+    save: "Save Receipt Image",
+    share: "Share Receipt Image",
+    done: "Done",
     generating: "Generating...",
-    sending: "Preparing WhatsApp...",
+    sharing: "Preparing Share...",
     receipt: "RECEIPT",
     receivedFrom: "Received From",
-    amountLabel: "Amount",
+    amountLabel: "Amount Received",
     thankYou: "Thank you for your contribution!",
     authorized: "Authorized Signature",
     language: "Receipt Language",
@@ -80,11 +83,12 @@ const translations: Record<Language, Translation> = {
     enterMobile: "Enter mobile number",
     enterAmount: "Enter amount",
     enterNote: "Enter note",
+    shareError: "Receipt image could not be shared.",
   },
 
   Marathi: {
     title: "पावती तयार करा",
-    subtitle: "मंडळाची आकर्षक पावती तयार करा",
+    subtitle: "मंडळाची आकर्षक व प्रोफेशनल पावती तयार करा",
     back: "← डॅशबोर्डवर जा",
     logo: "मंडळाचा लोगो",
     uploadLogo: "लोगो अपलोड करा",
@@ -103,13 +107,14 @@ const translations: Record<Language, Translation> = {
     other: "इतर",
     note: "नोंद",
     optional: "ऐच्छिक",
-    download: "पावतीचा फोटो डाउनलोड करा",
-    whatsapp: "WhatsApp वर पाठवा",
+    save: "पावतीची इमेज सेव करा",
+    share: "पावतीची इमेज शेअर करा",
+    done: "झालं",
     generating: "पावती तयार होत आहे...",
-    sending: "WhatsApp साठी तयार होत आहे...",
+    sharing: "शेअर करण्यासाठी तयार होत आहे...",
     receipt: "पावती",
     receivedFrom: "प्राप्तकर्त्याचे नाव",
-    amountLabel: "रक्कम",
+    amountLabel: "प्राप्त रक्कम",
     thankYou: "आपल्या योगदानाबद्दल धन्यवाद!",
     authorized: "अधिकृत स्वाक्षरी",
     language: "पावतीची भाषा",
@@ -117,11 +122,12 @@ const translations: Record<Language, Translation> = {
     enterMobile: "मोबाईल नंबर टाका",
     enterAmount: "रक्कम टाका",
     enterNote: "नोंद टाका",
+    shareError: "पावतीची इमेज शेअर करता आली नाही.",
   },
 
   Hindi: {
     title: "रसीद बनाएं",
-    subtitle: "मंडल की आकर्षक रसीद बनाएं",
+    subtitle: "मंडल की आकर्षक और प्रोफेशनल रसीद बनाएं",
     back: "← डैशबोर्ड पर जाएं",
     logo: "मंडल का लोगो",
     uploadLogo: "लोगो अपलोड करें",
@@ -140,20 +146,22 @@ const translations: Record<Language, Translation> = {
     other: "अन्य",
     note: "नोट",
     optional: "वैकल्पिक",
-    download: "रसीद का फोटो डाउनलोड करें",
-    whatsapp: "WhatsApp पर भेजें",
+    save: "रसीद की इमेज सेव करें",
+    share: "रसीद की इमेज शेयर करें",
+    done: "हो गया",
     generating: "रसीद तैयार हो रही है...",
-    sending: "WhatsApp के लिए तैयार हो रहा है...",
+    sharing: "शेयर करने के लिए तैयार हो रहा है...",
     receipt: "रसीद",
     receivedFrom: "प्राप्तकर्ता का नाम",
-    amountLabel: "राशि",
+    amountLabel: "प्राप्त राशि",
     thankYou: "आपके योगदान के लिए धन्यवाद!",
     authorized: "अधिकृत हस्ताक्षर",
-    language: "Receipt Language",
+    language: "रसीद की भाषा",
     enterName: "सदस्य का नाम दर्ज करें",
     enterMobile: "मोबाइल नंबर दर्ज करें",
     enterAmount: "राशि दर्ज करें",
     enterNote: "नोट दर्ज करें",
+    shareError: "रसीद की इमेज शेयर नहीं हो सकी।",
   },
 };
 
@@ -163,12 +171,8 @@ export default function CreateReceiptPage() {
 
   const receiptRef = useRef<HTMLDivElement | null>(null);
 
-  const [language, setLanguage] =
-    useState<Language>("Marathi");
-
-  const [mandalName, setMandalName] =
-    useState("मंडळ");
-
+  const [language, setLanguage] = useState<Language>("Marathi");
+  const [mandalName, setMandalName] = useState("मंडळ");
   const [logo, setLogo] = useState("");
   const [memberName, setMemberName] = useState("");
   const [mobile, setMobile] = useState("");
@@ -176,11 +180,8 @@ export default function CreateReceiptPage() {
   const [purpose, setPurpose] = useState("");
   const [date, setDate] = useState("");
   const [note, setNote] = useState("");
-  const [receiptNumber, setReceiptNumber] =
-    useState("");
-
-  const [generating, setGenerating] =
-    useState(false);
+  const [receiptNumber, setReceiptNumber] = useState("");
+  const [generating, setGenerating] = useState(false);
 
   const t = translations[language];
 
@@ -206,9 +207,7 @@ export default function CreateReceiptPage() {
       if (!active) return;
 
       if (mandal) {
-        setMandalName(
-          mandal.mandal_name || "मंडळ"
-        );
+        setMandalName(mandal.mandal_name || "मंडळ");
 
         if (
           mandal.language === "English" ||
@@ -219,25 +218,18 @@ export default function CreateReceiptPage() {
         }
       }
 
-      const savedLogo =
-        localStorage.getItem("mandalLogo");
+      const savedLogo = localStorage.getItem("mandalLogo");
 
       if (savedLogo) {
         setLogo(savedLogo);
       }
 
-      const today =
-        new Date()
-          .toISOString()
-          .split("T")[0];
+      const today = new Date().toISOString().split("T")[0];
 
       setDate(today);
 
       setReceiptNumber(
-        "MR-" +
-          Date.now()
-            .toString()
-            .slice(-6)
+        "MR-" + Date.now().toString().slice(-6)
       );
     }
 
@@ -267,10 +259,7 @@ export default function CreateReceiptPage() {
 
       setLogo(result);
 
-      localStorage.setItem(
-        "mandalLogo",
-        result
-      );
+      localStorage.setItem("mandalLogo", result);
     };
 
     reader.readAsDataURL(file);
@@ -279,9 +268,7 @@ export default function CreateReceiptPage() {
   function formatDate(value: string) {
     if (!value) return "";
 
-    const d = new Date(
-      `${value}T00:00:00`
-    );
+    const d = new Date(`${value}T00:00:00`);
 
     return d.toLocaleDateString(
       language === "Marathi"
@@ -326,9 +313,7 @@ export default function CreateReceiptPage() {
     blob: Blob;
   }> {
     if (!receiptRef.current) {
-      throw new Error(
-        "Receipt preview not found."
-      );
+      throw new Error("Receipt preview not found.");
     }
 
     await new Promise((resolve) =>
@@ -347,14 +332,11 @@ export default function CreateReceiptPage() {
       }
     );
 
-    const dataUrl =
-      canvas.toDataURL("image/png");
+    const dataUrl = canvas.toDataURL("image/png");
 
-    const response =
-      await fetch(dataUrl);
+    const response = await fetch(dataUrl);
 
-    const blob =
-      await response.blob();
+    const blob = await response.blob();
 
     return {
       dataUrl,
@@ -362,7 +344,7 @@ export default function CreateReceiptPage() {
     };
   }
 
-  async function downloadReceipt() {
+  async function saveReceiptImage() {
     if (!validateReceipt()) return;
 
     try {
@@ -371,8 +353,7 @@ export default function CreateReceiptPage() {
       const { dataUrl } =
         await createReceiptImage();
 
-      const link =
-        document.createElement("a");
+      const link = document.createElement("a");
 
       link.href = dataUrl;
 
@@ -398,7 +379,7 @@ export default function CreateReceiptPage() {
     }
   }
 
-  async function sendWhatsApp() {
+  async function shareReceiptImage() {
     if (!validateReceipt()) return;
 
     try {
@@ -415,107 +396,35 @@ export default function CreateReceiptPage() {
         }
       );
 
-      const cleanMobile =
-        mobile.replace(/\D/g, "");
-
-      const formattedMobile =
-        cleanMobile.length === 10
-          ? `91${cleanMobile}`
-          : cleanMobile;
-
-      let message = "";
-
-      if (language === "Marathi") {
-        message = `नमस्कार,
-
-${mandalName} ची पावती
-
-पावती क्र.: ${receiptNumber}
-नाव: ${memberName}
-रक्कम: ₹${amount}
-उद्देश: ${purpose}
-तारीख: ${formatDate(date)}
-
-आपल्या योगदानाबद्दल मनःपूर्वक धन्यवाद! 🙏
-
-ही पावती MandalMitra द्वारे तयार करण्यात आली आहे.
-
-https://mandalmitra.vercel.app`;
-      } else if (language === "Hindi") {
-        message = `नमस्ते,
-
-${mandalName} की रसीद
-
-रसीद क्र.: ${receiptNumber}
-नाम: ${memberName}
-राशि: ₹${amount}
-उद्देश्य: ${purpose}
-तारीख: ${formatDate(date)}
-
-आपके योगदान के लिए हार्दिक धन्यवाद! 🙏
-
-यह रसीद MandalMitra द्वारा बनाई गई है।
-
-https://mandalmitra.vercel.app`;
-      } else {
-        message = `Hello,
-
-${mandalName} Receipt
-
-Receipt No.: ${receiptNumber}
-Name: ${memberName}
-Amount: ₹${amount}
-Purpose: ${purpose}
-Date: ${formatDate(date)}
-
-Thank you for your valuable contribution! 🙏
-
-This receipt was created using MandalMitra.
-
-https://mandalmitra.vercel.app`;
-      }
-
-      /*
-       * Mobile:
-       * Native share sheet will open.
-       * User selects WhatsApp.
-       * Receipt image + message are shared together.
-       */
       if (
         typeof navigator !== "undefined" &&
-        navigator.share &&
-        navigator.canShare &&
-        navigator.canShare({
-          files: [file],
-        })
+        navigator.share
       ) {
-        try {
+        const canShareFile =
+          navigator.canShare
+            ? navigator.canShare({
+                files: [file],
+              })
+            : false;
+
+        if (canShareFile) {
           await navigator.share({
-            title: `${mandalName} Receipt`,
-            text: message,
+            title: `${mandalName} - ${t.receipt}`,
+            text: `${mandalName} - ${t.receipt}`,
             files: [file],
           });
 
           return;
-        } catch (shareError) {
-          if (
-            shareError instanceof DOMException &&
-            shareError.name === "AbortError"
-          ) {
-            return;
-          }
-
-          console.log(
-            "Native share unavailable:",
-            shareError
-          );
         }
+
+        await navigator.share({
+          title: `${mandalName} - ${t.receipt}`,
+          text: `${mandalName} - ${t.receipt}`,
+        });
+
+        return;
       }
 
-      /*
-       * Desktop / unsupported browser:
-       * Download receipt image and open WhatsApp.
-       */
       const downloadUrl =
         URL.createObjectURL(blob);
 
@@ -533,54 +442,49 @@ https://mandalmitra.vercel.app`;
 
       document.body.removeChild(link);
 
-      const encodedMessage =
-        encodeURIComponent(message);
-
-      const whatsappUrl =
-        formattedMobile.length >= 12
-          ? `https://wa.me/${formattedMobile}?text=${encodedMessage}`
-          : `https://wa.me/?text=${encodedMessage}`;
-
-      window.open(
-        whatsappUrl,
-        "_blank",
-        "noopener,noreferrer"
-      );
-
-      setTimeout(() => {
-        URL.revokeObjectURL(
-          downloadUrl
-        );
-      }, 1000);
+      URL.revokeObjectURL(downloadUrl);
 
       alert(
-        "Receipt photo download झाली आहे. WhatsApp उघडला आहे. Photo attach करून Send करा."
+        "तुमच्या device/browser मध्ये direct sharing उपलब्ध नाही. Receipt image save केली आहे."
       );
     } catch (error) {
       console.error(
-        "WhatsApp receipt error:",
+        "Receipt sharing error:",
         error
       );
 
-      alert(
-        "WhatsApp साठी receipt तयार करता आली नाही."
-      );
+      /*
+       * User ने share window cancel केली असेल
+       * तर error दाखवायचा नाही.
+       */
+      if (
+        error instanceof DOMException &&
+        error.name === "AbortError"
+      ) {
+        return;
+      }
+
+      alert(t.shareError);
     } finally {
       setGenerating(false);
     }
+  }
+
+  function handleDone() {
+    router.push("/dashboard");
   }
 
   return (
     <main
       style={{
         minHeight: "100vh",
-        backgroundColor: "#f9fafb",
-        padding: "32px 20px",
+        backgroundColor: "#f8f6f1",
+        padding: "24px 16px 40px",
       }}
     >
       <div
         style={{
-          maxWidth: "1200px",
+          maxWidth: "1180px",
           margin: "0 auto",
         }}
       >
@@ -592,11 +496,11 @@ https://mandalmitra.vercel.app`;
             router.push("/dashboard")
           }
           style={{
-            marginBottom: "24px",
+            marginBottom: "22px",
             border: "none",
             background: "transparent",
-            color: "#f97316",
-            fontWeight: 700,
+            color: "#c2410c",
+            fontWeight: 800,
             fontSize: "16px",
             cursor: "pointer",
           }}
@@ -608,7 +512,7 @@ https://mandalmitra.vercel.app`;
 
         <div
           style={{
-            marginBottom: "32px",
+            marginBottom: "28px",
           }}
         >
           <h1
@@ -638,28 +542,29 @@ https://mandalmitra.vercel.app`;
             display: "grid",
             gridTemplateColumns:
               "minmax(320px, 420px) minmax(320px, 1fr)",
-            gap: "32px",
+            gap: "30px",
             alignItems: "start",
           }}
         >
-          {/* LEFT FORM */}
+          {/* =========================
+              LEFT FORM
+          ========================== */}
 
           <div
             style={{
               backgroundColor: "#ffffff",
-              border:
-                "1px solid #e5e7eb",
-              borderRadius: "24px",
+              border: "1px solid #e5e7eb",
+              borderRadius: "22px",
               padding: "24px",
               boxShadow:
-                "0 4px 15px rgba(0,0,0,0.06)",
+                "0 4px 18px rgba(0,0,0,0.06)",
             }}
           >
             {/* LANGUAGE */}
 
             <div
               style={{
-                marginBottom: "24px",
+                marginBottom: "22px",
               }}
             >
               <label
@@ -667,7 +572,7 @@ https://mandalmitra.vercel.app`;
                   display: "block",
                   marginBottom: "8px",
                   fontSize: "14px",
-                  fontWeight: 700,
+                  fontWeight: 800,
                   color: "#374151",
                 }}
               >
@@ -683,13 +588,11 @@ https://mandalmitra.vercel.app`;
                 }
                 style={{
                   width: "100%",
-                  padding:
-                    "12px 16px",
+                  padding: "12px 14px",
                   borderRadius: "12px",
                   border:
                     "1px solid #d1d5db",
-                  backgroundColor:
-                    "#ffffff",
+                  backgroundColor: "#ffffff",
                   color: "#111827",
                   fontSize: "15px",
                   outline: "none",
@@ -713,7 +616,7 @@ https://mandalmitra.vercel.app`;
 
             <div
               style={{
-                marginBottom: "24px",
+                marginBottom: "22px",
               }}
             >
               <label
@@ -721,7 +624,7 @@ https://mandalmitra.vercel.app`;
                   display: "block",
                   marginBottom: "8px",
                   fontSize: "14px",
-                  fontWeight: 700,
+                  fontWeight: 800,
                   color: "#374151",
                 }}
               >
@@ -732,7 +635,7 @@ https://mandalmitra.vercel.app`;
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  gap: "16px",
+                  gap: "14px",
                 }}
               >
                 {logo ? (
@@ -740,32 +643,32 @@ https://mandalmitra.vercel.app`;
                     src={logo}
                     alt="Mandal Logo"
                     style={{
-                      width: "80px",
-                      height: "80px",
-                      borderRadius: "16px",
+                      width: "76px",
+                      height: "76px",
+                      borderRadius: "14px",
                       border:
                         "1px solid #d1d5db",
                       objectFit: "contain",
-                      padding: "8px",
+                      padding: "7px",
                       backgroundColor:
                         "#ffffff",
+                      boxSizing: "border-box",
                     }}
                   />
                 ) : (
                   <div
                     style={{
-                      width: "80px",
-                      height: "80px",
+                      width: "76px",
+                      height: "76px",
                       display: "flex",
-                      alignItems:
-                        "center",
-                      justifyContent:
-                        "center",
+                      alignItems: "center",
+                      justifyContent: "center",
                       border:
                         "2px dashed #d1d5db",
-                      borderRadius: "16px",
-                      fontSize: "30px",
+                      borderRadius: "14px",
+                      fontSize: "28px",
                       color: "#d1d5db",
+                      flexShrink: 0,
                     }}
                   >
                     🏛️
@@ -775,13 +678,11 @@ https://mandalmitra.vercel.app`;
                 <label
                   style={{
                     cursor: "pointer",
-                    backgroundColor:
-                      "#f97316",
+                    backgroundColor: "#f97316",
                     color: "#ffffff",
-                    padding:
-                      "12px 16px",
-                    borderRadius: "12px",
-                    fontWeight: 700,
+                    padding: "11px 14px",
+                    borderRadius: "11px",
+                    fontWeight: 800,
                   }}
                 >
                   {logo
@@ -806,7 +707,7 @@ https://mandalmitra.vercel.app`;
 
             <div
               style={{
-                marginBottom: "20px",
+                marginBottom: "18px",
               }}
             >
               <label
@@ -814,7 +715,7 @@ https://mandalmitra.vercel.app`;
                   display: "block",
                   marginBottom: "8px",
                   fontSize: "14px",
-                  fontWeight: 700,
+                  fontWeight: 800,
                   color: "#374151",
                 }}
               >
@@ -832,15 +733,12 @@ https://mandalmitra.vercel.app`;
                 placeholder={t.enterName}
                 style={{
                   width: "100%",
-                  boxSizing:
-                    "border-box",
-                  padding:
-                    "12px 16px",
+                  boxSizing: "border-box",
+                  padding: "12px 14px",
                   borderRadius: "12px",
                   border:
                     "1px solid #d1d5db",
-                  backgroundColor:
-                    "#ffffff",
+                  backgroundColor: "#ffffff",
                   color: "#111827",
                   fontSize: "15px",
                   outline: "none",
@@ -852,7 +750,7 @@ https://mandalmitra.vercel.app`;
 
             <div
               style={{
-                marginBottom: "20px",
+                marginBottom: "18px",
               }}
             >
               <label
@@ -860,7 +758,7 @@ https://mandalmitra.vercel.app`;
                   display: "block",
                   marginBottom: "8px",
                   fontSize: "14px",
-                  fontWeight: 700,
+                  fontWeight: 800,
                   color: "#374151",
                 }}
               >
@@ -879,15 +777,12 @@ https://mandalmitra.vercel.app`;
                 placeholder={t.enterMobile}
                 style={{
                   width: "100%",
-                  boxSizing:
-                    "border-box",
-                  padding:
-                    "12px 16px",
+                  boxSizing: "border-box",
+                  padding: "12px 14px",
                   borderRadius: "12px",
                   border:
                     "1px solid #d1d5db",
-                  backgroundColor:
-                    "#ffffff",
+                  backgroundColor: "#ffffff",
                   color: "#111827",
                   fontSize: "15px",
                   outline: "none",
@@ -899,7 +794,7 @@ https://mandalmitra.vercel.app`;
 
             <div
               style={{
-                marginBottom: "20px",
+                marginBottom: "18px",
               }}
             >
               <label
@@ -907,7 +802,7 @@ https://mandalmitra.vercel.app`;
                   display: "block",
                   marginBottom: "8px",
                   fontSize: "14px",
-                  fontWeight: 700,
+                  fontWeight: 800,
                   color: "#374151",
                 }}
               >
@@ -923,20 +818,15 @@ https://mandalmitra.vercel.app`;
                     e.target.value
                   )
                 }
-                placeholder={
-                  t.enterAmount
-                }
+                placeholder={t.enterAmount}
                 style={{
                   width: "100%",
-                  boxSizing:
-                    "border-box",
-                  padding:
-                    "12px 16px",
+                  boxSizing: "border-box",
+                  padding: "12px 14px",
                   borderRadius: "12px",
                   border:
                     "1px solid #d1d5db",
-                  backgroundColor:
-                    "#ffffff",
+                  backgroundColor: "#ffffff",
                   color: "#111827",
                   fontSize: "15px",
                   outline: "none",
@@ -948,7 +838,7 @@ https://mandalmitra.vercel.app`;
 
             <div
               style={{
-                marginBottom: "20px",
+                marginBottom: "18px",
               }}
             >
               <label
@@ -956,7 +846,7 @@ https://mandalmitra.vercel.app`;
                   display: "block",
                   marginBottom: "8px",
                   fontSize: "14px",
-                  fontWeight: 700,
+                  fontWeight: 800,
                   color: "#374151",
                 }}
               >
@@ -972,8 +862,7 @@ https://mandalmitra.vercel.app`;
                 }
                 style={{
                   width: "100%",
-                  padding:
-                    "12px 16px",
+                  padding: "12px 14px",
                   borderRadius: "12px",
                   border:
                     "1px solid #d1d5db",
@@ -996,15 +885,21 @@ https://mandalmitra.vercel.app`;
                   {t.mandalCollection}
                 </option>
 
-                <option value={t.donation}>
+                <option
+                  value={t.donation}
+                >
                   {t.donation}
                 </option>
 
-                <option value={t.program}>
+                <option
+                  value={t.program}
+                >
                   {t.program}
                 </option>
 
-                <option value={t.event}>
+                <option
+                  value={t.event}
+                >
                   {t.event}
                 </option>
 
@@ -1018,7 +913,7 @@ https://mandalmitra.vercel.app`;
 
             <div
               style={{
-                marginBottom: "20px",
+                marginBottom: "18px",
               }}
             >
               <label
@@ -1026,7 +921,7 @@ https://mandalmitra.vercel.app`;
                   display: "block",
                   marginBottom: "8px",
                   fontSize: "14px",
-                  fontWeight: 700,
+                  fontWeight: 800,
                   color: "#374151",
                 }}
               >
@@ -1043,10 +938,8 @@ https://mandalmitra.vercel.app`;
                 }
                 style={{
                   width: "100%",
-                  boxSizing:
-                    "border-box",
-                  padding:
-                    "12px 16px",
+                  boxSizing: "border-box",
+                  padding: "12px 14px",
                   borderRadius: "12px",
                   border:
                     "1px solid #d1d5db",
@@ -1071,7 +964,7 @@ https://mandalmitra.vercel.app`;
                   display: "block",
                   marginBottom: "8px",
                   fontSize: "14px",
-                  fontWeight: 700,
+                  fontWeight: 800,
                   color: "#374151",
                 }}
               >
@@ -1093,17 +986,13 @@ https://mandalmitra.vercel.app`;
                     e.target.value
                   )
                 }
-                placeholder={
-                  t.enterNote
-                }
+                placeholder={t.enterNote}
                 rows={3}
                 style={{
                   width: "100%",
-                  boxSizing:
-                    "border-box",
+                  boxSizing: "border-box",
                   resize: "none",
-                  padding:
-                    "12px 16px",
+                  padding: "12px 14px",
                   borderRadius: "12px",
                   border:
                     "1px solid #d1d5db",
@@ -1115,426 +1004,113 @@ https://mandalmitra.vercel.app`;
                 }}
               />
             </div>
-
-            {/* DOWNLOAD */}
-
-            <button
-              type="button"
-              onClick={
-                downloadReceipt
-              }
-              disabled={generating}
-              style={{
-                width: "100%",
-                border: "none",
-                borderRadius: "16px",
-                backgroundColor:
-                  generating
-                    ? "#fdba74"
-                    : "#f97316",
-                color: "#ffffff",
-                padding: "16px",
-                fontSize: "17px",
-                fontWeight: 900,
-                cursor: generating
-                  ? "not-allowed"
-                  : "pointer",
-                marginBottom:
-                  "12px",
-              }}
-            >
-              {generating
-                ? t.generating
-                : `📸 ${t.download}`}
-            </button>
-
-            {/* WHATSAPP */}
-
-            <button
-              type="button"
-              onClick={
-                sendWhatsApp
-              }
-              disabled={generating}
-              style={{
-                width: "100%",
-                border: "none",
-                borderRadius: "16px",
-                backgroundColor:
-                  generating
-                    ? "#86efac"
-                    : "#16a34a",
-                color: "#ffffff",
-                padding: "16px",
-                fontSize: "17px",
-                fontWeight: 900,
-                cursor: generating
-                  ? "not-allowed"
-                  : "pointer",
-              }}
-            >
-              {generating
-                ? t.sending
-                : `🟢 ${t.whatsapp}`}
-            </button>
           </div>
 
-          {/* RECEIPT */}
+          {/* =========================
+              RIGHT SIDE
+          ========================== */}
 
           <div
             style={{
-              display: "flex",
-              justifyContent:
-                "center",
               width: "100%",
             }}
           >
+            {/* RECEIPT */}
+
             <div
-              ref={receiptRef}
               style={{
-                position: "relative",
+                display: "flex",
+                justifyContent: "center",
                 width: "100%",
-                maxWidth: "560px",
-                overflow: "hidden",
-                border:
-                  "6px solid #f97316",
-                borderRadius: "28px",
-                backgroundColor:
-                  "#ffffff",
-                boxSizing:
-                  "border-box",
               }}
             >
-              {/* RECEIPT HEADER */}
-
               <div
+                ref={receiptRef}
                 style={{
-                  position:
-                    "relative",
-                  padding:
-                    "32px 28px",
-                  textAlign:
-                    "center",
+                  position: "relative",
+                  width: "100%",
+                  maxWidth: "560px",
+                  overflow: "hidden",
+                  border:
+                    "5px solid #f97316",
+                  borderRadius: "22px",
                   backgroundColor:
-                    "#f97316",
-                  color: "#ffffff",
+                    "#fffdf8",
+                  boxSizing: "border-box",
+                  boxShadow:
+                    "0 5px 20px rgba(0,0,0,0.08)",
                 }}
               >
+                {/* TOP DECORATIVE LINE */}
+
                 <div
                   style={{
-                    position:
-                      "absolute",
-                    right: "-60px",
-                    top: "-70px",
-                    width: "200px",
-                    height: "200px",
-                    borderRadius:
-                      "50%",
+                    height: "8px",
                     backgroundColor:
-                      "rgba(255,255,255,0.12)",
+                      "#f97316",
                   }}
                 />
 
-                <div
-                  style={{
-                    position:
-                      "relative",
-                    width: "112px",
-                    height: "112px",
-                    margin:
-                      "0 auto 16px",
-                    display: "flex",
-                    alignItems:
-                      "center",
-                    justifyContent:
-                      "center",
-                    borderRadius:
-                      "50%",
-                    backgroundColor:
-                      "#ffffff",
-                    padding: "8px",
-                    boxSizing:
-                      "border-box",
-                  }}
-                >
-                  {logo ? (
-                    <img
-                      src={logo}
-                      alt="Mandal Logo"
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        borderRadius:
-                          "50%",
-                        objectFit:
-                          "contain",
-                      }}
-                    />
-                  ) : (
-                    <span
-                      style={{
-                        fontSize:
-                          "48px",
-                      }}
-                    >
-                      🏛️
-                    </span>
-                  )}
-                </div>
-
-                <h2
-                  style={{
-                    position:
-                      "relative",
-                    margin: 0,
-                    fontSize: "30px",
-                    lineHeight: 1.2,
-                    fontWeight: 900,
-                    color:
-                      "#ffffff",
-                  }}
-                >
-                  {mandalName}
-                </h2>
+                {/* RECEIPT HEADER */}
 
                 <div
                   style={{
-                    position:
-                      "relative",
-                    display:
-                      "inline-block",
-                    marginTop:
-                      "16px",
+                    position: "relative",
                     padding:
-                      "10px 32px",
-                    borderRadius:
-                      "999px",
+                      "28px 24px 24px",
+                    textAlign: "center",
                     backgroundColor:
-                      "#ffffff",
-                    color:
-                      "#f97316",
-                    fontSize:
-                      "14px",
-                    fontWeight: 900,
+                      "#fffdf8",
+                    color: "#9a3412",
                   }}
                 >
-                  {t.receipt}
-                </div>
-              </div>
-
-              {/* RECEIPT CONTENT */}
-
-              <div
-                style={{
-                  padding:
-                    "28px 32px",
-                  backgroundColor:
-                    "#ffffff",
-                  color: "#111827",
-                }}
-              >
-                {/* NUMBER / DATE */}
-
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent:
-                      "space-between",
-                    gap: "20px",
-                    borderBottom:
-                      "1px solid #e5e7eb",
-                    paddingBottom:
-                      "20px",
-                    marginBottom:
-                      "24px",
-                  }}
-                >
-                  <div>
-                    <p
-                      style={{
-                        margin: 0,
-                        fontSize:
-                          "11px",
-                        fontWeight: 700,
-                        color:
-                          "#9ca3af",
-                      }}
-                    >
-                      {t.receiptNo}
-                    </p>
-
-                    <p
-                      style={{
-                        margin:
-                          "4px 0 0",
-                        fontSize:
-                          "16px",
-                        fontWeight: 900,
-                        color:
-                          "#1f2937",
-                      }}
-                    >
-                      {receiptNumber}
-                    </p>
-                  </div>
+                  {/* CORNER DECORATION */}
 
                   <div
                     style={{
-                      textAlign:
-                        "right",
+                      position:
+                        "absolute",
+                      left: "10px",
+                      top: "10px",
+                      width: "42px",
+                      height: "42px",
+                      borderTop:
+                        "2px solid #f97316",
+                      borderLeft:
+                        "2px solid #f97316",
+                      borderRadius:
+                        "24px 0 0 0",
                     }}
-                  >
-                    <p
-                      style={{
-                        margin: 0,
-                        fontSize:
-                          "11px",
-                        fontWeight: 700,
-                        color:
-                          "#9ca3af",
-                      }}
-                    >
-                      {t.date}
-                    </p>
+                  />
 
-                    <p
-                      style={{
-                        margin:
-                          "4px 0 0",
-                        fontSize:
-                          "16px",
-                        fontWeight: 900,
-                        color:
-                          "#1f2937",
-                      }}
-                    >
-                      {formatDate(
-                        date
-                      )}
-                    </p>
-                  </div>
-                </div>
-
-                {/* MEMBER */}
-
-                <div
-                  style={{
-                    marginBottom:
-                      "24px",
-                    padding:
-                      "20px",
-                    borderRadius:
-                      "16px",
-                    backgroundColor:
-                      "#fff7ed",
-                    border:
-                      "1px solid #fed7aa",
-                  }}
-                >
-                  <p
+                  <div
                     style={{
-                      margin: 0,
-                      fontSize:
-                        "11px",
-                      fontWeight: 700,
-                      color:
-                        "#f97316",
-                      textTransform:
-                        "uppercase",
+                      position:
+                        "absolute",
+                      right: "10px",
+                      top: "10px",
+                      width: "42px",
+                      height: "42px",
+                      borderTop:
+                        "2px solid #f97316",
+                      borderRight:
+                        "2px solid #f97316",
+                      borderRadius:
+                        "0 24px 0 0",
                     }}
-                  >
-                    {t.receivedFrom}
-                  </p>
+                  />
 
-                  <p
+                  {/* LOGO */}
+
+                  <div
                     style={{
+                      position:
+                        "relative",
+                      width: "92px",
+                      height: "92px",
                       margin:
-                        "8px 0 0",
-                      fontSize:
-                        "24px",
-                      lineHeight: 1.2,
-                      fontWeight: 900,
-                      color:
-                        "#111827",
-                      wordBreak:
-                        "break-word",
-                    }}
-                  >
-                    {memberName ||
-                      "________________"}
-                  </p>
-
-                  {mobile && (
-                    <p
-                      style={{
-                        margin:
-                          "6px 0 0",
-                        fontSize:
-                          "14px",
-                        color:
-                          "#6b7280",
-                      }}
-                    >
-                      📱 {mobile}
-                    </p>
-                  )}
-                </div>
-
-                {/* PURPOSE */}
-
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems:
-                      "center",
-                    justifyContent:
-                      "space-between",
-                    gap: "20px",
-                    borderBottom:
-                      "1px solid #e5e7eb",
-                    paddingBottom:
-                      "20px",
-                    marginBottom:
-                      "24px",
-                  }}
-                >
-                  <div>
-                    <p
-                      style={{
-                        margin: 0,
-                        fontSize:
-                          "11px",
-                        fontWeight: 700,
-                        color:
-                          "#9ca3af",
-                      }}
-                    >
-                      {t.purpose}
-                    </p>
-
-                    <p
-                      style={{
-                        margin:
-                          "4px 0 0",
-                        fontSize:
-                          "18px",
-                        fontWeight: 900,
-                        color:
-                          "#1f2937",
-                      }}
-                    >
-                      {purpose ||
-                        "________________"}
-                    </p>
-                  </div>
-
-                  <div
-                    style={{
-                      width: "44px",
-                      height: "44px",
-                      flexShrink: 0,
-                      display:
-                        "flex",
+                        "0 auto 14px",
+                      display: "flex",
                       alignItems:
                         "center",
                       justifyContent:
@@ -1542,197 +1118,709 @@ https://mandalmitra.vercel.app`;
                       borderRadius:
                         "50%",
                       backgroundColor:
-                        "#fff7ed",
-                      color:
-                        "#ea580c",
-                      fontSize:
-                        "20px",
-                      fontWeight: 900,
+                        "#ffffff",
+                      border:
+                        "3px solid #f97316",
+                      padding: "6px",
+                      boxSizing:
+                        "border-box",
                     }}
                   >
-                    ✓
+                    {logo ? (
+                      <img
+                        src={logo}
+                        alt="Mandal Logo"
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          borderRadius:
+                            "50%",
+                          objectFit:
+                            "contain",
+                        }}
+                      />
+                    ) : (
+                      <span
+                        style={{
+                          fontSize:
+                            "42px",
+                        }}
+                      >
+                        🏛️
+                      </span>
+                    )}
                   </div>
-                </div>
 
-                {/* AMOUNT */}
+                  {/* MANDAL NAME */}
 
-                <div
-                  style={{
-                    position:
-                      "relative",
-                    overflow:
-                      "hidden",
-                    borderRadius:
-                      "24px",
-                    padding:
-                      "28px 20px",
-                    textAlign:
-                      "center",
-                    backgroundColor:
-                      "#f97316",
-                    color: "#ffffff",
-                  }}
-                >
-                  <p
+                  <h2
                     style={{
                       position:
                         "relative",
                       margin: 0,
                       fontSize:
-                        "14px",
-                      fontWeight: 600,
+                        "28px",
+                      lineHeight: 1.25,
+                      fontWeight: 900,
                       color:
-                        "#ffffff",
+                        "#9a3412",
+                      wordBreak:
+                        "break-word",
                     }}
                   >
-                    {t.amountLabel}
-                  </p>
+                    {mandalName}
+                  </h2>
+
+                  {/* SUBTITLE */}
 
                   <p
                     style={{
-                      position:
-                        "relative",
                       margin:
-                        "4px 0 0",
+                        "8px 0 0",
                       fontSize:
-                        "48px",
-                      lineHeight: 1.1,
-                      fontWeight: 900,
+                        "13px",
                       color:
-                        "#ffffff",
+                        "#78716c",
                     }}
                   >
-                    ₹{amount || "0"}
+                    {language ===
+                    "Marathi"
+                      ? "सार्वजनिक उपक्रम व मंडळासाठी"
+                      : language ===
+                        "Hindi"
+                      ? "मंडल के लिए"
+                      : "For Mandal activities"}
                   </p>
-                </div>
 
-                {/* NOTE */}
-
-                {note && (
-                  <div
-                    style={{
-                      marginTop:
-                        "24px",
-                      padding: "16px",
-                      border:
-                        "1px dashed #d1d5db",
-                      borderRadius:
-                        "16px",
-                    }}
-                  >
-                    <p
-                      style={{
-                        margin: 0,
-                        fontSize:
-                          "11px",
-                        fontWeight: 700,
-                        color:
-                          "#9ca3af",
-                      }}
-                    >
-                      {t.note}
-                    </p>
-
-                    <p
-                      style={{
-                        margin:
-                          "4px 0 0",
-                        fontSize:
-                          "14px",
-                        color:
-                          "#4b5563",
-                        wordBreak:
-                          "break-word",
-                      }}
-                    >
-                      {note}
-                    </p>
-                  </div>
-                )}
-
-                {/* FOOTER */}
-
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems:
-                      "flex-end",
-                    justifyContent:
-                      "space-between",
-                    gap: "20px",
-                    marginTop:
-                      "36px",
-                  }}
-                >
-                  <div>
-                    <p
-                      style={{
-                        margin: 0,
-                        fontSize:
-                          "14px",
-                        fontWeight: 700,
-                        color:
-                          "#374151",
-                      }}
-                    >
-                      {t.thankYou}
-                    </p>
-
-                    <p
-                      style={{
-                        margin:
-                          "4px 0 0",
-                        fontSize:
-                          "11px",
-                        color:
-                          "#9ca3af",
-                      }}
-                    >
-                      {mandalName}
-                    </p>
-                  </div>
+                  {/* RECEIPT TITLE */}
 
                   <div
                     style={{
-                      textAlign:
+                      display:
+                        "flex",
+                      alignItems:
                         "center",
+                      gap: "10px",
+                      marginTop:
+                        "18px",
                     }}
                   >
                     <div
                       style={{
-                        width: "112px",
+                        flex: 1,
                         height: "1px",
                         backgroundColor:
-                          "#9ca3af",
-                        marginBottom:
-                          "8px",
+                          "#f2b38c",
                       }}
                     />
 
+                    <span
+                      style={{
+                        color:
+                          "#ea580c",
+                        fontSize:
+                          "18px",
+                        fontWeight:
+                          900,
+                        whiteSpace:
+                          "nowrap",
+                      }}
+                    >
+                      ◆ {t.receipt} ◆
+                    </span>
+
+                    <div
+                      style={{
+                        flex: 1,
+                        height: "1px",
+                        backgroundColor:
+                          "#f2b38c",
+                      }}
+                    />
+                  </div>
+                </div>
+
+                {/* RECEIPT BODY */}
+
+                <div
+                  style={{
+                    padding:
+                      "24px 26px 28px",
+                    backgroundColor:
+                      "#fffdf8",
+                    color:
+                      "#292524",
+                  }}
+                >
+                  {/* RECEIPT NUMBER + DATE */}
+
+                  <div
+                    style={{
+                      display:
+                        "flex",
+                      justifyContent:
+                        "space-between",
+                      gap: "20px",
+                      marginBottom:
+                        "24px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        flex: 1,
+                      }}
+                    >
+                      <p
+                        style={{
+                          margin: 0,
+                          fontSize:
+                            "11px",
+                          fontWeight:
+                            800,
+                          color:
+                            "#78716c",
+                        }}
+                      >
+                        {t.receiptNo}
+                      </p>
+
+                      <p
+                        style={{
+                          margin:
+                            "5px 0 0",
+                          fontSize:
+                            "17px",
+                          fontWeight:
+                            900,
+                          color:
+                            "#292524",
+                        }}
+                      >
+                        {receiptNumber}
+                      </p>
+                    </div>
+
+                    <div
+                      style={{
+                        textAlign:
+                          "right",
+                        flex: 1,
+                      }}
+                    >
+                      <p
+                        style={{
+                          margin: 0,
+                          fontSize:
+                            "11px",
+                          fontWeight:
+                            800,
+                          color:
+                            "#78716c",
+                        }}
+                      >
+                        {t.date}
+                      </p>
+
+                      <p
+                        style={{
+                          margin:
+                            "5px 0 0",
+                          fontSize:
+                            "17px",
+                          fontWeight:
+                            900,
+                          color:
+                            "#292524",
+                        }}
+                      >
+                        {formatDate(
+                          date
+                        )}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* MEMBER */}
+
+                  <div
+                    style={{
+                      padding:
+                        "18px",
+                      borderTop:
+                        "1px solid #e7e5e4",
+                      borderBottom:
+                        "1px solid #e7e5e4",
+                      marginBottom:
+                        "22px",
+                    }}
+                  >
                     <p
                       style={{
                         margin: 0,
                         fontSize:
                           "11px",
+                        fontWeight:
+                          900,
                         color:
-                          "#6b7280",
+                          "#c2410c",
                       }}
                     >
-                      {t.authorized}
+                      {t.receivedFrom}
+                    </p>
+
+                    <p
+                      style={{
+                        margin:
+                          "7px 0 0",
+                        fontSize:
+                          "21px",
+                        lineHeight:
+                          1.3,
+                        fontWeight:
+                          900,
+                        color:
+                          "#292524",
+                        wordBreak:
+                          "break-word",
+                      }}
+                    >
+                      {memberName ||
+                        "________________"}
+                    </p>
+
+                    {mobile && (
+                      <p
+                        style={{
+                          margin:
+                            "6px 0 0",
+                          fontSize:
+                            "13px",
+                          color:
+                            "#78716c",
+                        }}
+                      >
+                        📱 {mobile}
+                      </p>
+                    )}
+                  </div>
+
+                  {/* PURPOSE */}
+
+                  <div
+                    style={{
+                      display:
+                        "flex",
+                      justifyContent:
+                        "space-between",
+                      alignItems:
+                        "center",
+                      gap: "18px",
+                      marginBottom:
+                        "24px",
+                    }}
+                  >
+                    <div>
+                      <p
+                        style={{
+                          margin: 0,
+                          fontSize:
+                            "11px",
+                          fontWeight:
+                            900,
+                          color:
+                            "#78716c",
+                        }}
+                      >
+                        {t.purpose}
+                      </p>
+
+                      <p
+                        style={{
+                          margin:
+                            "5px 0 0",
+                          fontSize:
+                            "17px",
+                          fontWeight:
+                            900,
+                          color:
+                            "#292524",
+                        }}
+                      >
+                        {purpose ||
+                          "________________"}
+                      </p>
+                    </div>
+
+                    <div
+                      style={{
+                        width:
+                          "38px",
+                        height:
+                          "38px",
+                        flexShrink: 0,
+                        display:
+                          "flex",
+                        alignItems:
+                          "center",
+                        justifyContent:
+                          "center",
+                        borderRadius:
+                          "50%",
+                        backgroundColor:
+                          "#fff7ed",
+                        border:
+                          "1px solid #fdba74",
+                        color:
+                          "#ea580c",
+                        fontSize:
+                          "19px",
+                        fontWeight:
+                          900,
+                      }}
+                    >
+                      ✓
+                    </div>
+                  </div>
+
+                  {/* AMOUNT */}
+
+                  <div
+                    style={{
+                      position:
+                        "relative",
+                      overflow:
+                        "hidden",
+                      borderRadius:
+                        "12px",
+                      border:
+                        "2px solid #f97316",
+                      padding:
+                        "18px 16px",
+                      textAlign:
+                        "center",
+                      backgroundColor:
+                        "#fff7ed",
+                    }}
+                  >
+                    <p
+                      style={{
+                        position:
+                          "relative",
+                        margin: 0,
+                        fontSize:
+                          "12px",
+                        fontWeight:
+                          800,
+                        color:
+                          "#9a3412",
+                      }}
+                    >
+                      {t.amountLabel}
+                    </p>
+
+                    <p
+                      style={{
+                        position:
+                          "relative",
+                        margin:
+                          "4px 0 0",
+                        fontSize:
+                          "42px",
+                        lineHeight:
+                          1.1,
+                        fontWeight:
+                          900,
+                        color:
+                          "#9a3412",
+                      }}
+                    >
+                      ₹
+                      {amount ||
+                        "0"}
                     </p>
                   </div>
-                </div>
-              </div>
 
-              {/* BOTTOM STRIPE */}
+                  {/* AMOUNT IN WORDS */}
+
+                  {amount && (
+                    <p
+                      style={{
+                        margin:
+                          "10px 0 0",
+                        textAlign:
+                          "center",
+                        fontSize:
+                          "13px",
+                        color:
+                          "#57534e",
+                        fontWeight:
+                          700,
+                      }}
+                    >
+                      {language ===
+                      "Marathi"
+                        ? `रु. ${amount} प्राप्त झाले`
+                        : language ===
+                          "Hindi"
+                        ? `₹${amount} प्राप्त हुए`
+                        : `₹${amount} received`}
+                    </p>
+                  )}
+
+                  {/* NOTE */}
+
+                  {note && (
+                    <div
+                      style={{
+                        marginTop:
+                          "20px",
+                        padding:
+                          "13px",
+                        border:
+                          "1px dashed #d6d3d1",
+                        borderRadius:
+                          "10px",
+                      }}
+                    >
+                      <p
+                        style={{
+                          margin: 0,
+                          fontSize:
+                            "10px",
+                          fontWeight:
+                            900,
+                          color:
+                            "#78716c",
+                        }}
+                      >
+                        {t.note}
+                      </p>
+
+                      <p
+                        style={{
+                          margin:
+                            "4px 0 0",
+                          fontSize:
+                            "13px",
+                          color:
+                            "#57534e",
+                          wordBreak:
+                            "break-word",
+                        }}
+                      >
+                        {note}
+                      </p>
+                    </div>
+                  )}
+
+                  {/* THANK YOU */}
+
+                  <div
+                    style={{
+                      marginTop:
+                        "28px",
+                      paddingTop:
+                        "18px",
+                      borderTop:
+                        "1px dashed #d6d3d1",
+                      display:
+                        "flex",
+                      justifyContent:
+                        "space-between",
+                      alignItems:
+                        "flex-end",
+                      gap: "18px",
+                    }}
+                  >
+                    <div>
+                      <p
+                        style={{
+                          margin: 0,
+                          fontSize:
+                            "14px",
+                          fontWeight:
+                            900,
+                          color:
+                            "#44403c",
+                        }}
+                      >
+                        {t.thankYou}
+                      </p>
+
+                      <p
+                        style={{
+                          margin:
+                            "5px 0 0",
+                          fontSize:
+                            "11px",
+                          color:
+                            "#a8a29e",
+                        }}
+                      >
+                        {mandalName}
+                      </p>
+                    </div>
+
+                    <div
+                      style={{
+                        textAlign:
+                          "center",
+                        minWidth:
+                          "105px",
+                      }}
+                    >
+                      <div
+                        style={{
+                          width:
+                            "105px",
+                          height:
+                            "1px",
+                          backgroundColor:
+                            "#a8a29e",
+                          marginBottom:
+                            "7px",
+                        }}
+                      />
+
+                      <p
+                        style={{
+                          margin: 0,
+                          fontSize:
+                            "10px",
+                          color:
+                            "#78716c",
+                        }}
+                      >
+                        {t.authorized}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* BOTTOM STRIPE */}
+
+                <div
+                  style={{
+                    height: "8px",
+                    backgroundColor:
+                      "#f97316",
+                  }}
+                />
+              </div>
+            </div>
+
+            {/* =========================
+                THREE OPTIONS
+            ========================== */}
+
+            <div
+              style={{
+                marginTop: "22px",
+                backgroundColor:
+                  "#ffffff",
+                border:
+                  "1px solid #e5e7eb",
+                borderRadius: "18px",
+                padding: "14px",
+                boxShadow:
+                  "0 3px 14px rgba(0,0,0,0.05)",
+              }}
+            >
+              {/* SHARE */}
+
+              <button
+                type="button"
+                onClick={
+                  shareReceiptImage
+                }
+                disabled={generating}
+                style={{
+                  width: "100%",
+                  border:
+                    "1px solid #e5e7eb",
+                  borderRadius: "12px",
+                  backgroundColor:
+                    generating
+                      ? "#f3f4f6"
+                      : "#ffffff",
+                  color: "#292524",
+                  padding: "15px",
+                  fontSize: "17px",
+                  fontWeight: 900,
+                  cursor: generating
+                    ? "not-allowed"
+                    : "pointer",
+                  marginBottom:
+                    "10px",
+                }}
+              >
+                {generating
+                  ? `⏳ ${t.sharing}`
+                  : `📤 ${t.share}`}
+              </button>
+
+              {/* SAVE + DONE */}
 
               <div
                 style={{
-                  height: "12px",
-                  backgroundColor:
-                    "#f97316",
+                  display: "grid",
+                  gridTemplateColumns:
+                    "1fr 1fr",
+                  gap: "10px",
                 }}
-              />
+              >
+                <button
+                  type="button"
+                  onClick={
+                    saveReceiptImage
+                  }
+                  disabled={generating}
+                  style={{
+                    border:
+                      "1px solid #e5e7eb",
+                    borderRadius: "12px",
+                    backgroundColor:
+                      generating
+                        ? "#f3f4f6"
+                        : "#ffffff",
+                    color: "#292524",
+                    padding: "15px 10px",
+                    fontSize: "16px",
+                    fontWeight: 900,
+                    cursor: generating
+                      ? "not-allowed"
+                      : "pointer",
+                  }}
+                >
+                  {generating
+                    ? "⏳"
+                    : `⬇️ ${t.save}`}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleDone}
+                  disabled={generating}
+                  style={{
+                    border:
+                      "1px solid #e5e7eb",
+                    borderRadius: "12px",
+                    backgroundColor:
+                      generating
+                        ? "#f3f4f6"
+                        : "#ffffff",
+                    color: "#292524",
+                    padding: "15px 10px",
+                    fontSize: "16px",
+                    fontWeight: 900,
+                    cursor: generating
+                      ? "not-allowed"
+                      : "pointer",
+                  }}
+                >
+                  ✓ {t.done}
+                </button>
+              </div>
             </div>
           </div>
         </div>
