@@ -28,11 +28,11 @@ type Translation = {
   other: string;
   note: string;
   optional: string;
-  save: string;
+  download: string;
+  whatsapp: string;
   share: string;
-  done: string;
   generating: string;
-  sharing: string;
+  sending: string;
   receipt: string;
   receivedFrom: string;
   amountLabel: string;
@@ -43,13 +43,12 @@ type Translation = {
   enterMobile: string;
   enterAmount: string;
   enterNote: string;
-  shareError: string;
 };
 
 const translations: Record<Language, Translation> = {
   English: {
     title: "Create Receipt",
-    subtitle: "Create a professional Mandal receipt",
+    subtitle: "Create an attractive Mandal receipt",
     back: "← Back to Dashboard",
     logo: "Mandal Logo",
     uploadLogo: "Upload Logo",
@@ -68,27 +67,26 @@ const translations: Record<Language, Translation> = {
     other: "Other",
     note: "Note",
     optional: "Optional",
-    save: "Save Receipt Image",
-    share: "Share Receipt Image",
-    done: "Done",
+    download: "Download Receipt",
+    whatsapp: "Send on WhatsApp",
+    share: "Share Receipt",
     generating: "Generating...",
-    sharing: "Preparing Share...",
+    sending: "Preparing WhatsApp...",
     receipt: "RECEIPT",
     receivedFrom: "Received From",
     amountLabel: "Amount Received",
-    thankYou: "Thank you for your contribution!",
+    thankYou: "Thank you for your valuable contribution!",
     authorized: "Authorized Signature",
     language: "Receipt Language",
     enterName: "Enter member name",
     enterMobile: "Enter mobile number",
     enterAmount: "Enter amount",
     enterNote: "Enter note",
-    shareError: "Receipt image could not be shared.",
   },
 
   Marathi: {
     title: "पावती तयार करा",
-    subtitle: "मंडळाची आकर्षक व प्रोफेशनल पावती तयार करा",
+    subtitle: "मंडळाची आकर्षक पावती तयार करा",
     back: "← डॅशबोर्डवर जा",
     logo: "मंडळाचा लोगो",
     uploadLogo: "लोगो अपलोड करा",
@@ -107,27 +105,26 @@ const translations: Record<Language, Translation> = {
     other: "इतर",
     note: "नोंद",
     optional: "ऐच्छिक",
-    save: "पावतीची इमेज सेव करा",
-    share: "पावतीची इमेज शेअर करा",
-    done: "झालं",
+    download: "पावती डाउनलोड करा",
+    whatsapp: "WhatsApp वर पाठवा",
+    share: "पावती शेअर करा",
     generating: "पावती तयार होत आहे...",
-    sharing: "शेअर करण्यासाठी तयार होत आहे...",
+    sending: "WhatsApp साठी तयार होत आहे...",
     receipt: "पावती",
     receivedFrom: "प्राप्तकर्त्याचे नाव",
     amountLabel: "प्राप्त रक्कम",
-    thankYou: "आपल्या योगदानाबद्दल धन्यवाद!",
+    thankYou: "आपल्या अमूल्य योगदानाबद्दल धन्यवाद!",
     authorized: "अधिकृत स्वाक्षरी",
     language: "पावतीची भाषा",
     enterName: "सदस्याचे नाव टाका",
     enterMobile: "मोबाईल नंबर टाका",
     enterAmount: "रक्कम टाका",
     enterNote: "नोंद टाका",
-    shareError: "पावतीची इमेज शेअर करता आली नाही.",
   },
 
   Hindi: {
     title: "रसीद बनाएं",
-    subtitle: "मंडल की आकर्षक और प्रोफेशनल रसीद बनाएं",
+    subtitle: "मंडल की आकर्षक रसीद बनाएं",
     back: "← डैशबोर्ड पर जाएं",
     logo: "मंडल का लोगो",
     uploadLogo: "लोगो अपलोड करें",
@@ -146,22 +143,21 @@ const translations: Record<Language, Translation> = {
     other: "अन्य",
     note: "नोट",
     optional: "वैकल्पिक",
-    save: "रसीद की इमेज सेव करें",
-    share: "रसीद की इमेज शेयर करें",
-    done: "हो गया",
+    download: "रसीद डाउनलोड करें",
+    whatsapp: "WhatsApp पर भेजें",
+    share: "रसीद शेयर करें",
     generating: "रसीद तैयार हो रही है...",
-    sharing: "शेयर करने के लिए तैयार हो रहा है...",
+    sending: "WhatsApp के लिए तैयार हो रहा है...",
     receipt: "रसीद",
     receivedFrom: "प्राप्तकर्ता का नाम",
     amountLabel: "प्राप्त राशि",
-    thankYou: "आपके योगदान के लिए धन्यवाद!",
+    thankYou: "आपके अमूल्य योगदान के लिए धन्यवाद!",
     authorized: "अधिकृत हस्ताक्षर",
     language: "रसीद की भाषा",
     enterName: "सदस्य का नाम दर्ज करें",
     enterMobile: "मोबाइल नंबर दर्ज करें",
     enterAmount: "राशि दर्ज करें",
     enterNote: "नोट दर्ज करें",
-    shareError: "रसीद की इमेज शेयर नहीं हो सकी।",
   },
 };
 
@@ -290,6 +286,24 @@ export default function CreateReceiptPage() {
       return false;
     }
 
+    if (!mobile.trim()) {
+      alert(t.enterMobile);
+      return false;
+    }
+
+    const cleanMobile = mobile.replace(/\D/g, "");
+
+    if (cleanMobile.length !== 10) {
+      alert(
+        language === "Marathi"
+          ? "कृपया 10 अंकी मोबाईल नंबर टाका."
+          : language === "Hindi"
+          ? "कृपया 10 अंकों का मोबाइल नंबर दर्ज करें."
+          : "Please enter a valid 10 digit mobile number."
+      );
+      return false;
+    }
+
     if (!amount.trim()) {
       alert(t.enterAmount);
       return false;
@@ -344,7 +358,7 @@ export default function CreateReceiptPage() {
     };
   }
 
-  async function saveReceiptImage() {
+  async function downloadReceipt() {
     if (!validateReceipt()) return;
 
     try {
@@ -353,7 +367,8 @@ export default function CreateReceiptPage() {
       const { dataUrl } =
         await createReceiptImage();
 
-      const link = document.createElement("a");
+      const link =
+        document.createElement("a");
 
       link.href = dataUrl;
 
@@ -379,7 +394,55 @@ export default function CreateReceiptPage() {
     }
   }
 
-  async function shareReceiptImage() {
+  function getWhatsAppMessage() {
+    if (language === "Marathi") {
+      return `नमस्कार 🙏
+
+${mandalName} ची पावती
+
+पावती क्र.: ${receiptNumber}
+नाव: ${memberName}
+रक्कम: ₹${amount}
+उद्देश: ${purpose}
+तारीख: ${formatDate(date)}
+
+आपल्या अमूल्य योगदानाबद्दल मनःपूर्वक धन्यवाद! 🙏
+
+MandalMitra — प्रत्येक मंडळासाठी एक सोपा प्लॅटफॉर्म`;
+    }
+
+    if (language === "Hindi") {
+      return `नमस्ते 🙏
+
+${mandalName} की रसीद
+
+रसीद क्र.: ${receiptNumber}
+नाम: ${memberName}
+राशि: ₹${amount}
+उद्देश्य: ${purpose}
+तारीख: ${formatDate(date)}
+
+आपके अमूल्य योगदान के लिए हार्दिक धन्यवाद! 🙏
+
+MandalMitra — हर मंडल के लिए एक सरल प्लेटफॉर्म`;
+    }
+
+    return `Hello 🙏
+
+${mandalName} Receipt
+
+Receipt No.: ${receiptNumber}
+Name: ${memberName}
+Amount: ₹${amount}
+Purpose: ${purpose}
+Date: ${formatDate(date)}
+
+Thank you sincerely for your valuable contribution! 🙏
+
+MandalMitra — One Simple Platform for Every Mandal`;
+  }
+
+  async function sendWhatsApp() {
     if (!validateReceipt()) return;
 
     try {
@@ -396,35 +459,55 @@ export default function CreateReceiptPage() {
         }
       );
 
+      const cleanMobile =
+        mobile.replace(/\D/g, "");
+
+      const formattedMobile =
+        `91${cleanMobile}`;
+
+      const message =
+        getWhatsAppMessage();
+
+      /*
+       * On devices that support file sharing,
+       * open the native share sheet with the
+       * generated receipt image.
+       */
       if (
         typeof navigator !== "undefined" &&
         navigator.share
       ) {
-        const canShareFile =
-          navigator.canShare
-            ? navigator.canShare({
-                files: [file],
-              })
-            : false;
+        try {
+          const canShareFile =
+            navigator.canShare
+              ? navigator.canShare({
+                  files: [file],
+                })
+              : false;
 
-        if (canShareFile) {
-          await navigator.share({
-            title: `${mandalName} - ${t.receipt}`,
-            text: `${mandalName} - ${t.receipt}`,
-            files: [file],
-          });
+          if (canShareFile) {
+            await navigator.share({
+              title:
+                `${mandalName} Receipt`,
+              text: message,
+              files: [file],
+            });
 
-          return;
+            return;
+          }
+        } catch (shareError) {
+          console.log(
+            "Native share cancelled:",
+            shareError
+          );
         }
-
-        await navigator.share({
-          title: `${mandalName} - ${t.receipt}`,
-          text: `${mandalName} - ${t.receipt}`,
-        });
-
-        return;
       }
 
+      /*
+       * Browser fallback:
+       * download receipt and open WhatsApp
+       * with the selected person's number.
+       */
       const downloadUrl =
         URL.createObjectURL(blob);
 
@@ -444,63 +527,139 @@ export default function CreateReceiptPage() {
 
       URL.revokeObjectURL(downloadUrl);
 
-      alert(
-        "तुमच्या device/browser मध्ये direct sharing उपलब्ध नाही. Receipt image save केली आहे."
+      const encodedMessage =
+        encodeURIComponent(message);
+
+      const whatsappUrl =
+        `https://wa.me/${formattedMobile}?text=${encodedMessage}`;
+
+      window.open(
+        whatsappUrl,
+        "_blank",
+        "noopener,noreferrer"
       );
     } catch (error) {
       console.error(
-        "Receipt sharing error:",
+        "WhatsApp receipt error:",
         error
       );
 
-      /*
-       * User ने share window cancel केली असेल
-       * तर error दाखवायचा नाही.
-       */
-      if (
-        error instanceof DOMException &&
-        error.name === "AbortError"
-      ) {
-        return;
-      }
-
-      alert(t.shareError);
+      alert(
+        "WhatsApp साठी receipt तयार करता आली नाही."
+      );
     } finally {
       setGenerating(false);
     }
   }
 
-  function handleDone() {
-    router.push("/dashboard");
+  async function shareReceipt() {
+    if (!validateReceipt()) return;
+
+    try {
+      setGenerating(true);
+
+      const { blob } =
+        await createReceiptImage();
+
+      const file = new File(
+        [blob],
+        `mandal-receipt-${receiptNumber}.png`,
+        {
+          type: "image/png",
+        }
+      );
+
+      const message =
+        getWhatsAppMessage();
+
+      if (
+        typeof navigator !== "undefined" &&
+        navigator.share
+      ) {
+        const canShareFile =
+          navigator.canShare
+            ? navigator.canShare({
+                files: [file],
+              })
+            : false;
+
+        if (canShareFile) {
+          await navigator.share({
+            title:
+              `${mandalName} Receipt`,
+            text: message,
+            files: [file],
+          });
+
+          return;
+        }
+
+        await navigator.share({
+          title:
+            `${mandalName} Receipt`,
+          text: message,
+        });
+
+        return;
+      }
+
+      const { dataUrl } =
+        await createReceiptImage();
+
+      const link =
+        document.createElement("a");
+
+      link.href = dataUrl;
+
+      link.download =
+        `mandal-receipt-${receiptNumber}.png`;
+
+      document.body.appendChild(link);
+
+      link.click();
+
+      document.body.removeChild(link);
+
+      alert(
+        language === "Marathi"
+          ? "तुमच्या browser मध्ये direct share उपलब्ध नाही. Receipt download केली आहे."
+          : "Direct sharing is not available. Receipt has been downloaded."
+      );
+    } catch (error) {
+      console.error(
+        "Share receipt error:",
+        error
+      );
+    } finally {
+      setGenerating(false);
+    }
   }
 
   return (
     <main
       style={{
         minHeight: "100vh",
-        backgroundColor: "#f8f6f1",
-        padding: "24px 16px 40px",
+        backgroundColor: "#f9fafb",
+        padding: "32px 20px",
       }}
     >
       <div
         style={{
-          maxWidth: "1180px",
+          maxWidth: "1200px",
           margin: "0 auto",
         }}
       >
-        {/* BACK */}
-
         <button
           type="button"
           onClick={() =>
             router.push("/dashboard")
           }
           style={{
-            marginBottom: "22px",
+            marginBottom: "24px",
             border: "none",
             background: "transparent",
-            color: "#c2410c",
-            fontWeight: 800,
+            color: "#f97316",
+            fontWeight: 700,
             fontSize: "16px",
             cursor: "pointer",
           }}
@@ -508,11 +667,9 @@ export default function CreateReceiptPage() {
           {t.back}
         </button>
 
-        {/* HEADER */}
-
         <div
           style={{
-            marginBottom: "28px",
+            marginBottom: "32px",
           }}
         >
           <h1
@@ -542,29 +699,25 @@ export default function CreateReceiptPage() {
             display: "grid",
             gridTemplateColumns:
               "minmax(320px, 420px) minmax(320px, 1fr)",
-            gap: "30px",
+            gap: "32px",
             alignItems: "start",
           }}
         >
-          {/* =========================
-              LEFT FORM
-          ========================== */}
+          {/* FORM */}
 
           <div
             style={{
               backgroundColor: "#ffffff",
               border: "1px solid #e5e7eb",
-              borderRadius: "22px",
+              borderRadius: "24px",
               padding: "24px",
               boxShadow:
-                "0 4px 18px rgba(0,0,0,0.06)",
+                "0 4px 15px rgba(0,0,0,0.06)",
             }}
           >
-            {/* LANGUAGE */}
-
             <div
               style={{
-                marginBottom: "22px",
+                marginBottom: "24px",
               }}
             >
               <label
@@ -572,7 +725,7 @@ export default function CreateReceiptPage() {
                   display: "block",
                   marginBottom: "8px",
                   fontSize: "14px",
-                  fontWeight: 800,
+                  fontWeight: 700,
                   color: "#374151",
                 }}
               >
@@ -588,14 +741,13 @@ export default function CreateReceiptPage() {
                 }
                 style={{
                   width: "100%",
-                  padding: "12px 14px",
+                  padding: "12px 16px",
                   borderRadius: "12px",
                   border:
                     "1px solid #d1d5db",
                   backgroundColor: "#ffffff",
                   color: "#111827",
                   fontSize: "15px",
-                  outline: "none",
                 }}
               >
                 <option value="Marathi">
@@ -616,7 +768,7 @@ export default function CreateReceiptPage() {
 
             <div
               style={{
-                marginBottom: "22px",
+                marginBottom: "24px",
               }}
             >
               <label
@@ -624,7 +776,7 @@ export default function CreateReceiptPage() {
                   display: "block",
                   marginBottom: "8px",
                   fontSize: "14px",
-                  fontWeight: 800,
+                  fontWeight: 700,
                   color: "#374151",
                 }}
               >
@@ -635,7 +787,7 @@ export default function CreateReceiptPage() {
                 style={{
                   display: "flex",
                   alignItems: "center",
-                  gap: "14px",
+                  gap: "16px",
                 }}
               >
                 {logo ? (
@@ -643,32 +795,30 @@ export default function CreateReceiptPage() {
                     src={logo}
                     alt="Mandal Logo"
                     style={{
-                      width: "76px",
-                      height: "76px",
-                      borderRadius: "14px",
+                      width: "80px",
+                      height: "80px",
+                      borderRadius: "16px",
                       border:
                         "1px solid #d1d5db",
                       objectFit: "contain",
-                      padding: "7px",
+                      padding: "8px",
                       backgroundColor:
                         "#ffffff",
-                      boxSizing: "border-box",
                     }}
                   />
                 ) : (
                   <div
                     style={{
-                      width: "76px",
-                      height: "76px",
+                      width: "80px",
+                      height: "80px",
                       display: "flex",
                       alignItems: "center",
-                      justifyContent: "center",
+                      justifyContent:
+                        "center",
                       border:
                         "2px dashed #d1d5db",
-                      borderRadius: "14px",
-                      fontSize: "28px",
-                      color: "#d1d5db",
-                      flexShrink: 0,
+                      borderRadius: "16px",
+                      fontSize: "30px",
                     }}
                   >
                     🏛️
@@ -678,11 +828,13 @@ export default function CreateReceiptPage() {
                 <label
                   style={{
                     cursor: "pointer",
-                    backgroundColor: "#f97316",
+                    backgroundColor:
+                      "#f97316",
                     color: "#ffffff",
-                    padding: "11px 14px",
-                    borderRadius: "11px",
-                    fontWeight: 800,
+                    padding:
+                      "12px 16px",
+                    borderRadius: "12px",
+                    fontWeight: 700,
                   }}
                 >
                   {logo
@@ -703,11 +855,11 @@ export default function CreateReceiptPage() {
               </div>
             </div>
 
-            {/* MEMBER NAME */}
+            {/* NAME */}
 
             <div
               style={{
-                marginBottom: "18px",
+                marginBottom: "20px",
               }}
             >
               <label
@@ -715,7 +867,7 @@ export default function CreateReceiptPage() {
                   display: "block",
                   marginBottom: "8px",
                   fontSize: "14px",
-                  fontWeight: 800,
+                  fontWeight: 700,
                   color: "#374151",
                 }}
               >
@@ -734,14 +886,11 @@ export default function CreateReceiptPage() {
                 style={{
                   width: "100%",
                   boxSizing: "border-box",
-                  padding: "12px 14px",
+                  padding: "12px 16px",
                   borderRadius: "12px",
                   border:
                     "1px solid #d1d5db",
-                  backgroundColor: "#ffffff",
-                  color: "#111827",
                   fontSize: "15px",
-                  outline: "none",
                 }}
               />
             </div>
@@ -750,7 +899,7 @@ export default function CreateReceiptPage() {
 
             <div
               style={{
-                marginBottom: "18px",
+                marginBottom: "20px",
               }}
             >
               <label
@@ -758,7 +907,7 @@ export default function CreateReceiptPage() {
                   display: "block",
                   marginBottom: "8px",
                   fontSize: "14px",
-                  fontWeight: 800,
+                  fontWeight: 700,
                   color: "#374151",
                 }}
               >
@@ -778,14 +927,11 @@ export default function CreateReceiptPage() {
                 style={{
                   width: "100%",
                   boxSizing: "border-box",
-                  padding: "12px 14px",
+                  padding: "12px 16px",
                   borderRadius: "12px",
                   border:
                     "1px solid #d1d5db",
-                  backgroundColor: "#ffffff",
-                  color: "#111827",
                   fontSize: "15px",
-                  outline: "none",
                 }}
               />
             </div>
@@ -794,7 +940,7 @@ export default function CreateReceiptPage() {
 
             <div
               style={{
-                marginBottom: "18px",
+                marginBottom: "20px",
               }}
             >
               <label
@@ -802,7 +948,7 @@ export default function CreateReceiptPage() {
                   display: "block",
                   marginBottom: "8px",
                   fontSize: "14px",
-                  fontWeight: 800,
+                  fontWeight: 700,
                   color: "#374151",
                 }}
               >
@@ -822,14 +968,11 @@ export default function CreateReceiptPage() {
                 style={{
                   width: "100%",
                   boxSizing: "border-box",
-                  padding: "12px 14px",
+                  padding: "12px 16px",
                   borderRadius: "12px",
                   border:
                     "1px solid #d1d5db",
-                  backgroundColor: "#ffffff",
-                  color: "#111827",
                   fontSize: "15px",
-                  outline: "none",
                 }}
               />
             </div>
@@ -838,7 +981,7 @@ export default function CreateReceiptPage() {
 
             <div
               style={{
-                marginBottom: "18px",
+                marginBottom: "20px",
               }}
             >
               <label
@@ -846,7 +989,7 @@ export default function CreateReceiptPage() {
                   display: "block",
                   marginBottom: "8px",
                   fontSize: "14px",
-                  fontWeight: 800,
+                  fontWeight: 700,
                   color: "#374151",
                 }}
               >
@@ -862,15 +1005,13 @@ export default function CreateReceiptPage() {
                 }
                 style={{
                   width: "100%",
-                  padding: "12px 14px",
+                  padding: "12px 16px",
                   borderRadius: "12px",
                   border:
                     "1px solid #d1d5db",
                   backgroundColor:
                     "#ffffff",
-                  color: "#111827",
                   fontSize: "15px",
-                  outline: "none",
                 }}
               >
                 <option value="">
@@ -885,21 +1026,15 @@ export default function CreateReceiptPage() {
                   {t.mandalCollection}
                 </option>
 
-                <option
-                  value={t.donation}
-                >
+                <option value={t.donation}>
                   {t.donation}
                 </option>
 
-                <option
-                  value={t.program}
-                >
+                <option value={t.program}>
                   {t.program}
                 </option>
 
-                <option
-                  value={t.event}
-                >
+                <option value={t.event}>
                   {t.event}
                 </option>
 
@@ -913,7 +1048,7 @@ export default function CreateReceiptPage() {
 
             <div
               style={{
-                marginBottom: "18px",
+                marginBottom: "20px",
               }}
             >
               <label
@@ -921,7 +1056,7 @@ export default function CreateReceiptPage() {
                   display: "block",
                   marginBottom: "8px",
                   fontSize: "14px",
-                  fontWeight: 800,
+                  fontWeight: 700,
                   color: "#374151",
                 }}
               >
@@ -939,15 +1074,11 @@ export default function CreateReceiptPage() {
                 style={{
                   width: "100%",
                   boxSizing: "border-box",
-                  padding: "12px 14px",
+                  padding: "12px 16px",
                   borderRadius: "12px",
                   border:
                     "1px solid #d1d5db",
-                  backgroundColor:
-                    "#ffffff",
-                  color: "#111827",
                   fontSize: "15px",
-                  outline: "none",
                 }}
               />
             </div>
@@ -964,7 +1095,7 @@ export default function CreateReceiptPage() {
                   display: "block",
                   marginBottom: "8px",
                   fontSize: "14px",
-                  fontWeight: 800,
+                  fontWeight: 700,
                   color: "#374151",
                 }}
               >
@@ -982,9 +1113,7 @@ export default function CreateReceiptPage() {
               <textarea
                 value={note}
                 onChange={(e) =>
-                  setNote(
-                    e.target.value
-                  )
+                  setNote(e.target.value)
                 }
                 placeholder={t.enterNote}
                 rows={3}
@@ -992,366 +1121,179 @@ export default function CreateReceiptPage() {
                   width: "100%",
                   boxSizing: "border-box",
                   resize: "none",
-                  padding: "12px 14px",
+                  padding: "12px 16px",
                   borderRadius: "12px",
                   border:
                     "1px solid #d1d5db",
-                  backgroundColor:
-                    "#ffffff",
-                  color: "#111827",
                   fontSize: "15px",
-                  outline: "none",
                 }}
               />
             </div>
           </div>
 
-          {/* =========================
-              RIGHT SIDE
-          ========================== */}
+          {/* RECEIPT AREA */}
 
           <div
             style={{
               width: "100%",
             }}
           >
-            {/* RECEIPT */}
-
             <div
+              ref={receiptRef}
               style={{
-                display: "flex",
-                justifyContent: "center",
                 width: "100%",
+                maxWidth: "560px",
+                margin: "0 auto",
+                overflow: "hidden",
+                border:
+                  "6px solid #f97316",
+                borderRadius: "28px",
+                backgroundColor:
+                  "#ffffff",
+                boxSizing: "border-box",
               }}
             >
+              {/* HEADER */}
+
               <div
-                ref={receiptRef}
                 style={{
-                  position: "relative",
-                  width: "100%",
-                  maxWidth: "560px",
-                  overflow: "hidden",
-                  border:
-                    "5px solid #f97316",
-                  borderRadius: "22px",
+                  padding:
+                    "32px 28px",
+                  textAlign: "center",
                   backgroundColor:
-                    "#fffdf8",
-                  boxSizing: "border-box",
-                  boxShadow:
-                    "0 5px 20px rgba(0,0,0,0.08)",
+                    "#f97316",
+                  color: "#ffffff",
                 }}
               >
-                {/* TOP DECORATIVE LINE */}
-
                 <div
                   style={{
-                    height: "8px",
+                    width: "112px",
+                    height: "112px",
+                    margin:
+                      "0 auto 16px",
+                    display: "flex",
+                    alignItems:
+                      "center",
+                    justifyContent:
+                      "center",
+                    borderRadius:
+                      "50%",
                     backgroundColor:
-                      "#f97316",
-                  }}
-                />
-
-                {/* RECEIPT HEADER */}
-
-                <div
-                  style={{
-                    position: "relative",
-                    padding:
-                      "28px 24px 24px",
-                    textAlign: "center",
-                    backgroundColor:
-                      "#fffdf8",
-                    color: "#9a3412",
+                      "#ffffff",
+                    padding: "8px",
+                    boxSizing:
+                      "border-box",
                   }}
                 >
-                  {/* CORNER DECORATION */}
-
-                  <div
-                    style={{
-                      position:
-                        "absolute",
-                      left: "10px",
-                      top: "10px",
-                      width: "42px",
-                      height: "42px",
-                      borderTop:
-                        "2px solid #f97316",
-                      borderLeft:
-                        "2px solid #f97316",
-                      borderRadius:
-                        "24px 0 0 0",
-                    }}
-                  />
-
-                  <div
-                    style={{
-                      position:
-                        "absolute",
-                      right: "10px",
-                      top: "10px",
-                      width: "42px",
-                      height: "42px",
-                      borderTop:
-                        "2px solid #f97316",
-                      borderRight:
-                        "2px solid #f97316",
-                      borderRadius:
-                        "0 24px 0 0",
-                    }}
-                  />
-
-                  {/* LOGO */}
-
-                  <div
-                    style={{
-                      position:
-                        "relative",
-                      width: "92px",
-                      height: "92px",
-                      margin:
-                        "0 auto 14px",
-                      display: "flex",
-                      alignItems:
-                        "center",
-                      justifyContent:
-                        "center",
-                      borderRadius:
-                        "50%",
-                      backgroundColor:
-                        "#ffffff",
-                      border:
-                        "3px solid #f97316",
-                      padding: "6px",
-                      boxSizing:
-                        "border-box",
-                    }}
-                  >
-                    {logo ? (
-                      <img
-                        src={logo}
-                        alt="Mandal Logo"
-                        style={{
-                          width: "100%",
-                          height: "100%",
-                          borderRadius:
-                            "50%",
-                          objectFit:
-                            "contain",
-                        }}
-                      />
-                    ) : (
-                      <span
-                        style={{
-                          fontSize:
-                            "42px",
-                        }}
-                      >
-                        🏛️
-                      </span>
-                    )}
-                  </div>
-
-                  {/* MANDAL NAME */}
-
-                  <h2
-                    style={{
-                      position:
-                        "relative",
-                      margin: 0,
-                      fontSize:
-                        "28px",
-                      lineHeight: 1.25,
-                      fontWeight: 900,
-                      color:
-                        "#9a3412",
-                      wordBreak:
-                        "break-word",
-                    }}
-                  >
-                    {mandalName}
-                  </h2>
-
-                  {/* SUBTITLE */}
-
-                  <p
-                    style={{
-                      margin:
-                        "8px 0 0",
-                      fontSize:
-                        "13px",
-                      color:
-                        "#78716c",
-                    }}
-                  >
-                    {language ===
-                    "Marathi"
-                      ? "सार्वजनिक उपक्रम व मंडळासाठी"
-                      : language ===
-                        "Hindi"
-                      ? "मंडल के लिए"
-                      : "For Mandal activities"}
-                  </p>
-
-                  {/* RECEIPT TITLE */}
-
-                  <div
-                    style={{
-                      display:
-                        "flex",
-                      alignItems:
-                        "center",
-                      gap: "10px",
-                      marginTop:
-                        "18px",
-                    }}
-                  >
-                    <div
+                  {logo ? (
+                    <img
+                      src={logo}
+                      alt="Mandal Logo"
                       style={{
-                        flex: 1,
-                        height: "1px",
-                        backgroundColor:
-                          "#f2b38c",
+                        width: "100%",
+                        height: "100%",
+                        borderRadius:
+                          "50%",
+                        objectFit:
+                          "contain",
                       }}
                     />
-
+                  ) : (
                     <span
                       style={{
-                        color:
-                          "#ea580c",
                         fontSize:
-                          "18px",
-                        fontWeight:
-                          900,
-                        whiteSpace:
-                          "nowrap",
+                          "48px",
                       }}
                     >
-                      ◆ {t.receipt} ◆
+                      🏛️
                     </span>
-
-                    <div
-                      style={{
-                        flex: 1,
-                        height: "1px",
-                        backgroundColor:
-                          "#f2b38c",
-                      }}
-                    />
-                  </div>
+                  )}
                 </div>
 
-                {/* RECEIPT BODY */}
+                <h2
+                  style={{
+                    margin: 0,
+                    fontSize: "30px",
+                    fontWeight: 900,
+                  }}
+                >
+                  {mandalName}
+                </h2>
 
                 <div
                   style={{
+                    display:
+                      "inline-block",
+                    marginTop: "16px",
                     padding:
-                      "24px 26px 28px",
+                      "10px 32px",
+                    borderRadius:
+                      "999px",
                     backgroundColor:
-                      "#fffdf8",
-                    color:
-                      "#292524",
+                      "#ffffff",
+                    color: "#f97316",
+                    fontSize: "14px",
+                    fontWeight: 900,
                   }}
                 >
-                  {/* RECEIPT NUMBER + DATE */}
+                  {t.receipt}
+                </div>
+              </div>
 
-                  <div
-                    style={{
-                      display:
-                        "flex",
-                      justifyContent:
-                        "space-between",
-                      gap: "20px",
-                      marginBottom:
-                        "24px",
-                    }}
-                  >
-                    <div
+              {/* CONTENT */}
+
+              <div
+                style={{
+                  padding:
+                    "28px 32px",
+                  color: "#111827",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent:
+                      "space-between",
+                    gap: "20px",
+                    borderBottom:
+                      "1px solid #e5e7eb",
+                    paddingBottom:
+                      "20px",
+                    marginBottom:
+                      "24px",
+                  }}
+                >
+                  <div>
+                    <p
                       style={{
-                        flex: 1,
+                        margin: 0,
+                        fontSize:
+                          "11px",
+                        fontWeight: 700,
+                        color:
+                          "#9ca3af",
                       }}
                     >
-                      <p
-                        style={{
-                          margin: 0,
-                          fontSize:
-                            "11px",
-                          fontWeight:
-                            800,
-                          color:
-                            "#78716c",
-                        }}
-                      >
-                        {t.receiptNo}
-                      </p>
+                      {t.receiptNo}
+                    </p>
 
-                      <p
-                        style={{
-                          margin:
-                            "5px 0 0",
-                          fontSize:
-                            "17px",
-                          fontWeight:
-                            900,
-                          color:
-                            "#292524",
-                        }}
-                      >
-                        {receiptNumber}
-                      </p>
-                    </div>
-
-                    <div
+                    <p
                       style={{
-                        textAlign:
-                          "right",
-                        flex: 1,
+                        margin:
+                          "4px 0 0",
+                        fontSize:
+                          "16px",
+                        fontWeight: 900,
                       }}
                     >
-                      <p
-                        style={{
-                          margin: 0,
-                          fontSize:
-                            "11px",
-                          fontWeight:
-                            800,
-                          color:
-                            "#78716c",
-                        }}
-                      >
-                        {t.date}
-                      </p>
-
-                      <p
-                        style={{
-                          margin:
-                            "5px 0 0",
-                          fontSize:
-                            "17px",
-                          fontWeight:
-                            900,
-                          color:
-                            "#292524",
-                        }}
-                      >
-                        {formatDate(
-                          date
-                        )}
-                      </p>
-                    </div>
+                      {receiptNumber}
+                    </p>
                   </div>
 
-                  {/* MEMBER */}
-
                   <div
                     style={{
-                      padding:
-                        "18px",
-                      borderTop:
-                        "1px solid #e7e5e4",
-                      borderBottom:
-                        "1px solid #e7e5e4",
-                      marginBottom:
-                        "22px",
+                      textAlign:
+                        "right",
                     }}
                   >
                     <p
@@ -1359,468 +1301,418 @@ export default function CreateReceiptPage() {
                         margin: 0,
                         fontSize:
                           "11px",
-                        fontWeight:
-                          900,
+                        fontWeight: 700,
                         color:
-                          "#c2410c",
+                          "#9ca3af",
                       }}
                     >
-                      {t.receivedFrom}
+                      {t.date}
                     </p>
 
                     <p
                       style={{
-                        margin:
-                          "7px 0 0",
-                        fontSize:
-                          "21px",
-                        lineHeight:
-                          1.3,
-                        fontWeight:
-                          900,
-                        color:
-                          "#292524",
-                        wordBreak:
-                          "break-word",
-                      }}
-                    >
-                      {memberName ||
-                        "________________"}
-                    </p>
-
-                    {mobile && (
-                      <p
-                        style={{
-                          margin:
-                            "6px 0 0",
-                          fontSize:
-                            "13px",
-                          color:
-                            "#78716c",
-                        }}
-                      >
-                        📱 {mobile}
-                      </p>
-                    )}
-                  </div>
-
-                  {/* PURPOSE */}
-
-                  <div
-                    style={{
-                      display:
-                        "flex",
-                      justifyContent:
-                        "space-between",
-                      alignItems:
-                        "center",
-                      gap: "18px",
-                      marginBottom:
-                        "24px",
-                    }}
-                  >
-                    <div>
-                      <p
-                        style={{
-                          margin: 0,
-                          fontSize:
-                            "11px",
-                          fontWeight:
-                            900,
-                          color:
-                            "#78716c",
-                        }}
-                      >
-                        {t.purpose}
-                      </p>
-
-                      <p
-                        style={{
-                          margin:
-                            "5px 0 0",
-                          fontSize:
-                            "17px",
-                          fontWeight:
-                            900,
-                          color:
-                            "#292524",
-                        }}
-                      >
-                        {purpose ||
-                          "________________"}
-                      </p>
-                    </div>
-
-                    <div
-                      style={{
-                        width:
-                          "38px",
-                        height:
-                          "38px",
-                        flexShrink: 0,
-                        display:
-                          "flex",
-                        alignItems:
-                          "center",
-                        justifyContent:
-                          "center",
-                        borderRadius:
-                          "50%",
-                        backgroundColor:
-                          "#fff7ed",
-                        border:
-                          "1px solid #fdba74",
-                        color:
-                          "#ea580c",
-                        fontSize:
-                          "19px",
-                        fontWeight:
-                          900,
-                      }}
-                    >
-                      ✓
-                    </div>
-                  </div>
-
-                  {/* AMOUNT */}
-
-                  <div
-                    style={{
-                      position:
-                        "relative",
-                      overflow:
-                        "hidden",
-                      borderRadius:
-                        "12px",
-                      border:
-                        "2px solid #f97316",
-                      padding:
-                        "18px 16px",
-                      textAlign:
-                        "center",
-                      backgroundColor:
-                        "#fff7ed",
-                    }}
-                  >
-                    <p
-                      style={{
-                        position:
-                          "relative",
-                        margin: 0,
-                        fontSize:
-                          "12px",
-                        fontWeight:
-                          800,
-                        color:
-                          "#9a3412",
-                      }}
-                    >
-                      {t.amountLabel}
-                    </p>
-
-                    <p
-                      style={{
-                        position:
-                          "relative",
                         margin:
                           "4px 0 0",
                         fontSize:
-                          "42px",
-                        lineHeight:
-                          1.1,
-                        fontWeight:
-                          900,
-                        color:
-                          "#9a3412",
+                          "16px",
+                        fontWeight: 900,
                       }}
                     >
-                      ₹
-                      {amount ||
-                        "0"}
+                      {formatDate(
+                        date
+                      )}
                     </p>
-                  </div>
-
-                  {/* AMOUNT IN WORDS */}
-
-                  {amount && (
-                    <p
-                      style={{
-                        margin:
-                          "10px 0 0",
-                        textAlign:
-                          "center",
-                        fontSize:
-                          "13px",
-                        color:
-                          "#57534e",
-                        fontWeight:
-                          700,
-                      }}
-                    >
-                      {language ===
-                      "Marathi"
-                        ? `रु. ${amount} प्राप्त झाले`
-                        : language ===
-                          "Hindi"
-                        ? `₹${amount} प्राप्त हुए`
-                        : `₹${amount} received`}
-                    </p>
-                  )}
-
-                  {/* NOTE */}
-
-                  {note && (
-                    <div
-                      style={{
-                        marginTop:
-                          "20px",
-                        padding:
-                          "13px",
-                        border:
-                          "1px dashed #d6d3d1",
-                        borderRadius:
-                          "10px",
-                      }}
-                    >
-                      <p
-                        style={{
-                          margin: 0,
-                          fontSize:
-                            "10px",
-                          fontWeight:
-                            900,
-                          color:
-                            "#78716c",
-                        }}
-                      >
-                        {t.note}
-                      </p>
-
-                      <p
-                        style={{
-                          margin:
-                            "4px 0 0",
-                          fontSize:
-                            "13px",
-                          color:
-                            "#57534e",
-                          wordBreak:
-                            "break-word",
-                        }}
-                      >
-                        {note}
-                      </p>
-                    </div>
-                  )}
-
-                  {/* THANK YOU */}
-
-                  <div
-                    style={{
-                      marginTop:
-                        "28px",
-                      paddingTop:
-                        "18px",
-                      borderTop:
-                        "1px dashed #d6d3d1",
-                      display:
-                        "flex",
-                      justifyContent:
-                        "space-between",
-                      alignItems:
-                        "flex-end",
-                      gap: "18px",
-                    }}
-                  >
-                    <div>
-                      <p
-                        style={{
-                          margin: 0,
-                          fontSize:
-                            "14px",
-                          fontWeight:
-                            900,
-                          color:
-                            "#44403c",
-                        }}
-                      >
-                        {t.thankYou}
-                      </p>
-
-                      <p
-                        style={{
-                          margin:
-                            "5px 0 0",
-                          fontSize:
-                            "11px",
-                          color:
-                            "#a8a29e",
-                        }}
-                      >
-                        {mandalName}
-                      </p>
-                    </div>
-
-                    <div
-                      style={{
-                        textAlign:
-                          "center",
-                        minWidth:
-                          "105px",
-                      }}
-                    >
-                      <div
-                        style={{
-                          width:
-                            "105px",
-                          height:
-                            "1px",
-                          backgroundColor:
-                            "#a8a29e",
-                          marginBottom:
-                            "7px",
-                        }}
-                      />
-
-                      <p
-                        style={{
-                          margin: 0,
-                          fontSize:
-                            "10px",
-                          color:
-                            "#78716c",
-                        }}
-                      >
-                        {t.authorized}
-                      </p>
-                    </div>
                   </div>
                 </div>
 
-                {/* BOTTOM STRIPE */}
+                <div
+                  style={{
+                    marginBottom:
+                      "24px",
+                    padding: "20px",
+                    borderRadius:
+                      "16px",
+                    backgroundColor:
+                      "#fff7ed",
+                    border:
+                      "1px solid #fed7aa",
+                  }}
+                >
+                  <p
+                    style={{
+                      margin: 0,
+                      fontSize:
+                        "11px",
+                      fontWeight: 700,
+                      color:
+                        "#f97316",
+                    }}
+                  >
+                    {t.receivedFrom}
+                  </p>
+
+                  <p
+                    style={{
+                      margin:
+                        "8px 0 0",
+                      fontSize:
+                        "24px",
+                      fontWeight: 900,
+                      wordBreak:
+                        "break-word",
+                    }}
+                  >
+                    {memberName ||
+                      "________________"}
+                  </p>
+
+                  {mobile && (
+                    <p
+                      style={{
+                        margin:
+                          "6px 0 0",
+                        fontSize:
+                          "14px",
+                        color:
+                          "#6b7280",
+                      }}
+                    >
+                      📱 {mobile}
+                    </p>
+                  )}
+                </div>
 
                 <div
                   style={{
-                    height: "8px",
+                    display: "flex",
+                    alignItems:
+                      "center",
+                    justifyContent:
+                      "space-between",
+                    gap: "20px",
+                    borderBottom:
+                      "1px solid #e5e7eb",
+                    paddingBottom:
+                      "20px",
+                    marginBottom:
+                      "24px",
+                  }}
+                >
+                  <div>
+                    <p
+                      style={{
+                        margin: 0,
+                        fontSize:
+                          "11px",
+                        fontWeight: 700,
+                        color:
+                          "#9ca3af",
+                      }}
+                    >
+                      {t.purpose}
+                    </p>
+
+                    <p
+                      style={{
+                        margin:
+                          "4px 0 0",
+                        fontSize:
+                          "18px",
+                        fontWeight: 900,
+                      }}
+                    >
+                      {purpose ||
+                        "________________"}
+                    </p>
+                  </div>
+
+                  <div
+                    style={{
+                      width: "44px",
+                      height: "44px",
+                      display:
+                        "flex",
+                      alignItems:
+                        "center",
+                      justifyContent:
+                        "center",
+                      borderRadius:
+                        "50%",
+                      backgroundColor:
+                        "#fff7ed",
+                      color:
+                        "#ea580c",
+                      fontSize:
+                        "20px",
+                        fontWeight: 900,
+                    }}
+                  >
+                    ✓
+                  </div>
+                </div>
+
+                {/* AMOUNT */}
+
+                <div
+                  style={{
+                    borderRadius:
+                      "24px",
+                    padding:
+                      "28px 20px",
+                    textAlign:
+                      "center",
                     backgroundColor:
                       "#f97316",
+                    color:
+                      "#ffffff",
                   }}
-                />
+                >
+                  <p
+                    style={{
+                      margin: 0,
+                      fontSize:
+                        "14px",
+                      fontWeight: 600,
+                    }}
+                  >
+                    {t.amountLabel}
+                  </p>
+
+                  <p
+                    style={{
+                      margin:
+                        "4px 0 0",
+                      fontSize:
+                        "48px",
+                      fontWeight: 900,
+                    }}
+                  >
+                    ₹{amount || "0"}
+                  </p>
+                </div>
+
+                {note && (
+                  <div
+                    style={{
+                      marginTop:
+                        "24px",
+                      padding: "16px",
+                      border:
+                        "1px dashed #d1d5db",
+                      borderRadius:
+                        "16px",
+                    }}
+                  >
+                    <p
+                      style={{
+                        margin: 0,
+                        fontSize:
+                          "11px",
+                        fontWeight: 700,
+                        color:
+                          "#9ca3af",
+                      }}
+                    >
+                      {t.note}
+                    </p>
+
+                    <p
+                      style={{
+                        margin:
+                          "4px 0 0",
+                        fontSize:
+                          "14px",
+                        color:
+                          "#4b5563",
+                      }}
+                    >
+                      {note}
+                    </p>
+                  </div>
+                )}
+
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems:
+                      "flex-end",
+                    justifyContent:
+                      "space-between",
+                    gap: "20px",
+                    marginTop:
+                      "36px",
+                  }}
+                >
+                  <div>
+                    <p
+                      style={{
+                        margin: 0,
+                        fontSize:
+                          "14px",
+                        fontWeight: 700,
+                      }}
+                    >
+                      {t.thankYou}
+                    </p>
+
+                    <p
+                      style={{
+                        margin:
+                          "4px 0 0",
+                        fontSize:
+                          "11px",
+                        color:
+                          "#9ca3af",
+                      }}
+                    >
+                      {mandalName}
+                    </p>
+                  </div>
+
+                  <div
+                    style={{
+                      textAlign:
+                        "center",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width:
+                          "112px",
+                        height: "1px",
+                        backgroundColor:
+                          "#9ca3af",
+                        marginBottom:
+                          "8px",
+                      }}
+                    />
+
+                    <p
+                      style={{
+                        margin: 0,
+                        fontSize:
+                          "11px",
+                        color:
+                          "#6b7280",
+                      }}
+                    >
+                      {t.authorized}
+                    </p>
+                  </div>
+                </div>
               </div>
+
+              <div
+                style={{
+                  height: "12px",
+                  backgroundColor:
+                    "#f97316",
+                }}
+              />
             </div>
 
-            {/* =========================
-                THREE OPTIONS
-            ========================== */}
+            {/* THREE OPTIONS */}
 
             <div
               style={{
-                marginTop: "22px",
-                backgroundColor:
-                  "#ffffff",
-                border:
-                  "1px solid #e5e7eb",
-                borderRadius: "18px",
-                padding: "14px",
-                boxShadow:
-                  "0 3px 14px rgba(0,0,0,0.05)",
+                maxWidth: "560px",
+                margin:
+                  "20px auto 0",
+                display: "grid",
+                gridTemplateColumns:
+                  "1fr 1fr 1fr",
+                gap: "10px",
               }}
             >
-              {/* SHARE */}
+              <button
+                type="button"
+                onClick={
+                  downloadReceipt
+                }
+                disabled={generating}
+                style={{
+                  border: "none",
+                  borderRadius:
+                    "14px",
+                  backgroundColor:
+                    generating
+                      ? "#fdba74"
+                      : "#f97316",
+                  color: "#ffffff",
+                  padding:
+                    "14px 8px",
+                  fontSize: "14px",
+                  fontWeight: 900,
+                  cursor:
+                    generating
+                      ? "not-allowed"
+                      : "pointer",
+                }}
+              >
+                📥
+                <br />
+                {t.download}
+              </button>
 
               <button
                 type="button"
                 onClick={
-                  shareReceiptImage
+                  sendWhatsApp
                 }
                 disabled={generating}
                 style={{
-                  width: "100%",
-                  border:
-                    "1px solid #e5e7eb",
-                  borderRadius: "12px",
+                  border: "none",
+                  borderRadius:
+                    "14px",
                   backgroundColor:
                     generating
-                      ? "#f3f4f6"
-                      : "#ffffff",
-                  color: "#292524",
-                  padding: "15px",
-                  fontSize: "17px",
+                      ? "#86efac"
+                      : "#16a34a",
+                  color: "#ffffff",
+                  padding:
+                    "14px 8px",
+                  fontSize: "14px",
                   fontWeight: 900,
-                  cursor: generating
-                    ? "not-allowed"
-                    : "pointer",
-                  marginBottom:
-                    "10px",
+                  cursor:
+                    generating
+                      ? "not-allowed"
+                      : "pointer",
                 }}
               >
-                {generating
-                  ? `⏳ ${t.sharing}`
-                  : `📤 ${t.share}`}
+                🟢
+                <br />
+                {t.whatsapp}
               </button>
 
-              {/* SAVE + DONE */}
-
-              <div
+              <button
+                type="button"
+                onClick={
+                  shareReceipt
+                }
+                disabled={generating}
                 style={{
-                  display: "grid",
-                  gridTemplateColumns:
-                    "1fr 1fr",
-                  gap: "10px",
+                  border: "none",
+                  borderRadius:
+                    "14px",
+                  backgroundColor:
+                    generating
+                      ? "#9ca3af"
+                      : "#374151",
+                  color: "#ffffff",
+                  padding:
+                    "14px 8px",
+                  fontSize: "14px",
+                  fontWeight: 900,
+                  cursor:
+                    generating
+                      ? "not-allowed"
+                      : "pointer",
                 }}
               >
-                <button
-                  type="button"
-                  onClick={
-                    saveReceiptImage
-                  }
-                  disabled={generating}
-                  style={{
-                    border:
-                      "1px solid #e5e7eb",
-                    borderRadius: "12px",
-                    backgroundColor:
-                      generating
-                        ? "#f3f4f6"
-                        : "#ffffff",
-                    color: "#292524",
-                    padding: "15px 10px",
-                    fontSize: "16px",
-                    fontWeight: 900,
-                    cursor: generating
-                      ? "not-allowed"
-                      : "pointer",
-                  }}
-                >
-                  {generating
-                    ? "⏳"
-                    : `⬇️ ${t.save}`}
-                </button>
-
-                <button
-                  type="button"
-                  onClick={handleDone}
-                  disabled={generating}
-                  style={{
-                    border:
-                      "1px solid #e5e7eb",
-                    borderRadius: "12px",
-                    backgroundColor:
-                      generating
-                        ? "#f3f4f6"
-                        : "#ffffff",
-                    color: "#292524",
-                    padding: "15px 10px",
-                    fontSize: "16px",
-                    fontWeight: 900,
-                    cursor: generating
-                      ? "not-allowed"
-                      : "pointer",
-                  }}
-                >
-                  ✓ {t.done}
-                </button>
-              </div>
+                📤
+                <br />
+                {t.share}
+              </button>
             </div>
           </div>
         </div>
