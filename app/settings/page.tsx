@@ -63,6 +63,18 @@ const translations = {
     logoSuccess: "Logo uploaded successfully.",
     logoRemoved: "Logo removed successfully.",
     logoError: "Logo upload failed.",
+
+    logout: "Logout",
+    logoutText: "Sign out from your Mandal account.",
+    logoutConfirm: "Are you sure you want to logout?",
+
+    deleteAccount: "Delete Account",
+    deleteAccountText:
+      "Permanently delete your Mandal account.",
+    deleteAccountConfirm:
+      "Are you sure you want to delete your account? This action cannot be undone.",
+    deleteAccountInfo:
+      "Account deletion will be completed securely.",
   },
 
   Marathi: {
@@ -111,6 +123,19 @@ const translations = {
     logoSuccess: "लोगो यशस्वीरित्या अपलोड झाला.",
     logoRemoved: "लोगो काढला गेला.",
     logoError: "लोगो अपलोड करण्यात अडचण आली.",
+
+    logout: "लॉगआउट",
+    logoutText: "तुमच्या मंडळाच्या खात्यातून बाहेर पडा.",
+    logoutConfirm:
+      "तुम्हाला नक्की लॉगआउट करायचे आहे का?",
+
+    deleteAccount: "खाते डिलीट करा",
+    deleteAccountText:
+      "तुमचे मंडळाचे खाते कायमचे डिलीट करा.",
+    deleteAccountConfirm:
+      "तुम्हाला नक्की खाते डिलीट करायचे आहे का? ही प्रक्रिया पूर्ववत करता येणार नाही.",
+    deleteAccountInfo:
+      "खाते डिलीट करण्याची सुरक्षित प्रक्रिया पुढील स्टेपमध्ये पूर्ण केली जाईल.",
   },
 
   Hindi: {
@@ -159,6 +184,19 @@ const translations = {
     logoSuccess: "लोगो सफलतापूर्वक अपलोड हो गया।",
     logoRemoved: "लोगो हटा दिया गया।",
     logoError: "लोगो अपलोड करने में समस्या हुई।",
+
+    logout: "लॉगआउट",
+    logoutText: "अपने मंडल खाते से बाहर निकलें।",
+    logoutConfirm:
+      "क्या आप वाकई लॉगआउट करना चाहते हैं?",
+
+    deleteAccount: "खाता डिलीट करें",
+    deleteAccountText:
+      "अपने मंडल खाते को स्थायी रूप से डिलीट करें।",
+    deleteAccountConfirm:
+      "क्या आप वाकई अपना खाता डिलीट करना चाहते हैं? यह प्रक्रिया वापस नहीं की जा सकती।",
+    deleteAccountInfo:
+      "खाता डिलीट करने की सुरक्षित प्रक्रिया अगले स्टेप में पूरी की जाएगी।",
   },
 };
 
@@ -557,8 +595,49 @@ export default function SettingsPage() {
     );
   }
 
+  async function handleLogout() {
+    const confirmed = window.confirm(
+      t.logoutConfirm
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    const { error } =
+      await supabase.auth.signOut();
+
+    if (error) {
+      console.error(
+        "LOGOUT ERROR:",
+        error
+      );
+      return;
+    }
+
+    localStorage.removeItem(
+      "mandalLoggedIn"
+    );
+
+    router.replace("/login");
+  }
+
+  function handleDeleteAccount() {
+    const confirmed = window.confirm(
+      t.deleteAccountConfirm
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    window.alert(
+      t.deleteAccountInfo
+    );
+  }
+
   return (
-    <main className="min-h-screen bg-gray-50 p-6">
+    <main className="min-h-screen bg-gray-50 px-4 py-8">
       <div className="mx-auto max-w-4xl">
 
         {/* BACK */}
@@ -994,6 +1073,60 @@ export default function SettingsPage() {
 
               </div>
             )}
+
+          </div>
+
+          {/* LOGOUT */}
+          <div className="rounded-2xl border bg-white p-6 shadow-sm">
+
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+
+              <div>
+                <h2 className="text-lg font-bold">
+                  🚪 {t.logout}
+                </h2>
+
+                <p className="mt-1 text-sm text-gray-500">
+                  {t.logoutText}
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="rounded-xl bg-gray-800 px-6 py-3 font-semibold text-white transition hover:bg-gray-900"
+              >
+                {t.logout}
+              </button>
+
+            </div>
+
+          </div>
+
+          {/* DELETE ACCOUNT */}
+          <div className="rounded-2xl border border-red-200 bg-white p-6 shadow-sm">
+
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+
+              <div>
+                <h2 className="text-lg font-bold text-red-600">
+                  🗑️ {t.deleteAccount}
+                </h2>
+
+                <p className="mt-1 text-sm text-gray-500">
+                  {t.deleteAccountText}
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={handleDeleteAccount}
+                className="rounded-xl border border-red-500 px-6 py-3 font-semibold text-red-600 transition hover:bg-red-50"
+              >
+                {t.deleteAccount}
+              </button>
+
+            </div>
 
           </div>
 

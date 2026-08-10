@@ -24,7 +24,6 @@ type EventItem = {
 const translations = {
   English: {
     welcomeBack: "Welcome back 👋",
-    logout: "Logout",
 
     latestEvent: "🔔 Latest Event Update",
     view: "View →",
@@ -74,7 +73,6 @@ const translations = {
 
   Marathi: {
     welcomeBack: "पुन्हा स्वागत आहे 👋",
-    logout: "लॉगआउट",
 
     latestEvent: "🔔 नवीन कार्यक्रम अपडेट",
     view: "पहा →",
@@ -110,10 +108,10 @@ const translations = {
     openReports: "रिपोर्ट्स उघडा →",
     openReceipt: "पावती उघडा →",
 
-    settings: "सेटिंग्स",
+    settings: "सेटिंग्ज",
     settingsDescription:
       "भाषा, खाते आणि preferences व्यवस्थापित करा.",
-    openSettings: "सेटिंग्स उघडा →",
+    openSettings: "सेटिंग्ज उघडा →",
 
     mandalInformation: "मंडळाची माहिती",
 
@@ -130,7 +128,6 @@ const translations = {
 
   Hindi: {
     welcomeBack: "फिर से स्वागत है 👋",
-    logout: "लॉगआउट",
 
     latestEvent: "🔔 नया कार्यक्रम अपडेट",
     view: "देखें →",
@@ -195,6 +192,9 @@ export default function Dashboard() {
 
   const [account, setAccount] =
     useState<Account | null>(null);
+
+  const [logoUrl, setLogoUrl] =
+    useState("");
 
   const [memberCount, setMemberCount] =
     useState(0);
@@ -272,6 +272,14 @@ export default function Dashboard() {
         state:
           mandal.state || "",
       });
+
+      // =========================
+      // MANDAL LOGO
+      // =========================
+
+      setLogoUrl(
+        mandal.logo_url || ""
+      );
 
       if (
         mandal.language === "English" ||
@@ -450,28 +458,6 @@ export default function Dashboard() {
   }, [router, setLanguage]);
 
   // =========================
-  // LOGOUT
-  // =========================
-
-  async function logout() {
-    await supabase.auth.signOut();
-
-    localStorage.removeItem(
-      "mandalLoggedIn"
-    );
-
-    localStorage.removeItem(
-      "mandalAccount"
-    );
-
-    localStorage.removeItem(
-      "mandalLanguage"
-    );
-
-    router.replace("/");
-  }
-
-  // =========================
   // NAVIGATION
   // =========================
 
@@ -515,8 +501,8 @@ export default function Dashboard() {
   if (loading || !account) {
     return (
       <main className="min-h-screen bg-gray-50">
-        <div className="mx-auto flex min-h-screen max-w-7xl items-center justify-center px-6">
-          <p className="text-lg font-semibold text-gray-600">
+        <div className="flex min-h-screen items-center justify-center">
+          <p className="text-gray-500">
             {t.loading}
           </p>
         </div>
@@ -530,7 +516,7 @@ export default function Dashboard() {
 
   return (
     <main className="min-h-screen bg-gray-50">
-      <div className="mx-auto max-w-7xl px-6 py-8">
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
 
         {/* HEADER */}
 
@@ -545,12 +531,29 @@ export default function Dashboard() {
             </h1>
           </div>
 
+          {/* MANDAL LOGO / SETTINGS */}
+
           <button
             type="button"
-            onClick={logout}
-            className="cursor-pointer rounded-xl border bg-white px-4 py-2 font-semibold text-gray-700 hover:bg-gray-50"
+            onClick={() =>
+              router.push("/settings")
+            }
+            className="cursor-pointer"
+            title={t.settings}
           >
-            {t.logout}
+            {logoUrl ? (
+              <div className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-2xl border bg-white p-2 shadow-sm transition hover:shadow-md">
+                <img
+                  src={logoUrl}
+                  alt="Mandal Logo"
+                  className="max-h-full max-w-full object-contain"
+                />
+              </div>
+            ) : (
+              <div className="flex h-20 w-20 items-center justify-center rounded-2xl border bg-white text-3xl shadow-sm transition hover:shadow-md">
+                ⚙️
+              </div>
+            )}
           </button>
         </div>
 
