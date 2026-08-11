@@ -44,13 +44,19 @@ export default function Login() {
       return;
     }
 
-    if (!loginData.user) {
+    if (!loginData.user || !loginData.session) {
       setError(
         "Login failed. Please try again."
       );
       setLoading(false);
       return;
     }
+
+    // Make sure the session is stored
+    await supabase.auth.setSession({
+      access_token: loginData.session.access_token,
+      refresh_token: loginData.session.refresh_token,
+    });
 
     const {
       data: mandalData,
@@ -78,7 +84,7 @@ export default function Login() {
       setLanguage("English");
     }
 
-    router.push("/dashboard");
+    router.replace("/dashboard");
   }
 
   return (
@@ -100,7 +106,6 @@ export default function Login() {
           <p className="mt-2 text-gray-500">
             Login to your Mandal
           </p>
-
         </div>
 
         {/* LOGIN CARD */}
