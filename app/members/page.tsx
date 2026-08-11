@@ -1,11 +1,14 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import {
+  FormEvent,
+  useEffect,
+  useState,
+} from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import {
   useLanguage,
-  type Language,
 } from "../language-provider";
 
 type Member = {
@@ -43,6 +46,7 @@ const translations = {
     unableDelete: "Unable to delete member.",
     deleteConfirm:
       "Are you sure you want to delete this member?",
+    notificationTitle: "👤 New Member",
   },
 
   Marathi: {
@@ -71,6 +75,7 @@ const translations = {
     unableDelete: "सदस्य हटवता आला नाही.",
     deleteConfirm:
       "तुम्हाला हा सदस्य नक्की हटवायचा आहे का?",
+    notificationTitle: "👤 नवीन सदस्य",
   },
 
   Hindi: {
@@ -99,6 +104,7 @@ const translations = {
     unableDelete: "सदस्य हटाया नहीं जा सका।",
     deleteConfirm:
       "क्या आप इस सदस्य को हटाना चाहते हैं?",
+    notificationTitle: "👤 नया सदस्य",
   },
 };
 
@@ -134,13 +140,14 @@ export default function MembersPage() {
         return;
       }
 
-      const { data, error } = await supabase
-        .from("members")
-        .select("*")
-        .eq("user_id", user.id)
-        .order("created_at", {
-          ascending: false,
-        });
+      const { data, error } =
+        await supabase
+          .from("members")
+          .select("*")
+          .eq("user_id", user.id)
+          .order("created_at", {
+            ascending: false,
+          });
 
       if (error) {
         console.error(
@@ -160,16 +167,62 @@ export default function MembersPage() {
     loadMembers();
   }, [router, language]);
 
+  function showMemberNotification(
+    memberName: string
+  ) {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const notificationsEnabled =
+      localStorage.getItem(
+        "mandalNotifications"
+      ) === "true";
+
+    if (!notificationsEnabled) {
+      return;
+    }
+
+    if (
+      !("Notification" in window) ||
+      Notification.permission !== "granted"
+    ) {
+      return;
+    }
+
+    let body = "";
+
+    if (language === "Marathi") {
+      body = `${memberName} हा नवीन सदस्य जोडला गेला आहे.`;
+    } else if (language === "Hindi") {
+      body = `${memberName} नया सदस्य जोड़ा गया है।`;
+    } else {
+      body = `${memberName} has been added as a new member.`;
+    }
+
+    new Notification(
+      t.notificationTitle,
+      {
+        body,
+      }
+    );
+  }
+
   async function handleSubmit(
     e: FormEvent
   ) {
     e.preventDefault();
 
     const cleanName = name.trim();
-    const cleanMobile = mobile.trim();
-    const cleanAddress = address.trim();
+    const cleanMobile =
+      mobile.trim();
+    const cleanAddress =
+      address.trim();
 
-    if (!cleanName || !cleanMobile) {
+    if (
+      !cleanName ||
+      !cleanMobile
+    ) {
       alert(t.enterNameMobile);
       return;
     }
@@ -246,16 +299,24 @@ export default function MembersPage() {
       ...current,
     ]);
 
+    showMemberNotification(
+      cleanName
+    );
+
     setName("");
     setMobile("");
     setAddress("");
   }
 
-  function startEdit(member: Member) {
+  function startEdit(
+    member: Member
+  ) {
     setEditingId(member.id);
     setName(member.name || "");
     setMobile(member.mobile || "");
-    setAddress(member.address || "");
+    setAddress(
+      member.address || ""
+    );
 
     window.scrollTo({
       top: 0,
@@ -270,7 +331,9 @@ export default function MembersPage() {
     setAddress("");
   }
 
-  async function deleteMember(id: string) {
+  async function deleteMember(
+    id: string
+  ) {
     const {
       data: { user },
     } = await supabase.auth.getUser();
@@ -280,19 +343,21 @@ export default function MembersPage() {
       return;
     }
 
-    const confirmed = window.confirm(
-      t.deleteConfirm
-    );
+    const confirmed =
+      window.confirm(
+        t.deleteConfirm
+      );
 
     if (!confirmed) {
       return;
     }
 
-    const { error } = await supabase
-      .from("members")
-      .delete()
-      .eq("id", id)
-      .eq("user_id", user.id);
+    const { error } =
+      await supabase
+        .from("members")
+        .delete()
+        .eq("id", id)
+        .eq("user_id", user.id);
 
     if (error) {
       console.error(
@@ -306,7 +371,8 @@ export default function MembersPage() {
 
     setMembers((current) =>
       current.filter(
-        (member) => member.id !== id
+        (member) =>
+          member.id !== id
       )
     );
 
@@ -347,12 +413,11 @@ export default function MembersPage() {
           {t.subtitle}
         </p>
 
-        {/* ADD / EDIT MEMBER */}
-
         <form
           onSubmit={handleSubmit}
           className="mt-8 rounded-2xl border bg-white p-6 shadow-sm"
         >
+
           <h2 className="text-xl font-bold">
             {editingId !== null
               ? t.editMember
@@ -364,9 +429,13 @@ export default function MembersPage() {
             <input
               value={name}
               onChange={(e) =>
-                setName(e.target.value)
+                setName(
+                  e.target.value
+                )
               }
-              placeholder={t.memberName}
+              placeholder={
+                t.memberName
+              }
               className="rounded-xl border px-4 py-3 outline-none focus:border-orange-500"
               required
             />
@@ -374,9 +443,13 @@ export default function MembersPage() {
             <input
               value={mobile}
               onChange={(e) =>
-                setMobile(e.target.value)
+                setMobile(
+                  e.target.value
+                )
               }
-              placeholder={t.mobileNumber}
+              placeholder={
+                t.mobileNumber
+              }
               className="rounded-xl border px-4 py-3 outline-none focus:border-orange-500"
               required
             />
@@ -384,7 +457,9 @@ export default function MembersPage() {
             <input
               value={address}
               onChange={(e) =>
-                setAddress(e.target.value)
+                setAddress(
+                  e.target.value
+                )
               }
               placeholder={t.address}
               className="rounded-xl border px-4 py-3 outline-none focus:border-orange-500 sm:col-span-2"
@@ -414,9 +489,8 @@ export default function MembersPage() {
             )}
 
           </div>
-        </form>
 
-        {/* MEMBERS LIST */}
+        </form>
 
         <div className="mt-8 rounded-2xl border bg-white p-6 shadow-sm">
 
@@ -427,7 +501,8 @@ export default function MembersPage() {
             </h2>
 
             <span className="font-semibold text-orange-500">
-              {members.length} {t.members}
+              {members.length}{" "}
+              {t.members}
             </span>
 
           </div>
@@ -472,7 +547,9 @@ export default function MembersPage() {
                     <button
                       type="button"
                       onClick={() =>
-                        startEdit(member)
+                        startEdit(
+                          member
+                        )
                       }
                       className="cursor-pointer rounded-lg bg-orange-50 px-4 py-2 font-semibold text-orange-600"
                     >
@@ -482,7 +559,9 @@ export default function MembersPage() {
                     <button
                       type="button"
                       onClick={() =>
-                        deleteMember(member.id)
+                        deleteMember(
+                          member.id
+                        )
                       }
                       className="cursor-pointer rounded-lg bg-red-50 px-4 py-2 font-semibold text-red-600"
                     >

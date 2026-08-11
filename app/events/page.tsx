@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import {
   useLanguage,
-  type Language,
 } from "../language-provider";
 
 type EventItem = {
@@ -38,6 +37,10 @@ const translations = {
     loadFailed: "Events load failed.",
     saveFailed: "Event save failed.",
     deleteFailed: "Event delete failed.",
+    todayTitle: "📅 Event Today!",
+    tomorrowTitle: "🔔 Event Tomorrow",
+    todayBody: "is today at",
+    tomorrowBody: "is tomorrow at",
   },
 
   Marathi: {
@@ -61,6 +64,10 @@ const translations = {
     loadFailed: "कार्यक्रम लोड करण्यात अडचण आली.",
     saveFailed: "कार्यक्रम सेव्ह करण्यात अडचण आली.",
     deleteFailed: "कार्यक्रम हटवण्यात अडचण आली.",
+    todayTitle: "📅 आज कार्यक्रम आहे!",
+    tomorrowTitle: "🔔 उद्याचा कार्यक्रम",
+    todayBody: "आज",
+    tomorrowBody: "उद्या",
   },
 
   Hindi: {
@@ -84,6 +91,10 @@ const translations = {
     loadFailed: "कार्यक्रम लोड करने में समस्या हुई।",
     saveFailed: "कार्यक्रम सेव करने में समस्या हुई।",
     deleteFailed: "कार्यक्रम हटाने में समस्या हुई।",
+    todayTitle: "📅 आज कार्यक्रम है!",
+    tomorrowTitle: "🔔 कल का कार्यक्रम",
+    todayBody: "आज",
+    tomorrowBody: "कल",
   },
 };
 
@@ -95,18 +106,133 @@ export default function EventsPage() {
 
   const t = translations[language];
 
-  const [events, setEvents] = useState<EventItem[]>([]);
+  const [events, setEvents] =
+    useState<EventItem[]>([]);
 
   const [title, setTitle] = useState("");
   const [location, setLocation] = useState("");
   const [date, setDate] = useState("");
-  const [description, setDescription] = useState("");
+  const [description, setDescription] =
+    useState("");
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] =
+    useState(true);
 
   useEffect(() => {
     loadEvents();
-  }, []);
+  }, [language]);
+
+  function checkEventReminders(
+    eventList: EventItem[]
+  ) {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const notificationsEnabled =
+      localStorage.getItem(
+        "mandalNotifications"
+      ) === "true";
+
+    if (!notificationsEnabled) {
+      return;
+    }
+
+    if (
+      !("Notification" in window) ||
+      Notification.permission !== "granted"
+    ) {
+      return;
+    }
+
+    const today = new Date();
+
+    today.setHours(0, 0, 0, 0);
+
+    eventList.forEach((event) => {
+      if (!event.date) {
+        return;
+      }
+
+      const eventDate = new Date(
+        `${event.date}T00:00:00`
+      );
+
+      eventDate.setHours(0, 0, 0, 0);
+
+      const difference =
+        eventDate.getTime() -
+        today.getTime();
+
+      const daysLeft = Math.round(
+        difference /
+          (1000 * 60 * 60 * 24)
+      );
+
+      if (
+        daysLeft < 0 ||
+        daysLeft > 1
+      ) {
+        return;
+      }
+
+      const reminderKey =
+        `mandalEventReminder-${event.id}-${event.date}`;
+
+      if (
+        localStorage.getItem(
+          reminderKey
+        )
+      ) {
+        return;
+      }
+
+      let notificationTitle = "";
+      let notificationBody = "";
+
+      if (daysLeft === 0) {
+        notificationTitle =
+          t.todayTitle;
+
+        if (language === "English") {
+          notificationBody =
+            `${event.title} is today at ${event.location}.`;
+        } else if (language === "Marathi") {
+          notificationBody =
+            `${event.title} आज ${event.location} येथे आहे.`;
+        } else {
+          notificationBody =
+            `${event.title} आज ${event.location} में है।`;
+        }
+      } else {
+        notificationTitle =
+          t.tomorrowTitle;
+
+        if (language === "English") {
+          notificationBody =
+            `${event.title} is tomorrow at ${event.location}.`;
+        } else if (language === "Marathi") {
+          notificationBody =
+            `${event.title} उद्या ${event.location} येथे आहे.`;
+        } else {
+          notificationBody =
+            `${event.title} कल ${event.location} में है।`;
+        }
+      }
+
+      new Notification(
+        notificationTitle,
+        {
+          body: notificationBody,
+        }
+      );
+
+      localStorage.setItem(
+        reminderKey,
+        "true"
+      );
+    });
+  }
 
   async function loadEvents() {
     setLoading(true);
@@ -120,14 +246,20 @@ export default function EventsPage() {
       return;
     }
 
-    const { data, error } = await supabase
-      .from("events")
-      .select("*")
-      .eq("user_id", user.id)
-      .order("date", { ascending: true });
+    const { data, error } =
+      await supabase
+        .from("events")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("date", {
+          ascending: true,
+        });
 
     if (error) {
-      console.error("EVENT LOAD ERROR:", error);
+      console.error(
+        "EVENT LOAD ERROR:",
+        error
+      );
 
       alert(
         `${t.loadFailed}\n\nCode: ${error.code}\nMessage: ${error.message}\nDetails: ${
@@ -140,28 +272,39 @@ export default function EventsPage() {
       return;
     }
 
-    const fixedData: EventItem[] = (data || []).map(
-      (item) => ({
+    const fixedData: EventItem[] =
+      (data || []).map((item) => ({
         id: String(item.id),
         title: item.title || "",
         location: item.location || "",
         date: item.date || "",
-        description: item.description || "",
-      })
-    );
+        description:
+          item.description || "",
+      }));
 
     setEvents(fixedData);
+
+    checkEventReminders(fixedData);
+
     setLoading(false);
   }
 
-  async function addEvent(e: FormEvent) {
+  async function addEvent(
+    e: FormEvent
+  ) {
     e.preventDefault();
 
     const cleanTitle = title.trim();
-    const cleanLocation = location.trim();
-    const cleanDescription = description.trim();
+    const cleanLocation =
+      location.trim();
+    const cleanDescription =
+      description.trim();
 
-    if (!cleanTitle || !cleanLocation || !date) {
+    if (
+      !cleanTitle ||
+      !cleanLocation ||
+      !date
+    ) {
       alert(t.validation);
       return;
     }
@@ -175,18 +318,23 @@ export default function EventsPage() {
       return;
     }
 
-    const { error } = await supabase
-      .from("events")
-      .insert({
-        user_id: user.id,
-        title: cleanTitle,
-        location: cleanLocation,
-        date: date,
-        description: cleanDescription,
-      });
+    const { error } =
+      await supabase
+        .from("events")
+        .insert({
+          user_id: user.id,
+          title: cleanTitle,
+          location: cleanLocation,
+          date: date,
+          description:
+            cleanDescription,
+        });
 
     if (error) {
-      console.error("EVENT INSERT ERROR:", error);
+      console.error(
+        "EVENT INSERT ERROR:",
+        error
+      );
 
       alert(
         `${t.saveFailed}\n\nCode: ${error.code}\nMessage: ${error.message}\nDetails: ${
@@ -205,10 +353,13 @@ export default function EventsPage() {
     await loadEvents();
   }
 
-  async function deleteEvent(id: string) {
-    const confirmed = window.confirm(
-      t.deleteConfirm
-    );
+  async function deleteEvent(
+    id: string
+  ) {
+    const confirmed =
+      window.confirm(
+        t.deleteConfirm
+      );
 
     if (!confirmed) {
       return;
@@ -223,14 +374,18 @@ export default function EventsPage() {
       return;
     }
 
-    const { error } = await supabase
-      .from("events")
-      .delete()
-      .eq("id", id)
-      .eq("user_id", user.id);
+    const { error } =
+      await supabase
+        .from("events")
+        .delete()
+        .eq("id", id)
+        .eq("user_id", user.id);
 
     if (error) {
-      console.error("EVENT DELETE ERROR:", error);
+      console.error(
+        "EVENT DELETE ERROR:",
+        error
+      );
 
       alert(
         `${t.deleteFailed}\n\nCode: ${error.code}\nMessage: ${error.message}\nDetails: ${
@@ -260,8 +415,6 @@ export default function EventsPage() {
     <main className="min-h-screen bg-gray-50 px-4 py-10">
       <div className="mx-auto max-w-4xl">
 
-        {/* BACK */}
-
         <button
           type="button"
           onClick={() =>
@@ -272,8 +425,6 @@ export default function EventsPage() {
           {t.back}
         </button>
 
-        {/* HEADER */}
-
         <h1 className="text-3xl font-bold text-gray-900">
           {t.events}
         </h1>
@@ -281,8 +432,6 @@ export default function EventsPage() {
         <p className="mt-2 text-gray-500">
           {t.subtitle}
         </p>
-
-        {/* ADD EVENT */}
 
         <div className="mt-6 rounded-3xl border bg-white p-6 shadow-sm">
 
@@ -298,7 +447,9 @@ export default function EventsPage() {
             <input
               value={title}
               onChange={(e) =>
-                setTitle(e.target.value)
+                setTitle(
+                  e.target.value
+                )
               }
               placeholder={t.eventName}
               className="w-full rounded-xl border px-4 py-3 outline-none focus:border-orange-500"
@@ -308,7 +459,9 @@ export default function EventsPage() {
             <input
               value={location}
               onChange={(e) =>
-                setLocation(e.target.value)
+                setLocation(
+                  e.target.value
+                )
               }
               placeholder={t.location}
               className="w-full rounded-xl border px-4 py-3 outline-none focus:border-orange-500"
@@ -319,7 +472,9 @@ export default function EventsPage() {
               type="date"
               value={date}
               onChange={(e) =>
-                setDate(e.target.value)
+                setDate(
+                  e.target.value
+                )
               }
               className="w-full rounded-xl border px-4 py-3 outline-none focus:border-orange-500"
               required
@@ -328,9 +483,13 @@ export default function EventsPage() {
             <textarea
               value={description}
               onChange={(e) =>
-                setDescription(e.target.value)
+                setDescription(
+                  e.target.value
+                )
               }
-              placeholder={t.eventDescription}
+              placeholder={
+                t.eventDescription
+              }
               rows={4}
               className="w-full rounded-xl border px-4 py-3 outline-none focus:border-orange-500"
             />
@@ -346,8 +505,6 @@ export default function EventsPage() {
 
         </div>
 
-        {/* UPCOMING EVENTS */}
-
         <div className="mt-6 rounded-3xl border bg-white p-6 shadow-sm">
 
           <div className="flex items-center justify-between">
@@ -357,7 +514,8 @@ export default function EventsPage() {
             </h2>
 
             <span className="font-semibold text-orange-500">
-              {events.length} {t.eventCount}
+              {events.length}{" "}
+              {t.eventCount}
             </span>
 
           </div>
@@ -400,7 +558,9 @@ export default function EventsPage() {
                     <button
                       type="button"
                       onClick={() =>
-                        deleteEvent(event.id)
+                        deleteEvent(
+                          event.id
+                        )
                       }
                       className="cursor-pointer rounded-lg bg-red-50 px-3 py-2 text-sm font-semibold text-red-500"
                     >

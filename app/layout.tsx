@@ -4,6 +4,7 @@ import { LanguageProvider } from "./language-provider";
 export const metadata = {
   title: "MandalSetu",
   description: "Every Mandal, One Simple Platform",
+  manifest: "/manifest.json",
 };
 
 export default function RootLayout({

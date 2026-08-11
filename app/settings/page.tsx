@@ -45,6 +45,17 @@ const translations = {
 
     notifications: "Notifications",
     notificationText: "Manage notification preferences.",
+    notificationPermission:
+      "Please allow browser notifications to receive reminders.",
+    notificationsNotSupported:
+      "Notifications are not supported by this browser.",
+    notificationsBlocked:
+      "Notifications are blocked. Please allow them from your browser settings.",
+    notificationEnabled:
+      "Notifications have been enabled successfully.",
+    notificationTestTitle: "MandalSetu Notification 🔔",
+    notificationTestBody:
+      "Notifications are working successfully.",
 
     about: "About",
     aboutText: "Mandal Management System",
@@ -106,6 +117,17 @@ const translations = {
 
     notifications: "सूचना",
     notificationText: "सूचनांची सेटिंग व्यवस्थापित करा.",
+    notificationPermission:
+      "रिमाइंडर मिळवण्यासाठी browser notifications ला Allow करा.",
+    notificationsNotSupported:
+      "या browser मध्ये notifications उपलब्ध नाहीत.",
+    notificationsBlocked:
+      "Notifications block आहेत. Browser settings मधून त्यांना Allow करा.",
+    notificationEnabled:
+      "Notifications यशस्वीरित्या सुरू झाल्या आहेत.",
+    notificationTestTitle: "MandalSetu सूचना 🔔",
+    notificationTestBody:
+      "Notifications व्यवस्थित काम करत आहेत.",
 
     about: "माहिती",
     aboutText: "मंडळ व्यवस्थापन प्रणाली",
@@ -167,6 +189,17 @@ const translations = {
 
     notifications: "सूचनाएं",
     notificationText: "सूचना सेटिंग प्रबंधित करें।",
+    notificationPermission:
+      "रिमाइंडर पाने के लिए browser notifications को Allow करें।",
+    notificationsNotSupported:
+      "इस browser में notifications उपलब्ध नहीं हैं।",
+    notificationsBlocked:
+      "Notifications block हैं। Browser settings से उन्हें Allow करें।",
+    notificationEnabled:
+      "Notifications सफलतापूर्वक शुरू हो गई हैं।",
+    notificationTestTitle: "MandalSetu सूचना 🔔",
+    notificationTestBody:
+      "Notifications सही तरीके से काम कर रही हैं।",
 
     about: "जानकारी",
     aboutText: "मंडल प्रबंधन प्रणाली",
@@ -207,6 +240,9 @@ export default function SettingsPage() {
 
   const [notifications, setNotifications] =
     useState(true);
+
+  const [notificationMessage, setNotificationMessage] =
+    useState("");
 
   const [account, setAccount] =
     useState<Account | null>(null);
@@ -364,6 +400,69 @@ export default function SettingsPage() {
     }
 
     setSavingLanguage(false);
+  }
+
+  async function toggleNotifications() {
+    setNotificationMessage("");
+
+    if (notifications) {
+      setNotifications(false);
+
+      localStorage.setItem(
+        "mandalNotifications",
+        "false"
+      );
+
+      return;
+    }
+
+    if (!("Notification" in window)) {
+      setNotificationMessage(
+        t.notificationsNotSupported
+      );
+      return;
+    }
+
+    const permission =
+      await Notification.requestPermission();
+
+    if (permission !== "granted") {
+      setNotificationMessage(
+        t.notificationsBlocked
+      );
+      return;
+    }
+
+    if ("serviceWorker" in navigator) {
+      try {
+        await navigator.serviceWorker.register(
+          "/sw.js"
+        );
+      } catch (error) {
+        console.error(
+          "SERVICE WORKER ERROR:",
+          error
+        );
+      }
+    }
+
+    setNotifications(true);
+
+    localStorage.setItem(
+      "mandalNotifications",
+      "true"
+    );
+
+    setNotificationMessage(
+      t.notificationEnabled
+    );
+
+    new Notification(
+      t.notificationTestTitle,
+      {
+        body: t.notificationTestBody,
+      }
+    );
   }
 
   function startEditAccount() {
@@ -591,17 +690,6 @@ export default function SettingsPage() {
     setLogoMessage(t.logoRemoved);
   }
 
-  function toggleNotifications() {
-    const newValue = !notifications;
-
-    setNotifications(newValue);
-
-    localStorage.setItem(
-      "mandalNotifications",
-      String(newValue)
-    );
-  }
-
   async function logout() {
     await supabase.auth.signOut();
 
@@ -701,7 +789,6 @@ export default function SettingsPage() {
     <main className="min-h-screen bg-gray-50 px-4 py-8">
       <div className="mx-auto max-w-5xl">
 
-        {/* BACK */}
         <button
           type="button"
           onClick={() =>
@@ -712,7 +799,6 @@ export default function SettingsPage() {
           {t.back}
         </button>
 
-        {/* HEADER */}
         <h1 className="text-3xl font-bold text-gray-900">
           {t.settings}
         </h1>
@@ -724,6 +810,7 @@ export default function SettingsPage() {
         <div className="mt-8 space-y-4">
 
           {/* LOGO */}
+
           <div className="rounded-2xl border bg-white p-6 shadow-sm">
 
             <h2 className="text-lg font-bold">
@@ -738,16 +825,19 @@ export default function SettingsPage() {
               <div className="mt-5">
 
                 <div className="flex h-40 w-40 items-center justify-center overflow-hidden rounded-2xl border bg-gray-50 p-3">
+
                   <img
                     src={logoUrl}
                     alt="Mandal Logo"
                     className="max-h-full max-w-full object-contain"
                   />
+
                 </div>
 
                 <div className="mt-4 flex flex-wrap gap-3">
 
                   <label className="cursor-pointer rounded-xl bg-orange-500 px-5 py-3 font-semibold text-white transition hover:bg-orange-600">
+
                     {t.changeLogo}
 
                     <input
@@ -757,6 +847,7 @@ export default function SettingsPage() {
                       className="hidden"
                       disabled={uploadingLogo}
                     />
+
                   </label>
 
                   <button
@@ -772,6 +863,7 @@ export default function SettingsPage() {
 
               </div>
             ) : (
+
               <div className="mt-5">
 
                 <label className="inline-block cursor-pointer rounded-xl bg-orange-500 px-5 py-3 font-semibold text-white">
@@ -814,6 +906,7 @@ export default function SettingsPage() {
           </div>
 
           {/* LANGUAGE */}
+
           <div className="rounded-2xl border bg-white p-6 shadow-sm">
 
             <h2 className="text-lg font-bold">
@@ -862,11 +955,13 @@ export default function SettingsPage() {
           </div>
 
           {/* ACCOUNT */}
+
           <div className="rounded-2xl border bg-white p-6 shadow-sm">
 
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 
               <div>
+
                 <h2 className="text-lg font-bold">
                   👤 {t.account}
                 </h2>
@@ -874,6 +969,7 @@ export default function SettingsPage() {
                 <p className="mt-1 text-sm text-gray-500">
                   {t.accountText}
                 </p>
+
               </div>
 
               {account && !editingAccount && (
@@ -905,8 +1001,8 @@ export default function SettingsPage() {
 
                 <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2">
 
-                  {/* MANDAL NAME */}
                   <div>
+
                     <label className="mb-2 block text-sm font-semibold text-gray-700">
                       {t.mandal}
                     </label>
@@ -922,10 +1018,11 @@ export default function SettingsPage() {
                       }
                       className="w-full rounded-xl border px-4 py-3 outline-none focus:border-orange-500"
                     />
+
                   </div>
 
-                  {/* LEADER */}
                   <div>
+
                     <label className="mb-2 block text-sm font-semibold text-gray-700">
                       {t.leader}
                     </label>
@@ -941,10 +1038,11 @@ export default function SettingsPage() {
                       }
                       className="w-full rounded-xl border px-4 py-3 outline-none focus:border-orange-500"
                     />
+
                   </div>
 
-                  {/* MOBILE */}
                   <div>
+
                     <label className="mb-2 block text-sm font-semibold text-gray-700">
                       {t.mobile}
                     </label>
@@ -960,10 +1058,11 @@ export default function SettingsPage() {
                       }
                       className="w-full rounded-xl border px-4 py-3 outline-none focus:border-orange-500"
                     />
+
                   </div>
 
-                  {/* CITY */}
                   <div>
+
                     <label className="mb-2 block text-sm font-semibold text-gray-700">
                       {t.city}
                     </label>
@@ -979,10 +1078,11 @@ export default function SettingsPage() {
                       }
                       className="w-full rounded-xl border px-4 py-3 outline-none focus:border-orange-500"
                     />
+
                   </div>
 
-                  {/* STATE */}
                   <div>
+
                     <label className="mb-2 block text-sm font-semibold text-gray-700">
                       {t.state}
                     </label>
@@ -998,9 +1098,9 @@ export default function SettingsPage() {
                       }
                       className="w-full rounded-xl border px-4 py-3 outline-none focus:border-orange-500"
                     />
+
                   </div>
 
-                  {/* BUTTONS */}
                   <div className="flex flex-wrap gap-3 md:col-span-2">
 
                     <button
@@ -1056,43 +1156,65 @@ export default function SettingsPage() {
 
               )
             ) : (
+
               <p className="mt-4 text-sm text-gray-400">
                 {t.noAccount}
               </p>
+
             )}
 
           </div>
 
           {/* NOTIFICATIONS */}
-          <div className="flex items-center justify-between rounded-2xl border bg-white p-6 shadow-sm">
 
-            <div>
-              <h2 className="text-lg font-bold">
-                🔔 {t.notifications}
-              </h2>
+          <div className="rounded-2xl border bg-white p-6 shadow-sm">
 
-              <p className="mt-1 text-sm text-gray-500">
-                {t.notificationText}
-              </p>
+            <div className="flex items-center justify-between gap-4">
+
+              <div>
+
+                <h2 className="text-lg font-bold">
+                  🔔 {t.notifications}
+                </h2>
+
+                <p className="mt-1 text-sm text-gray-500">
+                  {t.notificationText}
+                </p>
+
+              </div>
+
+              <button
+                type="button"
+                onClick={toggleNotifications}
+                className={`rounded-xl px-5 py-3 font-semibold text-white ${
+                  notifications
+                    ? "bg-green-500"
+                    : "bg-gray-400"
+                }`}
+              >
+                {notifications
+                  ? "ON"
+                  : "OFF"}
+              </button>
+
             </div>
 
-            <button
-              type="button"
-              onClick={toggleNotifications}
-              className={`rounded-xl px-5 py-3 font-semibold text-white ${
-                notifications
-                  ? "bg-green-500"
-                  : "bg-gray-400"
-              }`}
-            >
-              {notifications
-                ? "ON"
-                : "OFF"}
-            </button>
+            {notificationMessage && (
+              <p
+                className={`mt-4 rounded-xl px-4 py-3 text-sm ${
+                  notifications
+                    ? "bg-green-50 text-green-600"
+                    : "bg-red-50 text-red-500"
+                }`}
+              >
+                {notificationMessage}
+              </p>
+            )}
 
           </div>
 
           {/* ABOUT */}
+
           <div className="rounded-2xl border bg-white p-6 shadow-sm">
 
             <button
@@ -1102,7 +1224,9 @@ export default function SettingsPage() {
               }
               className="flex w-full items-center justify-between text-left"
             >
+
               <div>
+
                 <h2 className="text-lg font-bold">
                   ℹ️ {t.about}
                 </h2>
@@ -1110,11 +1234,13 @@ export default function SettingsPage() {
                 <p className="mt-2 text-gray-500">
                   {t.aboutText}
                 </p>
+
               </div>
 
               <span className="text-xl text-gray-500">
                 {aboutOpen ? "▲" : "▼"}
               </span>
+
             </button>
 
             {aboutOpen && (
@@ -1138,6 +1264,7 @@ export default function SettingsPage() {
           </div>
 
           {/* LOGOUT */}
+
           <div className="rounded-2xl border bg-white p-6 shadow-sm">
 
             <h2 className="text-lg font-bold text-gray-900">
@@ -1155,6 +1282,7 @@ export default function SettingsPage() {
           </div>
 
           {/* DELETE ACCOUNT */}
+
           <div className="rounded-2xl border border-red-200 bg-white p-6 shadow-sm">
 
             <h2 className="text-lg font-bold text-red-600">
