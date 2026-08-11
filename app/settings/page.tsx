@@ -65,16 +65,15 @@ const translations = {
     logoError: "Logo upload failed.",
 
     logout: "Logout",
-    logoutText: "Sign out from your Mandal account.",
-    logoutConfirm: "Are you sure you want to logout?",
 
     deleteAccount: "Delete Account",
     deleteAccountText:
-      "Permanently delete your Mandal account.",
+      "Permanently delete your Mandal account and all associated data.",
+    deletingAccount: "Deleting Account...",
     deleteAccountConfirm:
-      "Are you sure you want to delete your account? This action cannot be undone.",
-    deleteAccountInfo:
-      "Account deletion will be completed securely.",
+      "Are you sure you want to delete your account? This will permanently delete your Mandal data and cannot be undone.",
+    deleteAccountError:
+      "Account could not be deleted.",
   },
 
   Marathi: {
@@ -91,8 +90,10 @@ const translations = {
     saveChanges: "बदल जतन करा",
     cancel: "रद्द करा",
     saving: "जतन होत आहे...",
-    accountUpdated: "खात्याची माहिती यशस्वीरित्या अपडेट झाली.",
-    accountUpdateError: "खात्याची माहिती अपडेट करता आली नाही.",
+    accountUpdated:
+      "खात्याची माहिती यशस्वीरित्या अपडेट झाली.",
+    accountUpdateError:
+      "खात्याची माहिती अपडेट करता आली नाही.",
 
     mandal: "मंडळ",
     leader: "प्रमुख",
@@ -125,17 +126,15 @@ const translations = {
     logoError: "लोगो अपलोड करण्यात अडचण आली.",
 
     logout: "लॉगआउट",
-    logoutText: "तुमच्या मंडळाच्या खात्यातून बाहेर पडा.",
-    logoutConfirm:
-      "तुम्हाला नक्की लॉगआउट करायचे आहे का?",
 
     deleteAccount: "खाते डिलीट करा",
     deleteAccountText:
-      "तुमचे मंडळाचे खाते कायमचे डिलीट करा.",
+      "तुमचे मंडळाचे खाते आणि त्याच्याशी संबंधित सर्व माहिती कायमची डिलीट करा.",
+    deletingAccount: "खाते डिलीट होत आहे...",
     deleteAccountConfirm:
-      "तुम्हाला नक्की खाते डिलीट करायचे आहे का? ही प्रक्रिया पूर्ववत करता येणार नाही.",
-    deleteAccountInfo:
-      "खाते डिलीट करण्याची सुरक्षित प्रक्रिया पुढील स्टेपमध्ये पूर्ण केली जाईल.",
+      "तुम्हाला तुमचे खाते डिलीट करायचे आहे का? मंडळाची सर्व माहिती कायमची डिलीट होईल आणि ती पुन्हा मिळवता येणार नाही.",
+    deleteAccountError:
+      "खाते डिलीट करता आले नाही.",
   },
 
   Hindi: {
@@ -152,8 +151,10 @@ const translations = {
     saveChanges: "बदलाव सेव करें",
     cancel: "रद्द करें",
     saving: "सेव हो रहा है...",
-    accountUpdated: "खाते की जानकारी सफलतापूर्वक अपडेट हो गई।",
-    accountUpdateError: "खाते की जानकारी अपडेट नहीं हो सकी।",
+    accountUpdated:
+      "खाते की जानकारी सफलतापूर्वक अपडेट हो गई।",
+    accountUpdateError:
+      "खाते की जानकारी अपडेट नहीं हो सकी।",
 
     mandal: "मंडल",
     leader: "प्रमुख",
@@ -186,17 +187,15 @@ const translations = {
     logoError: "लोगो अपलोड करने में समस्या हुई।",
 
     logout: "लॉगआउट",
-    logoutText: "अपने मंडल खाते से बाहर निकलें।",
-    logoutConfirm:
-      "क्या आप वाकई लॉगआउट करना चाहते हैं?",
 
     deleteAccount: "खाता डिलीट करें",
     deleteAccountText:
-      "अपने मंडल खाते को स्थायी रूप से डिलीट करें।",
+      "अपने मंडल का खाता और उससे जुड़ी सभी जानकारी हमेशा के लिए डिलीट करें।",
+    deletingAccount: "खाता डिलीट हो रहा है...",
     deleteAccountConfirm:
-      "क्या आप वाकई अपना खाता डिलीट करना चाहते हैं? यह प्रक्रिया वापस नहीं की जा सकती।",
-    deleteAccountInfo:
-      "खाता डिलीट करने की सुरक्षित प्रक्रिया अगले स्टेप में पूरी की जाएगी।",
+      "क्या आप अपना खाता डिलीट करना चाहते हैं? मंडल की सभी जानकारी हमेशा के लिए डिलीट हो जाएगी और इसे वापस नहीं पाया जा सकेगा।",
+    deleteAccountError:
+      "खाता डिलीट नहीं किया जा सका।",
   },
 };
 
@@ -206,7 +205,8 @@ export default function SettingsPage() {
 
   const { language, setLanguage } = useLanguage();
 
-  const [notifications, setNotifications] = useState(true);
+  const [notifications, setNotifications] =
+    useState(true);
 
   const [account, setAccount] =
     useState<Account | null>(null);
@@ -229,7 +229,8 @@ export default function SettingsPage() {
   const [aboutOpen, setAboutOpen] =
     useState(false);
 
-  const [logoUrl, setLogoUrl] = useState("");
+  const [logoUrl, setLogoUrl] =
+    useState("");
 
   const [uploadingLogo, setUploadingLogo] =
     useState(false);
@@ -244,6 +245,12 @@ export default function SettingsPage() {
     useState(false);
 
   const [languageError, setLanguageError] =
+    useState("");
+
+  const [deletingAccount, setDeletingAccount] =
+    useState(false);
+
+  const [deleteAccountError, setDeleteAccountError] =
     useState("");
 
   useEffect(() => {
@@ -595,34 +602,29 @@ export default function SettingsPage() {
     );
   }
 
-  async function handleLogout() {
-    const confirmed = window.confirm(
-      t.logoutConfirm
-    );
-
-    if (!confirmed) {
-      return;
-    }
-
-    const { error } =
-      await supabase.auth.signOut();
-
-    if (error) {
-      console.error(
-        "LOGOUT ERROR:",
-        error
-      );
-      return;
-    }
+  async function logout() {
+    await supabase.auth.signOut();
 
     localStorage.removeItem(
       "mandalLoggedIn"
     );
 
-    router.replace("/login");
+    localStorage.removeItem(
+      "mandalAccount"
+    );
+
+    localStorage.removeItem(
+      "mandalLanguage"
+    );
+
+    localStorage.removeItem(
+      "mandalNotifications"
+    );
+
+    router.replace("/");
   }
 
-  function handleDeleteAccount() {
+  async function deleteAccount() {
     const confirmed = window.confirm(
       t.deleteAccountConfirm
     );
@@ -631,14 +633,73 @@ export default function SettingsPage() {
       return;
     }
 
-    window.alert(
-      t.deleteAccountInfo
-    );
+    setDeleteAccountError("");
+    setDeletingAccount(true);
+
+    try {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user) {
+        router.replace("/login");
+        return;
+      }
+
+      const { error } = await supabase.rpc(
+        "delete_my_account"
+      );
+
+      if (error) {
+        console.error(
+          "DELETE ACCOUNT ERROR:",
+          error
+        );
+
+        setDeleteAccountError(
+          t.deleteAccountError
+        );
+
+        setDeletingAccount(false);
+        return;
+      }
+
+      localStorage.removeItem(
+        "mandalLoggedIn"
+      );
+
+      localStorage.removeItem(
+        "mandalAccount"
+      );
+
+      localStorage.removeItem(
+        "mandalLanguage"
+      );
+
+      localStorage.removeItem(
+        "mandalNotifications"
+      );
+
+      await supabase.auth.signOut();
+
+      router.replace("/");
+    } catch (error) {
+      console.error(
+        "DELETE ACCOUNT ERROR:",
+        error
+      );
+
+      setDeleteAccountError(
+        t.deleteAccountError
+      );
+
+      setDeletingAccount(false);
+    }
   }
 
   return (
     <main className="min-h-screen bg-gray-50 px-4 py-8">
-      <div className="mx-auto max-w-4xl">
+      <div className="mx-auto max-w-5xl">
 
         {/* BACK */}
         <button
@@ -1079,59 +1140,51 @@ export default function SettingsPage() {
           {/* LOGOUT */}
           <div className="rounded-2xl border bg-white p-6 shadow-sm">
 
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <h2 className="text-lg font-bold text-gray-900">
+              {t.logout}
+            </h2>
 
-              <div>
-                <h2 className="text-lg font-bold">
-                  🚪 {t.logout}
-                </h2>
-
-                <p className="mt-1 text-sm text-gray-500">
-                  {t.logoutText}
-                </p>
-              </div>
-
-              <button
-                type="button"
-                onClick={handleLogout}
-                className="rounded-xl bg-gray-800 px-6 py-3 font-semibold text-white transition hover:bg-gray-900"
-              >
-                {t.logout}
-              </button>
-
-            </div>
+            <button
+              type="button"
+              onClick={logout}
+              className="mt-4 rounded-xl border px-5 py-3 font-semibold text-gray-700 transition hover:bg-gray-50"
+            >
+              {t.logout}
+            </button>
 
           </div>
 
           {/* DELETE ACCOUNT */}
           <div className="rounded-2xl border border-red-200 bg-white p-6 shadow-sm">
 
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <h2 className="text-lg font-bold text-red-600">
+              🗑️ {t.deleteAccount}
+            </h2>
 
-              <div>
-                <h2 className="text-lg font-bold text-red-600">
-                  🗑️ {t.deleteAccount}
-                </h2>
+            <p className="mt-1 text-sm text-gray-500">
+              {t.deleteAccountText}
+            </p>
 
-                <p className="mt-1 text-sm text-gray-500">
-                  {t.deleteAccountText}
-                </p>
-              </div>
+            {deleteAccountError && (
+              <p className="mt-4 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-600">
+                {deleteAccountError}
+              </p>
+            )}
 
-              <button
-                type="button"
-                onClick={handleDeleteAccount}
-                className="rounded-xl border border-red-500 px-6 py-3 font-semibold text-red-600 transition hover:bg-red-50"
-              >
-                {t.deleteAccount}
-              </button>
-
-            </div>
+            <button
+              type="button"
+              onClick={deleteAccount}
+              disabled={deletingAccount}
+              className="mt-5 rounded-xl bg-red-600 px-5 py-3 font-semibold text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {deletingAccount
+                ? t.deletingAccount
+                : t.deleteAccount}
+            </button>
 
           </div>
 
         </div>
-
       </div>
     </main>
   );
