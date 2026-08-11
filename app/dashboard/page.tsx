@@ -24,70 +24,54 @@ type EventItem = {
 const translations = {
   English: {
     welcomeBack: "Welcome back 👋",
-
     latestEvent: "🔔 Latest Event Update",
     view: "View →",
-
     dashboard: "Mandal Dashboard",
     overview: "Overview",
-
     members: "Members",
     collection: "Collection",
     expenses: "Expenses",
     balance: "Balance",
     events: "Events",
-
     manageMandal: "Manage Mandal",
-
     manageMembers: "Add and manage Mandal members.",
     manageCollection: "Add and manage collection.",
     manageExpenses: "Track Mandal expenses.",
     manageEvents: "Manage Mandal events and programs.",
     manageReports: "View collection, expenses and balance.",
     manageReceipt: "Create and manage Mandal receipts.",
-
     openMembers: "Open Members →",
     openCollection: "Open Collection →",
     openExpenses: "Open Expenses →",
     openEvents: "Open Events →",
     openReports: "Open Reports →",
     openReceipt: "Open Receipt →",
-
     settings: "Settings",
     settingsDescription:
       "Manage language, account and preferences.",
     openSettings: "Open Settings →",
-
     mandalInformation: "Mandal Information",
-
     leader: "Leader",
     mobile: "Mobile",
     city: "City / Village",
     state: "State",
-
     reports: "Reports",
     receipt: "Receipt",
-
     loading: "Loading Dashboard...",
   },
 
   Marathi: {
     welcomeBack: "पुन्हा स्वागत आहे 👋",
-
     latestEvent: "🔔 नवीन कार्यक्रम अपडेट",
     view: "पहा →",
-
     dashboard: "मंडळ डॅशबोर्ड",
     overview: "आढावा",
-
     members: "सदस्य",
     collection: "वर्गणी",
     expenses: "खर्च",
     balance: "शिल्लक",
     events: "कार्यक्रम",
-
     manageMandal: "मंडळ व्यवस्थापन",
-
     manageMembers:
       "मंडळाचे सदस्य जोडा आणि व्यवस्थापित करा.",
     manageCollection:
@@ -100,49 +84,38 @@ const translations = {
       "वर्गणी, खर्च आणि शिल्लक पहा.",
     manageReceipt:
       "मंडळाच्या पावत्या तयार करा आणि व्यवस्थापित करा.",
-
     openMembers: "सदस्य उघडा →",
     openCollection: "वर्गणी उघडा →",
     openExpenses: "खर्च उघडा →",
     openEvents: "कार्यक्रम उघडा →",
     openReports: "रिपोर्ट्स उघडा →",
     openReceipt: "पावती उघडा →",
-
     settings: "सेटिंग्ज",
     settingsDescription:
       "भाषा, खाते आणि preferences व्यवस्थापित करा.",
     openSettings: "सेटिंग्ज उघडा →",
-
     mandalInformation: "मंडळाची माहिती",
-
     leader: "प्रमुख",
     mobile: "मोबाईल",
     city: "शहर / गाव",
     state: "राज्य",
-
     reports: "रिपोर्ट्स",
     receipt: "पावती",
-
     loading: "डॅशबोर्ड लोड होत आहे...",
   },
 
   Hindi: {
     welcomeBack: "फिर से स्वागत है 👋",
-
     latestEvent: "🔔 नया कार्यक्रम अपडेट",
     view: "देखें →",
-
     dashboard: "मंडल डैशबोर्ड",
     overview: "अवलोकन",
-
     members: "सदस्य",
     collection: "संग्रह",
     expenses: "खर्च",
     balance: "शेष राशि",
     events: "कार्यक्रम",
-
     manageMandal: "मंडल प्रबंधन",
-
     manageMembers:
       "मंडल के सदस्यों को जोड़ें और प्रबंधित करें।",
     manageCollection:
@@ -155,29 +128,23 @@ const translations = {
       "संग्रह, खर्च और शेष राशि देखें।",
     manageReceipt:
       "मंडल की रसीद बनाएं और प्रबंधित करें।",
-
     openMembers: "सदस्य खोलें →",
     openCollection: "संग्रह खोलें →",
     openExpenses: "खर्च खोलें →",
     openEvents: "कार्यक्रम खोलें →",
     openReports: "रिपोर्ट खोलें →",
     openReceipt: "रसीद खोलें →",
-
     settings: "सेटिंग्स",
     settingsDescription:
       "भाषा, खाते और preferences प्रबंधित करें.",
     openSettings: "सेटिंग्स खोलें →",
-
     mandalInformation: "मंडल की जानकारी",
-
     leader: "प्रमुख",
     mobile: "मोबाइल",
     city: "शहर / गांव",
     state: "राज्य",
-
     reports: "रिपोर्ट",
     receipt: "रसीद",
-
     loading: "डैशबोर्ड लोड हो रहा है...",
   },
 };
@@ -220,18 +187,20 @@ export default function Dashboard() {
     async function loadDashboard() {
       setLoading(true);
 
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
+      // =========================
+      // MANDAL
+      // =========================
 
-      if (!user) {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (!session?.user) {
         router.replace("/login");
         return;
       }
 
-      // =========================
-      // MANDAL
-      // =========================
+      const user = session.user;
 
       const {
         data: mandal,
