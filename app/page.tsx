@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 import { useLanguage } from "./language-provider";
 
 const translations = {
@@ -46,6 +48,9 @@ const translations = {
 };
 
 export default function Home() {
+  const router = useRouter();
+  const supabase = createClient();
+
   const { language } = useLanguage();
   const t = translations[language];
 
@@ -53,6 +58,22 @@ export default function Home() {
   const [showInstall, setShowInstall] = useState(false);
 
   useEffect(() => {
+    let active = true;
+
+    async function checkSession() {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (!active) return;
+
+      if (session?.user) {
+        router.replace("/dashboard");
+      }
+    }
+
+    checkSession();
+
     const handleBeforeInstallPrompt = (event: Event) => {
       event.preventDefault();
 
@@ -66,12 +87,14 @@ export default function Home() {
     );
 
     return () => {
+      active = false;
+
       window.removeEventListener(
         "beforeinstallprompt",
         handleBeforeInstallPrompt
       );
     };
-  }, []);
+  }, [router, supabase]);
 
   const handleInstall = async () => {
     if (!deferredPrompt) return;
@@ -99,7 +122,7 @@ export default function Home() {
 
         <div className="mb-8 text-center">
 
-          <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-3xl bg-orange-500 overflow-hidden">
+          <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center overflow-hidden rounded-3xl bg-orange-500">
             <img
               src="/logo.png"
               alt="MandalSetu Logo"
