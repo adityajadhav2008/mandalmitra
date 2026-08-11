@@ -1,6 +1,7 @@
 {
   "name": "MandalSetu",
   "short_name": "MandalSetu",
+  "id": "/",
   "description": "Mandal management made simple.",
   "start_url": "/",
   "display": "standalone",
