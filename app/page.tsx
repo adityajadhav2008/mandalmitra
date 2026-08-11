@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { useLanguage } from "./language-provider";
 
 const translations = {
@@ -11,6 +12,10 @@ const translations = {
     create: "Create Mandal",
     login: "Login",
     made: "🇮🇳 Made for Mandals across India",
+    install: "Install MandalSetu App",
+    installText: "Get quick access from your home screen.",
+    installButton: "Install",
+    close: "Close",
   },
 
   Marathi: {
@@ -20,6 +25,10 @@ const translations = {
     create: "मंडळ तयार करा",
     login: "लॉगिन",
     made: "🇮🇳 भारतातील मंडळांसाठी बनवलेले",
+    install: "MandalSetu App Install करा",
+    installText: "Home screen वरून App पटकन वापरा.",
+    installButton: "Install",
+    close: "बंद",
   },
 
   Hindi: {
@@ -29,27 +38,72 @@ const translations = {
     create: "मंडल बनाएं",
     login: "लॉगिन",
     made: "🇮🇳 भारत के मंडलों के लिए बनाया गया",
+    install: "MandalSetu App Install करें",
+    installText: "Home screen से App जल्दी इस्तेमाल करें।",
+    installButton: "Install",
+    close: "बंद",
   },
 };
 
 export default function Home() {
   const { language } = useLanguage();
-
   const t = translations[language];
 
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [showInstall, setShowInstall] = useState(false);
+
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (event: Event) => {
+      event.preventDefault();
+
+      setDeferredPrompt(event);
+      setShowInstall(true);
+    };
+
+    window.addEventListener(
+      "beforeinstallprompt",
+      handleBeforeInstallPrompt
+    );
+
+    return () => {
+      window.removeEventListener(
+        "beforeinstallprompt",
+        handleBeforeInstallPrompt
+      );
+    };
+  }, []);
+
+  const handleInstall = async () => {
+    if (!deferredPrompt) return;
+
+    deferredPrompt.prompt();
+
+    const result = await deferredPrompt.userChoice;
+
+    if (result.outcome === "accepted") {
+      setShowInstall(false);
+    }
+
+    setDeferredPrompt(null);
+  };
+
+  const closeInstall = () => {
+    setShowInstall(false);
+  };
+
   return (
-    <main className="min-h-screen bg-gray-50 px-4 py-8">
+    <main className="min-h-screen bg-gray-50 px-4 py-8 pb-32">
       <div className="mx-auto max-w-md">
 
         {/* HEADER */}
 
         <div className="mb-8 text-center">
 
-          <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-3xl bg-orange-500">
+          <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-3xl bg-orange-500 overflow-hidden">
             <img
               src="/logo.png"
               alt="MandalSetu Logo"
-              className="h-16 w-16 object-contain"
+              className="h-full w-full object-cover"
             />
           </div>
 
@@ -102,6 +156,50 @@ export default function Home() {
         </p>
 
       </div>
+
+      {/* INSTALL BOTTOM BANNER */}
+
+      {showInstall && (
+        <div className="fixed bottom-0 left-0 right-0 z-50 px-3 pb-3">
+          <div className="mx-auto flex max-w-md items-center gap-3 rounded-2xl border border-orange-200 bg-white p-3 shadow-lg">
+
+            <div className="h-12 w-12 shrink-0 overflow-hidden rounded-xl bg-orange-500">
+              <img
+                src="/logo.png"
+                alt="MandalSetu"
+                className="h-full w-full object-cover"
+              />
+            </div>
+
+            <div className="min-w-0 flex-1">
+              <p className="font-bold text-gray-900">
+                {t.install}
+              </p>
+
+              <p className="truncate text-xs text-gray-500">
+                {t.installText}
+              </p>
+            </div>
+
+            <button
+              onClick={handleInstall}
+              className="shrink-0 rounded-xl bg-orange-500 px-4 py-2 text-sm font-semibold text-white hover:bg-orange-600"
+            >
+              {t.installButton}
+            </button>
+
+            <button
+              onClick={closeInstall}
+              className="shrink-0 text-lg text-gray-400"
+              aria-label={t.close}
+            >
+              ×
+            </button>
+
+          </div>
+        </div>
+      )}
+
     </main>
   );
 }
