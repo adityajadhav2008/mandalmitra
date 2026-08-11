@@ -45,8 +45,12 @@ export default function Home() {
 
         <div className="mb-8 text-center">
 
-          <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-3xl bg-orange-500 text-4xl">
-            🏛️
+          <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-3xl bg-orange-500">
+            <img
+              src="/logo.png"
+              alt="MandalSetu Logo"
+              className="h-16 w-16 object-contain"
+            />
           </div>
 
           <h1 className="text-4xl font-bold text-gray-900">
