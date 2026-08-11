@@ -2,7 +2,7 @@ import "./globals.css";
 import { LanguageProvider } from "./language-provider";
 
 export const metadata = {
-  title: "MandalMitra",
+  title: "MandalSetu",
   description: "Every Mandal, One Simple Platform",
 };
 

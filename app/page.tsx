@@ -50,7 +50,7 @@ export default function Home() {
           </div>
 
           <h1 className="text-4xl font-bold text-gray-900">
-            MandalMitra
+            MandalSetu
           </h1>
 
           <p className="mt-2 text-gray-500">

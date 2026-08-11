@@ -408,7 +408,7 @@ ${mandalName} ची पावती
 
 आपल्या अमूल्य योगदानाबद्दल मनःपूर्वक धन्यवाद! 🙏
 
-MandalMitra — प्रत्येक मंडळासाठी एक सोपा प्लॅटफॉर्म`;
+MandalSetu — प्रत्येक मंडळासाठी एक सोपा प्लॅटफॉर्म`;
     }
 
     if (language === "Hindi") {
@@ -424,7 +424,7 @@ ${mandalName} की रसीद
 
 आपके अमूल्य योगदान के लिए हार्दिक धन्यवाद! 🙏
 
-MandalMitra — हर मंडल के लिए एक सरल प्लेटफॉर्म`;
+MandalSetu — हर मंडल के लिए एक सरल प्लेटफॉर्म`;
     }
 
     return `Hello 🙏
@@ -439,7 +439,7 @@ Date: ${formatDate(date)}
 
 Thank you sincerely for your valuable contribution! 🙏
 
-MandalMitra — One Simple Platform for Every Mandal`;
+MandalSetu — One Simple Platform for Every Mandal`;
   }
 
   async function sendWhatsApp() {

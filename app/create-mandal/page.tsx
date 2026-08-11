@@ -133,7 +133,7 @@ export default function CreateMandal() {
           </h1>
 
           <p className="mt-2 text-gray-500">
-            Register your Mandal on MandalMitra
+            Register your Mandal on MandalSetu
           </p>
 
         </div>

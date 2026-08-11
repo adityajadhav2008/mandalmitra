@@ -51,7 +51,7 @@ const translations = {
     aboutSubText:
       "Manage members, collections, expenses and events.",
     aboutDetails:
-      "MandalMitra helps Mandals manage members, collections, receipts, expenses, events and reports in one place.",
+      "MandalSetu helps Mandals manage members, collections, receipts, expenses, events and reports in one place.",
 
     logo: "Mandal Logo",
     logoText:
@@ -1129,7 +1129,7 @@ export default function SettingsPage() {
                 </p>
 
                 <div className="mt-4 border-t pt-4 text-sm text-gray-400">
-                  MandalMitra
+                  MandalSetu
                 </div>
 
               </div>
