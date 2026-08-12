@@ -574,7 +574,7 @@ export default function Dashboard() {
 
             <div className="relative flex items-center gap-4">
 
-              {/* LOGO */}
+              {/* LOGO - SIZE UNCHANGED */}
 
               <button
                 onClick={openProfile}
@@ -595,19 +595,12 @@ export default function Dashboard() {
                 )}
               </button>
 
-              {/* TEXT */}
+              {/* ONLY MANDAL NAME */}
 
               <div className="min-w-0">
-
-                <p className="text-sm font-semibold text-white/90 sm:text-base">
-                  {t.namaskar},{" "}
-                  {account.leaderName || "Aditya"} 😄
-                </p>
-
-                <h1 className="mt-1 text-xl font-bold leading-tight sm:text-3xl">
-                  {t.welcome}
+                <h1 className="text-2xl font-extrabold leading-tight sm:text-4xl">
+                  {account.mandalName}
                 </h1>
-
               </div>
 
             </div>
@@ -619,23 +612,6 @@ export default function Dashboard() {
           ========================= */}
 
           <section className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
-
-            {/* ANNOUNCEMENTS */}
-
-            <button
-              onClick={openAnnouncements}
-              className="relative min-h-[125px] overflow-hidden rounded-[22px] bg-gradient-to-br from-[#1677ee] to-[#0755c9] p-4 text-left shadow-xl transition active:scale-[0.98]"
-            >
-              <div className="absolute -right-5 -top-5 h-20 w-20 rounded-full bg-white/10" />
-
-              <p className="text-3xl font-extrabold sm:text-4xl">
-                {latestAnnouncements.length}
-              </p>
-
-              <p className="mt-3 text-sm font-bold leading-tight sm:text-base">
-                {t.announcements}
-              </p>
-            </button>
 
             {/* EVENTS */}
 
@@ -654,7 +630,7 @@ export default function Dashboard() {
               </p>
             </button>
 
-            {/* COLLECTION - SEPARATE */}
+            {/* COLLECTION */}
 
             <button
               onClick={openCollection}
@@ -692,7 +668,7 @@ export default function Dashboard() {
               </p>
             </button>
 
-            {/* EXPENSES - SEPARATE */}
+            {/* EXPENSES */}
 
             <button
               onClick={openExpenses}
@@ -742,6 +718,74 @@ export default function Dashboard() {
                 {t.reports}
               </p>
             </button>
+
+          </section>
+
+          {/* =========================
+              LATEST ANNOUNCEMENTS
+              MOVED ABOVE EVENTS
+          ========================= */}
+
+          <section className="mt-8 border-t border-white/10 pt-7">
+
+            <div className="mb-4 flex items-center justify-between px-1">
+
+              <h2 className="text-xl font-bold sm:text-2xl">
+                {t.latestAnnouncements}
+              </h2>
+
+              <button
+                onClick={openAnnouncements}
+                className="text-sm font-semibold text-[#91a4c9] transition hover:text-white sm:text-base"
+              >
+                {t.viewAll} →
+              </button>
+
+            </div>
+
+            <div className="space-y-3">
+
+              {latestAnnouncements.length > 0 ? (
+                latestAnnouncements.map((announcement) => (
+
+                  <button
+                    key={announcement.id}
+                    onClick={openAnnouncements}
+                    className="relative flex w-full items-start gap-4 overflow-hidden rounded-[18px] border border-white/10 bg-[#1a2334]/90 p-4 text-left shadow-xl transition active:scale-[0.99]"
+                  >
+
+                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-[#24304a] text-2xl">
+                      📣
+                    </div>
+
+                    <div className="min-w-0 flex-1">
+
+                      <h3 className="text-base font-bold sm:text-lg">
+                        {announcement.title}
+                      </h3>
+
+                      <p className="mt-1 line-clamp-2 text-sm leading-5 text-white/55">
+                        {announcement.message}
+                      </p>
+
+                      <p className="mt-2 text-xs text-white/35">
+                        {formatDate(
+                          announcement.created_at
+                        )}
+                      </p>
+
+                    </div>
+
+                  </button>
+
+                ))
+              ) : (
+                <div className="rounded-[18px] border border-white/10 bg-[#1a2334] p-6 text-center text-white/50">
+                  {t.noAnnouncements}
+                </div>
+              )}
+
+            </div>
 
           </section>
 
@@ -807,73 +851,6 @@ export default function Dashboard() {
               ) : (
                 <div className="rounded-[18px] border border-white/10 bg-[#1a2334] p-6 text-center text-white/50">
                   {t.noEvents}
-                </div>
-              )}
-
-            </div>
-
-          </section>
-
-          {/* =========================
-              LATEST ANNOUNCEMENTS
-          ========================= */}
-
-          <section className="mt-8 border-t border-white/10 pt-7">
-
-            <div className="mb-4 flex items-center justify-between px-1">
-
-              <h2 className="text-xl font-bold sm:text-2xl">
-                {t.latestAnnouncements}
-              </h2>
-
-              <button
-                onClick={openAnnouncements}
-                className="text-sm font-semibold text-[#91a4c9] transition hover:text-white sm:text-base"
-              >
-                {t.viewAll} →
-              </button>
-
-            </div>
-
-            <div className="space-y-3">
-
-              {latestAnnouncements.length > 0 ? (
-                latestAnnouncements.map((announcement) => (
-
-                  <button
-                    key={announcement.id}
-                    onClick={openAnnouncements}
-                    className="relative flex w-full items-start gap-4 overflow-hidden rounded-[18px] border border-white/10 bg-[#1a2334]/90 p-4 text-left shadow-xl transition active:scale-[0.99]"
-                  >
-
-                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-[#24304a] text-2xl">
-                      📣
-                    </div>
-
-                    <div className="min-w-0 flex-1">
-
-                      <h3 className="text-base font-bold sm:text-lg">
-                        {announcement.title}
-                      </h3>
-
-                      <p className="mt-1 line-clamp-2 text-sm leading-5 text-white/55">
-                        {announcement.message}
-                      </p>
-
-                      <p className="mt-2 text-xs text-white/35">
-                        {formatDate(
-                          announcement.created_at
-                        )}
-                      </p>
-
-                    </div>
-
-                  </button>
-
-                ))
-              ) : (
-                <div className="rounded-[18px] border border-white/10 bg-[#1a2334] p-6 text-center text-white/50">
-                  {t.noAnnouncements}
                 </div>
               )}
 
