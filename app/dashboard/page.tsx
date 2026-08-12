@@ -21,131 +21,75 @@ type EventItem = {
   description: string;
 };
 
+type Announcement = {
+  id: string;
+  title: string;
+  message: string;
+  created_at: string;
+};
+
 const translations = {
   English: {
-    welcomeBack: "Welcome back 👋",
-    latestEvent: "🔔 Latest Event Update",
-    view: "View →",
-    dashboard: "Mandal Dashboard",
-    overview: "Overview",
-    members: "Members",
+    welcome: "Welcome to MandalMitra",
+    namaskar: "Namaskar",
+    announcements: "Announcements",
+    upcomingEvents: "Upcoming Events",
     collection: "Collection",
     expenses: "Expenses",
     balance: "Balance",
-    events: "Events",
-    manageMandal: "Manage Mandal",
-    manageMembers: "Add and manage Mandal members.",
-    manageCollection: "Add and manage collection.",
-    manageExpenses: "Track Mandal expenses.",
-    manageEvents: "Manage Mandal events and programs.",
-    manageReports: "View collection, expenses and balance.",
-    manageReceipt: "Create and manage Mandal receipts.",
-    openMembers: "Open Members →",
-    openCollection: "Open Collection →",
-    openExpenses: "Open Expenses →",
-    openEvents: "Open Events →",
-    openReports: "Open Reports →",
-    openReceipt: "Open Receipt →",
-    settings: "Settings",
-    settingsDescription:
-      "Manage language, account and preferences.",
-    openSettings: "Open Settings →",
-    mandalInformation: "Mandal Information",
-    leader: "Leader",
-    mobile: "Mobile",
-    city: "City / Village",
-    state: "State",
+    members: "Members",
     reports: "Reports",
-    receipt: "Receipt",
+    manageMembers: "Manage Members",
+    latestAnnouncements: "Latest Announcements",
+    viewAll: "View All",
+    dashboard: "Dashboard",
+    events: "Events",
+    profile: "Profile",
     loading: "Loading Dashboard...",
+    noEvents: "No upcoming events",
+    noAnnouncements: "No announcements yet",
   },
 
   Marathi: {
-    welcomeBack: "पुन्हा स्वागत आहे 👋",
-    latestEvent: "🔔 नवीन कार्यक्रम अपडेट",
-    view: "पहा →",
-    dashboard: "मंडळ डॅशबोर्ड",
-    overview: "आढावा",
-    members: "सदस्य",
+    welcome: "MandalMitra मध्ये आपले स्वागत आहे",
+    namaskar: "नमस्कार",
+    announcements: "घोषणा",
+    upcomingEvents: "आगामी कार्यक्रम",
     collection: "वर्गणी",
     expenses: "खर्च",
     balance: "शिल्लक",
+    members: "सदस्य",
+    reports: "अहवाल",
+    manageMembers: "सदस्य व्यवस्थापन",
+    latestAnnouncements: "नवीन घोषणा",
+    viewAll: "सर्व पहा",
+    dashboard: "डॅशबोर्ड",
     events: "कार्यक्रम",
-    manageMandal: "मंडळ व्यवस्थापन",
-    manageMembers:
-      "मंडळाचे सदस्य जोडा आणि व्यवस्थापित करा.",
-    manageCollection:
-      "वर्गणी जोडा आणि व्यवस्थापित करा.",
-    manageExpenses:
-      "मंडळाचा खर्च नोंदवा.",
-    manageEvents:
-      "मंडळाचे कार्यक्रम व्यवस्थापित करा.",
-    manageReports:
-      "वर्गणी, खर्च आणि शिल्लक पहा.",
-    manageReceipt:
-      "मंडळाच्या पावत्या तयार करा आणि व्यवस्थापित करा.",
-    openMembers: "सदस्य उघडा →",
-    openCollection: "वर्गणी उघडा →",
-    openExpenses: "खर्च उघडा →",
-    openEvents: "कार्यक्रम उघडा →",
-    openReports: "रिपोर्ट्स उघडा →",
-    openReceipt: "पावती उघडा →",
-    settings: "सेटिंग्ज",
-    settingsDescription:
-      "भाषा, खाते आणि preferences व्यवस्थापित करा.",
-    openSettings: "सेटिंग्ज उघडा →",
-    mandalInformation: "मंडळाची माहिती",
-    leader: "प्रमुख",
-    mobile: "मोबाईल",
-    city: "शहर / गाव",
-    state: "राज्य",
-    reports: "रिपोर्ट्स",
-    receipt: "पावती",
+    profile: "प्रोफाइल",
     loading: "डॅशबोर्ड लोड होत आहे...",
+    noEvents: "आगामी कार्यक्रम नाहीत",
+    noAnnouncements: "अजून कोणतीही घोषणा नाही",
   },
 
   Hindi: {
-    welcomeBack: "फिर से स्वागत है 👋",
-    latestEvent: "🔔 नया कार्यक्रम अपडेट",
-    view: "देखें →",
-    dashboard: "मंडल डैशबोर्ड",
-    overview: "अवलोकन",
-    members: "सदस्य",
+    welcome: "MandalMitra में आपका स्वागत है",
+    namaskar: "नमस्कार",
+    announcements: "घोषणाएं",
+    upcomingEvents: "आगामी कार्यक्रम",
     collection: "संग्रह",
     expenses: "खर्च",
     balance: "शेष राशि",
-    events: "कार्यक्रम",
-    manageMandal: "मंडल प्रबंधन",
-    manageMembers:
-      "मंडल के सदस्यों को जोड़ें और प्रबंधित करें।",
-    manageCollection:
-      "संग्रह जोड़ें और प्रबंधित करें।",
-    manageExpenses:
-      "मंडल के खर्च को ट्रैक करें।",
-    manageEvents:
-      "मंडल के कार्यक्रम प्रबंधित करें।",
-    manageReports:
-      "संग्रह, खर्च और शेष राशि देखें।",
-    manageReceipt:
-      "मंडल की रसीद बनाएं और प्रबंधित करें।",
-    openMembers: "सदस्य खोलें →",
-    openCollection: "संग्रह खोलें →",
-    openExpenses: "खर्च खोलें →",
-    openEvents: "कार्यक्रम खोलें →",
-    openReports: "रिपोर्ट खोलें →",
-    openReceipt: "रसीद खोलें →",
-    settings: "सेटिंग्स",
-    settingsDescription:
-      "भाषा, खाते और preferences प्रबंधित करें.",
-    openSettings: "सेटिंग्स खोलें →",
-    mandalInformation: "मंडल की जानकारी",
-    leader: "प्रमुख",
-    mobile: "मोबाइल",
-    city: "शहर / गांव",
-    state: "राज्य",
+    members: "सदस्य",
     reports: "रिपोर्ट",
-    receipt: "रसीद",
+    manageMembers: "सदस्य प्रबंधन",
+    latestAnnouncements: "नई घोषणाएं",
+    viewAll: "सभी देखें",
+    dashboard: "डैशबोर्ड",
+    events: "कार्यक्रम",
+    profile: "प्रोफाइल",
     loading: "डैशबोर्ड लोड हो रहा है...",
+    noEvents: "कोई आगामी कार्यक्रम नहीं",
+    noAnnouncements: "अभी कोई घोषणा नहीं",
   },
 };
 
@@ -154,42 +98,32 @@ export default function Dashboard() {
   const supabase = createClient();
 
   const { language, setLanguage } = useLanguage();
-
   const t = translations[language];
 
-  const [account, setAccount] =
-    useState<Account | null>(null);
+  const [account, setAccount] = useState<Account | null>(null);
+  const [logoUrl, setLogoUrl] = useState("");
 
-  const [logoUrl, setLogoUrl] =
-    useState("");
+  const [memberCount, setMemberCount] = useState(0);
+  const [collectionTotal, setCollectionTotal] = useState(0);
+  const [expenseTotal, setExpenseTotal] = useState(0);
+  const [balanceTotal, setBalanceTotal] = useState(0);
+  const [eventCount, setEventCount] = useState(0);
 
-  const [memberCount, setMemberCount] =
-    useState(0);
+  const [latestEvents, setLatestEvents] = useState<EventItem[]>([]);
+  const [latestAnnouncements, setLatestAnnouncements] =
+    useState<Announcement[]>([]);
 
-  const [collectionTotal, setCollectionTotal] =
-    useState(0);
+  const [loading, setLoading] = useState(true);
 
-  const [expenseTotal, setExpenseTotal] =
-    useState(0);
-
-  const [eventCount, setEventCount] =
-    useState(0);
-
-  const [latestEvent, setLatestEvent] =
-    useState<EventItem | null>(null);
-
-  const [loading, setLoading] =
-    useState(true);
+  // =========================
+  // LOAD DASHBOARD
+  // =========================
 
   useEffect(() => {
     let active = true;
 
     async function loadDashboard() {
       setLoading(true);
-
-      // =========================
-      // MANDAL
-      // =========================
 
       const {
         data: { session },
@@ -202,6 +136,10 @@ export default function Dashboard() {
 
       const user = session.user;
 
+      // =========================
+      // MANDAL
+      // =========================
+
       const {
         data: mandal,
         error: mandalError,
@@ -212,10 +150,7 @@ export default function Dashboard() {
         .maybeSingle();
 
       if (mandalError) {
-        console.error(
-          "MANDAL DASHBOARD ERROR:",
-          mandalError
-        );
+        console.error("MANDAL DASHBOARD ERROR:", mandalError);
       }
 
       if (!mandal) {
@@ -226,29 +161,14 @@ export default function Dashboard() {
       if (!active) return;
 
       setAccount({
-        mandalName:
-          mandal.mandal_name || "",
-
-        leaderName:
-          mandal.leader_name || "",
-
-        mobile:
-          mandal.mobile || "",
-
-        city:
-          mandal.city || "",
-
-        state:
-          mandal.state || "",
+        mandalName: mandal.mandal_name || "",
+        leaderName: mandal.leader_name || "",
+        mobile: mandal.mobile || "",
+        city: mandal.city || "",
+        state: mandal.state || "",
       });
 
-      // =========================
-      // MANDAL LOGO
-      // =========================
-
-      setLogoUrl(
-        mandal.logo_url || ""
-      );
+      setLogoUrl(mandal.logo_url || "");
 
       if (
         mandal.language === "English" ||
@@ -276,16 +196,10 @@ export default function Dashboard() {
         .eq("user_id", user.id);
 
       if (membersError) {
-        console.error(
-          "MEMBERS COUNT ERROR:",
-          membersError
-        );
-
+        console.error("MEMBERS COUNT ERROR:", membersError);
         setMemberCount(0);
       } else {
-        setMemberCount(
-          membersCount || 0
-        );
+        setMemberCount(membersCount || 0);
       }
 
       // =========================
@@ -300,6 +214,8 @@ export default function Dashboard() {
         .select("amount")
         .eq("user_id", user.id);
 
+      let totalCollection = 0;
+
       if (collectionError) {
         console.error(
           "COLLECTION DASHBOARD ERROR:",
@@ -308,19 +224,16 @@ export default function Dashboard() {
 
         setCollectionTotal(0);
       } else {
-        const total =
-          (collectionData || []).reduce(
-            (sum, item) =>
-              sum +
-              Number(item.amount || 0),
-            0
-          );
+        totalCollection = (collectionData || []).reduce(
+          (sum, item) => sum + Number(item.amount || 0),
+          0
+        );
 
-        setCollectionTotal(total);
+        setCollectionTotal(totalCollection);
       }
 
       // =========================
-      // EXPENSE
+      // EXPENSES
       // =========================
 
       const {
@@ -331,6 +244,8 @@ export default function Dashboard() {
         .select("amount")
         .eq("user_id", user.id);
 
+      let totalExpenses = 0;
+
       if (expenseError) {
         console.error(
           "EXPENSE DASHBOARD ERROR:",
@@ -339,16 +254,19 @@ export default function Dashboard() {
 
         setExpenseTotal(0);
       } else {
-        const total =
-          (expenseData || []).reduce(
-            (sum, item) =>
-              sum +
-              Number(item.amount || 0),
-            0
-          );
+        totalExpenses = (expenseData || []).reduce(
+          (sum, item) => sum + Number(item.amount || 0),
+          0
+        );
 
-        setExpenseTotal(total);
+        setExpenseTotal(totalExpenses);
       }
+
+      // =========================
+      // BALANCE
+      // =========================
+
+      setBalanceTotal(totalCollection - totalExpenses);
 
       // =========================
       // EVENTS
@@ -372,32 +290,47 @@ export default function Dashboard() {
         );
 
         setEventCount(0);
-        setLatestEvent(null);
+        setLatestEvents([]);
       } else {
-        setEventCount(
-          (eventData || []).length
+        const events = (eventData || []).map((event) => ({
+          id: String(event.id),
+          title: event.title || "",
+          location: event.location || "",
+          date: event.date || "",
+          description: event.description || "",
+        }));
+
+        setEventCount(events.length);
+        setLatestEvents(events.slice(0, 2));
+      }
+
+      // =========================
+      // ANNOUNCEMENTS
+      // =========================
+
+      const {
+        data: announcementData,
+        error: announcementError,
+      } = await supabase
+        .from("announcements")
+        .select("id, title, message, created_at")
+        .eq("user_id", user.id)
+        .order("created_at", {
+          ascending: false,
+        })
+        .limit(2);
+
+      if (announcementError) {
+        console.error(
+          "ANNOUNCEMENTS DASHBOARD ERROR:",
+          announcementError
         );
 
-        if (
-          eventData &&
-          eventData.length > 0
-        ) {
-          const latest = eventData[0];
-
-          setLatestEvent({
-            id: String(latest.id),
-            title:
-              latest.title || "",
-            location:
-              latest.location || "",
-            date:
-              latest.date || "",
-            description:
-              latest.description || "",
-          });
-        } else {
-          setLatestEvent(null);
-        }
+        setLatestAnnouncements([]);
+      } else {
+        setLatestAnnouncements(
+          announcementData || []
+        );
       }
 
       if (active) {
@@ -411,24 +344,25 @@ export default function Dashboard() {
       loadDashboard();
     };
 
-    window.addEventListener(
-      "focus",
-      handleFocus
-    );
+    window.addEventListener("focus", handleFocus);
 
     return () => {
       active = false;
-
-      window.removeEventListener(
-        "focus",
-        handleFocus
-      );
+      window.removeEventListener("focus", handleFocus);
     };
   }, [router, setLanguage]);
 
   // =========================
   // NAVIGATION
   // =========================
+
+  function openEvents() {
+    router.push("/events");
+  }
+
+  function openAnnouncements() {
+    router.push("/announcements");
+  }
 
   function openMembers() {
     router.push("/members");
@@ -442,26 +376,50 @@ export default function Dashboard() {
     router.push("/expenses");
   }
 
-  function openEvents() {
-    router.push("/events");
-  }
-
   function openReports() {
     router.push("/reports");
   }
 
-  // IMPORTANT:
-  // Receipt page is /create-receipt
-  function openReceipt() {
-    router.push("/create-receipt");
+  function openProfile() {
+    router.push("/settings");
   }
 
   // =========================
-  // BALANCE
+  // DATE
   // =========================
 
-  const balance =
-    collectionTotal - expenseTotal;
+  function formatDate(date: string) {
+    if (!date) return "";
+
+    try {
+      return new Date(date).toLocaleDateString(
+        "en-IN",
+        {
+          day: "numeric",
+          month: "short",
+          year: "numeric",
+        }
+      );
+    } catch {
+      return date;
+    }
+  }
+
+  // =========================
+  // MONEY FORMAT
+  // =========================
+
+  function formatMoney(amount: number) {
+    if (amount >= 100000) {
+      return `${(amount / 100000).toFixed(1)}L`;
+    }
+
+    if (amount >= 1000) {
+      return `${Math.round(amount / 1000)}K`;
+    }
+
+    return amount.toString();
+  }
 
   // =========================
   // LOADING
@@ -469,9 +427,11 @@ export default function Dashboard() {
 
   if (loading || !account) {
     return (
-      <main className="min-h-screen bg-gray-50">
-        <div className="flex min-h-screen items-center justify-center">
-          <p className="text-gray-500">
+      <main className="flex min-h-screen items-center justify-center bg-[#101725]">
+        <div className="text-center">
+          <div className="mx-auto mb-4 h-10 w-10 animate-spin rounded-full border-4 border-orange-400 border-t-transparent" />
+
+          <p className="text-white/70">
             {t.loading}
           </p>
         </div>
@@ -484,429 +444,536 @@ export default function Dashboard() {
   // =========================
 
   return (
-    <main className="min-h-screen bg-gray-50">
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+    <main className="min-h-screen overflow-x-hidden bg-[#101725] text-white">
 
-        {/* HEADER */}
+      {/* =========================
+          DESKTOP SIDEBAR
+      ========================= */}
 
-        <div className="mb-8 flex items-center justify-between">
-          <div>
-            <p className="text-sm text-gray-500">
-              {t.welcomeBack}
-            </p>
+      <aside className="fixed left-0 top-0 z-40 hidden h-screen w-[250px] border-r border-white/10 bg-[#10182b]/95 px-5 py-7 backdrop-blur-xl lg:block">
 
-            <h1 className="text-3xl font-bold text-gray-900">
-              {account.mandalName}
-            </h1>
-          </div>
+        {/* LOGO */}
 
-          {/* MANDAL LOGO / SETTINGS */}
-
-          <button
-            type="button"
-            onClick={() =>
-              router.push("/settings")
-            }
-            className="cursor-pointer"
-            title={t.settings}
-          >
-            {logoUrl ? (
-              <div className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-2xl border bg-white p-2 shadow-sm transition hover:shadow-md">
-                <img
-                  src={logoUrl}
-                  alt="Mandal Logo"
-                  className="max-h-full max-w-full object-contain"
-                />
-              </div>
-            ) : (
-              <div className="flex h-20 w-20 items-center justify-center rounded-2xl border bg-white text-3xl shadow-sm transition hover:shadow-md">
-                ⚙️
-              </div>
-            )}
-          </button>
+        <div className="mb-10 flex justify-center">
+          {logoUrl ? (
+            <div className="flex h-28 w-28 items-center justify-center overflow-hidden rounded-3xl bg-white p-2 shadow-2xl">
+              <img
+                src={logoUrl}
+                alt="MandalSetu Logo"
+                className="h-full w-full object-contain"
+              />
+            </div>
+          ) : (
+            <div className="flex h-28 w-28 items-center justify-center rounded-3xl bg-white text-4xl">
+              🏛️
+            </div>
+          )}
         </div>
 
-        {/* LATEST EVENT */}
+        <nav className="space-y-2">
 
-        {latestEvent && (
+          {/* DASHBOARD */}
+
           <button
-            type="button"
-            onClick={openEvents}
-            className="mb-8 w-full cursor-pointer rounded-3xl border border-orange-200 bg-orange-50 p-6 text-left shadow-sm transition hover:shadow-md"
+            onClick={() => router.push("/dashboard")}
+            className="flex w-full items-center gap-4 rounded-2xl bg-white/10 px-5 py-4 text-left font-semibold text-white shadow-lg"
           >
-            <div className="flex items-center justify-between">
-              <div>
-
-                <p className="text-sm font-semibold text-orange-600">
-                  {t.latestEvent}
-                </p>
-
-                <h2 className="mt-2 text-xl font-bold text-gray-900">
-                  {latestEvent.title}
-                </h2>
-
-                <p className="mt-1 text-sm text-gray-600">
-                  📍 {latestEvent.location}
-                </p>
-
-                <p className="mt-1 text-sm text-orange-600">
-                  📅 {latestEvent.date}
-                </p>
-
-              </div>
-
-              <span className="font-semibold text-orange-500">
-                {t.view}
-              </span>
-            </div>
-          </button>
-        )}
-
-        {/* DASHBOARD BANNER */}
-
-        <div className="rounded-3xl bg-orange-500 p-7 text-white">
-          <h2 className="text-2xl font-bold">
+            <span className="text-2xl">⌂</span>
             {t.dashboard}
-          </h2>
-
-          <p className="mt-2">
-            {account.city},{" "}
-            {account.state}
-          </p>
-        </div>
-
-        {/* OVERVIEW */}
-
-        <h2 className="mt-8 text-xl font-bold text-gray-900">
-          {t.overview}
-        </h2>
-
-        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-
-          {/* MEMBERS */}
-
-          <div className="rounded-2xl border bg-white p-5 shadow-sm">
-            <div className="text-3xl">
-              👥
-            </div>
-
-            <p className="mt-3 text-sm text-gray-500">
-              {t.members}
-            </p>
-
-            <p className="mt-1 text-2xl font-bold text-gray-900">
-              {memberCount}
-            </p>
-          </div>
-
-          {/* COLLECTION */}
-
-          <div className="rounded-2xl border bg-white p-5 shadow-sm">
-            <div className="text-3xl">
-              💰
-            </div>
-
-            <p className="mt-3 text-sm text-gray-500">
-              {t.collection}
-            </p>
-
-            <p className="mt-1 text-2xl font-bold text-green-600">
-              ₹{collectionTotal}
-            </p>
-          </div>
-
-          {/* EXPENSE */}
-
-          <div className="rounded-2xl border bg-white p-5 shadow-sm">
-            <div className="text-3xl">
-              🧾
-            </div>
-
-            <p className="mt-3 text-sm text-gray-500">
-              {t.expenses}
-            </p>
-
-            <p className="mt-1 text-2xl font-bold text-red-500">
-              ₹{expenseTotal}
-            </p>
-          </div>
-
-          {/* BALANCE */}
-
-          <div className="rounded-2xl border bg-white p-5 shadow-sm">
-            <div className="text-3xl">
-              💵
-            </div>
-
-            <p className="mt-3 text-sm text-gray-500">
-              {t.balance}
-            </p>
-
-            <p
-              className={`mt-1 text-2xl font-bold ${
-                balance >= 0
-                  ? "text-green-600"
-                  : "text-red-600"
-              }`}
-            >
-              ₹{balance}
-            </p>
-          </div>
-
-          {/* EVENTS */}
-
-          <div className="rounded-2xl border bg-white p-5 shadow-sm">
-            <div className="text-3xl">
-              🎉
-            </div>
-
-            <p className="mt-3 text-sm text-gray-500">
-              {t.events}
-            </p>
-
-            <p className="mt-1 text-2xl font-bold text-gray-900">
-              {eventCount}
-            </p>
-          </div>
-
-        </div>
-
-        {/* MANAGE MANDAL */}
-
-        <h2 className="mt-10 text-xl font-bold text-gray-900">
-          {t.manageMandal}
-        </h2>
-
-        <div className="mt-4 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          </button>
 
           {/* MEMBERS */}
 
           <button
-            type="button"
             onClick={openMembers}
-            className="cursor-pointer rounded-2xl border bg-white p-6 text-left shadow-sm transition hover:-translate-y-1 hover:border-orange-500 hover:shadow-md"
+            className="flex w-full items-center gap-4 rounded-2xl px-5 py-3 text-left text-white/75 transition hover:bg-white/10 hover:text-white"
           >
-            <div className="text-4xl">
-              👥
-            </div>
-
-            <h3 className="mt-3 text-lg font-bold text-gray-900">
-              {t.members}
-            </h3>
-
-            <p className="mt-1 text-sm text-gray-500">
-              {t.manageMembers}
-            </p>
-
-            <p className="mt-4 font-semibold text-orange-500">
-              {t.openMembers}
-            </p>
+            <span className="text-2xl">👥</span>
+            {t.members}
           </button>
 
           {/* COLLECTION */}
 
           <button
-            type="button"
             onClick={openCollection}
-            className="cursor-pointer rounded-2xl border bg-white p-6 text-left shadow-sm transition hover:-translate-y-1 hover:border-orange-500 hover:shadow-md"
+            className="flex w-full items-center gap-4 rounded-2xl px-5 py-3 text-left text-white/75 transition hover:bg-white/10 hover:text-white"
           >
-            <div className="text-4xl">
-              💰
-            </div>
-
-            <h3 className="mt-3 text-lg font-bold text-gray-900">
-              {t.collection}
-            </h3>
-
-            <p className="mt-1 text-sm text-gray-500">
-              {t.manageCollection}
-            </p>
-
-            <p className="mt-4 font-semibold text-orange-500">
-              {t.openCollection}
-            </p>
+            <span className="text-2xl">💰</span>
+            {t.collection}
           </button>
 
           {/* EXPENSES */}
 
           <button
-            type="button"
             onClick={openExpenses}
-            className="cursor-pointer rounded-2xl border bg-white p-6 text-left shadow-sm transition hover:-translate-y-1 hover:border-orange-500 hover:shadow-md"
+            className="flex w-full items-center gap-4 rounded-2xl px-5 py-3 text-left text-white/75 transition hover:bg-white/10 hover:text-white"
           >
-            <div className="text-4xl">
-              🧾
-            </div>
-
-            <h3 className="mt-3 text-lg font-bold text-gray-900">
-              {t.expenses}
-            </h3>
-
-            <p className="mt-1 text-sm text-gray-500">
-              {t.manageExpenses}
-            </p>
-
-            <p className="mt-4 font-semibold text-orange-500">
-              {t.openExpenses}
-            </p>
-          </button>
-
-          {/* EVENTS */}
-
-          <button
-            type="button"
-            onClick={openEvents}
-            className="cursor-pointer rounded-2xl border bg-white p-6 text-left shadow-sm transition hover:-translate-y-1 hover:border-orange-500 hover:shadow-md"
-          >
-            <div className="text-4xl">
-              🎉
-            </div>
-
-            <h3 className="mt-3 text-lg font-bold text-gray-900">
-              {t.events}
-            </h3>
-
-            <p className="mt-1 text-sm text-gray-500">
-              {t.manageEvents}
-            </p>
-
-            <p className="mt-4 font-semibold text-orange-500">
-              {t.openEvents}
-            </p>
+            <span className="text-2xl">💸</span>
+            {t.expenses}
           </button>
 
           {/* REPORTS */}
 
           <button
-            type="button"
             onClick={openReports}
-            className="cursor-pointer rounded-2xl border bg-white p-6 text-left shadow-sm transition hover:-translate-y-1 hover:border-orange-500 hover:shadow-md"
+            className="flex w-full items-center gap-4 rounded-2xl px-5 py-3 text-left text-white/75 transition hover:bg-white/10 hover:text-white"
           >
-            <div className="text-4xl">
-              📊
-            </div>
-
-            <h3 className="mt-3 text-lg font-bold text-gray-900">
-              {t.reports}
-            </h3>
-
-            <p className="mt-1 text-sm text-gray-500">
-              {t.manageReports}
-            </p>
-
-            <p className="mt-4 font-semibold text-orange-500">
-              {t.openReports}
-            </p>
+            <span className="text-2xl">📊</span>
+            {t.reports}
           </button>
 
-          {/* RECEIPT */}
+          {/* ANNOUNCEMENTS */}
 
           <button
-            type="button"
-            onClick={openReceipt}
-            className="cursor-pointer rounded-2xl border bg-white p-6 text-left shadow-sm transition hover:-translate-y-1 hover:border-orange-500 hover:shadow-md"
+            onClick={openAnnouncements}
+            className="flex w-full items-center gap-4 rounded-2xl px-5 py-3 text-left text-white/75 transition hover:bg-white/10 hover:text-white"
           >
-            <div className="text-4xl">
-              🧾
-            </div>
-
-            <h3 className="mt-3 text-lg font-bold text-gray-900">
-              {t.receipt}
-            </h3>
-
-            <p className="mt-1 text-sm text-gray-500">
-              {t.manageReceipt}
-            </p>
-
-            <p className="mt-4 font-semibold text-orange-500">
-              {t.openReceipt}
-            </p>
+            <span className="text-2xl">📣</span>
+            {t.announcements}
           </button>
 
-        </div>
+          {/* EVENTS */}
 
-        {/* SETTINGS */}
-
-        <div className="mt-6">
           <button
-            type="button"
-            onClick={() =>
-              router.push("/settings")
-            }
-            className="w-full cursor-pointer rounded-2xl border bg-white p-5 text-left shadow-sm transition hover:-translate-y-1 hover:border-orange-500 hover:shadow-md"
+            onClick={openEvents}
+            className="flex w-full items-center gap-4 rounded-2xl px-5 py-3 text-left text-white/75 transition hover:bg-white/10 hover:text-white"
           >
-            <div className="text-3xl">
-              ⚙️
-            </div>
-
-            <h3 className="mt-2 text-lg font-bold text-gray-900">
-              {t.settings}
-            </h3>
-
-            <p className="mt-1 text-sm text-gray-500">
-              {t.settingsDescription}
-            </p>
-
-            <p className="mt-3 font-semibold text-orange-500">
-              {t.openSettings}
-            </p>
+            <span className="text-2xl">📅</span>
+            {t.events}
           </button>
-        </div>
 
-        {/* MANDAL INFORMATION */}
+        </nav>
 
-        <div className="mt-8 rounded-2xl border bg-white p-6 shadow-sm">
+        {/* PROFILE */}
 
-          <h2 className="font-bold text-gray-900">
-            {t.mandalInformation}
-          </h2>
+        <button
+          onClick={openProfile}
+          className="absolute bottom-8 left-5 right-5 flex items-center gap-4 rounded-2xl px-5 py-4 text-left text-white/75 hover:bg-white/10"
+        >
+          <span className="text-2xl">👤</span>
+          {t.profile}
+        </button>
 
-          <div className="mt-5 grid gap-5 sm:grid-cols-2">
+      </aside>
 
-            <div>
-              <p className="text-sm text-gray-500">
-                {t.leader}
-              </p>
+      {/* =========================
+          MAIN
+      ========================= */}
 
-              <p className="mt-1 font-semibold text-gray-900">
-                {account.leaderName}
-              </p>
+      <div className="lg:ml-[250px]">
+
+        <div className="mx-auto max-w-[1400px] px-4 pb-28 pt-4 sm:px-6 lg:px-10 lg:pb-10">
+
+          {/* HEADER */}
+
+          <section className="relative overflow-hidden rounded-[30px] border border-orange-300/20 bg-gradient-to-br from-orange-500 via-orange-500 to-[#ff7a00] px-5 py-6 shadow-2xl sm:px-8 lg:px-10">
+
+            <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-white/10 blur-3xl" />
+
+            <div className="absolute -bottom-24 right-20 h-64 w-64 rounded-full bg-yellow-300/10 blur-3xl" />
+
+            <div className="relative flex items-center gap-4">
+
+              {/* LOGO */}
+
+              <button
+                onClick={openProfile}
+                className="shrink-0"
+              >
+                {logoUrl ? (
+                  <div className="flex h-[78px] w-[78px] items-center justify-center overflow-hidden rounded-[24px] bg-white p-2 shadow-xl sm:h-24 sm:w-24">
+                    <img
+                      src={logoUrl}
+                      alt="MandalSetu Logo"
+                      className="h-full w-full object-contain"
+                    />
+                  </div>
+                ) : (
+                  <div className="flex h-[78px] w-[78px] items-center justify-center rounded-[24px] bg-white text-3xl sm:h-24 sm:w-24">
+                    🏛️
+                  </div>
+                )}
+              </button>
+
+              {/* TEXT */}
+
+              <div className="min-w-0">
+
+                <p className="text-sm font-semibold text-white/90 sm:text-base">
+                  {t.namaskar},{" "}
+                  {account.leaderName || "Aditya"} 😄
+                </p>
+
+                <h1 className="mt-1 text-xl font-bold leading-tight sm:text-3xl">
+                  {t.welcome}
+                </h1>
+
+              </div>
+
             </div>
 
-            <div>
-              <p className="text-sm text-gray-500">
-                {t.mobile}
+          </section>
+
+          {/* =========================
+              SUMMARY CARDS
+          ========================= */}
+
+          <section className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
+
+            {/* ANNOUNCEMENTS */}
+
+            <button
+              onClick={openAnnouncements}
+              className="relative min-h-[125px] overflow-hidden rounded-[22px] bg-gradient-to-br from-[#1677ee] to-[#0755c9] p-4 text-left shadow-xl transition active:scale-[0.98]"
+            >
+              <div className="absolute -right-5 -top-5 h-20 w-20 rounded-full bg-white/10" />
+
+              <p className="text-3xl font-extrabold sm:text-4xl">
+                {latestAnnouncements.length}
               </p>
 
-              <p className="mt-1 font-semibold text-gray-900">
-                {account.mobile}
+              <p className="mt-3 text-sm font-bold leading-tight sm:text-base">
+                {t.announcements}
               </p>
+            </button>
+
+            {/* EVENTS */}
+
+            <button
+              onClick={openEvents}
+              className="relative min-h-[125px] overflow-hidden rounded-[22px] bg-gradient-to-br from-[#ff9d00] to-[#f24d00] p-4 text-left shadow-xl transition active:scale-[0.98]"
+            >
+              <div className="absolute -right-5 -top-5 h-20 w-20 rounded-full bg-white/10" />
+
+              <p className="text-3xl font-extrabold sm:text-4xl">
+                {eventCount}
+              </p>
+
+              <p className="mt-3 text-sm font-bold leading-tight sm:text-base">
+                {t.upcomingEvents}
+              </p>
+            </button>
+
+            {/* COLLECTION - SEPARATE */}
+
+            <button
+              onClick={openCollection}
+              className="relative min-h-[125px] overflow-hidden rounded-[22px] bg-gradient-to-br from-[#09a6a5] to-[#087d83] p-4 text-left shadow-xl transition active:scale-[0.98]"
+            >
+              <div className="absolute -right-5 -top-5 h-20 w-20 rounded-full bg-white/10" />
+
+              <p className="text-3xl font-extrabold sm:text-4xl">
+                ₹{formatMoney(collectionTotal)}
+              </p>
+
+              <p className="mt-3 text-sm font-bold leading-tight sm:text-base">
+                {t.collection}
+              </p>
+            </button>
+
+            {/* MEMBERS */}
+
+            <button
+              onClick={openMembers}
+              className="relative min-h-[125px] w-full overflow-hidden rounded-[22px] bg-gradient-to-br from-[#7140e8] to-[#5420b8] p-4 text-left shadow-xl transition active:scale-[0.98]"
+            >
+              <div className="absolute -right-5 -top-5 h-20 w-20 rounded-full bg-white/10" />
+
+              <p className="text-3xl font-extrabold sm:text-4xl">
+                {memberCount}
+              </p>
+
+              <p className="mt-3 text-sm font-bold leading-tight sm:text-base">
+                {t.members}
+              </p>
+
+              <p className="mt-1 text-xs text-white/60">
+                {t.manageMembers}
+              </p>
+            </button>
+
+            {/* EXPENSES - SEPARATE */}
+
+            <button
+              onClick={openExpenses}
+              className="relative min-h-[125px] overflow-hidden rounded-[22px] bg-gradient-to-br from-[#ef4444] to-[#b91c1c] p-4 text-left shadow-xl transition active:scale-[0.98]"
+            >
+              <div className="absolute -right-5 -top-5 h-20 w-20 rounded-full bg-white/10" />
+
+              <p className="text-3xl font-extrabold sm:text-4xl">
+                ₹{formatMoney(expenseTotal)}
+              </p>
+
+              <p className="mt-3 text-sm font-bold leading-tight sm:text-base">
+                {t.expenses}
+              </p>
+            </button>
+
+            {/* BALANCE */}
+
+            <button
+              onClick={openReports}
+              className="relative min-h-[125px] overflow-hidden rounded-[22px] bg-gradient-to-br from-[#22c55e] to-[#15803d] p-4 text-left shadow-xl transition active:scale-[0.98]"
+            >
+              <div className="absolute -right-5 -top-5 h-20 w-20 rounded-full bg-white/10" />
+
+              <p className="text-3xl font-extrabold sm:text-4xl">
+                ₹{formatMoney(balanceTotal)}
+              </p>
+
+              <p className="mt-3 text-sm font-bold leading-tight sm:text-base">
+                {t.balance}
+              </p>
+            </button>
+
+            {/* REPORTS */}
+
+            <button
+              onClick={openReports}
+              className="relative min-h-[125px] overflow-hidden rounded-[22px] bg-gradient-to-br from-[#6366f1] to-[#4338ca] p-4 text-left shadow-xl transition active:scale-[0.98]"
+            >
+              <div className="absolute -right-5 -top-5 h-20 w-20 rounded-full bg-white/10" />
+
+              <p className="text-3xl font-extrabold sm:text-4xl">
+                📊
+              </p>
+
+              <p className="mt-3 text-sm font-bold leading-tight sm:text-base">
+                {t.reports}
+              </p>
+            </button>
+
+          </section>
+
+          {/* =========================
+              UPCOMING EVENTS
+          ========================= */}
+
+          <section className="mt-8">
+
+            <div className="mb-4 flex items-center justify-between px-1">
+
+              <h2 className="text-xl font-bold sm:text-2xl">
+                {t.upcomingEvents}
+              </h2>
+
+              <button
+                onClick={openEvents}
+                className="text-sm font-semibold text-[#91a4c9] transition hover:text-white sm:text-base"
+              >
+                {t.viewAll} →
+              </button>
+
             </div>
 
-            <div>
-              <p className="text-sm text-gray-500">
-                {t.city}
-              </p>
+            <div className="space-y-3">
 
-              <p className="mt-1 font-semibold text-gray-900">
-                {account.city}
-              </p>
+              {latestEvents.length > 0 ? (
+                latestEvents.map((event, index) => (
+
+                  <button
+                    key={event.id}
+                    onClick={openEvents}
+                    className="group relative flex w-full items-center gap-4 overflow-hidden rounded-[18px] border border-white/10 bg-[#1a2334]/90 p-4 text-left shadow-xl backdrop-blur-xl transition active:scale-[0.99]"
+                  >
+
+                    <div className="absolute -bottom-8 -right-8 h-28 w-28 rounded-full bg-orange-500/5" />
+
+                    <div className="relative flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-[#24304a] text-3xl shadow-lg">
+                      {index === 0 ? "🪔" : "🙏"}
+                    </div>
+
+                    <div className="relative min-w-0">
+
+                      <h3 className="truncate text-base font-bold text-white sm:text-lg">
+                        {event.title}
+                      </h3>
+
+                      <p className="mt-1 text-sm text-white/60">
+                        {formatDate(event.date)}
+                      </p>
+
+                      {event.location && (
+                        <p className="mt-1 truncate text-xs text-white/45">
+                          📍 {event.location}
+                        </p>
+                      )}
+
+                    </div>
+
+                  </button>
+
+                ))
+              ) : (
+                <div className="rounded-[18px] border border-white/10 bg-[#1a2334] p-6 text-center text-white/50">
+                  {t.noEvents}
+                </div>
+              )}
+
             </div>
 
-            <div>
-              <p className="text-sm text-gray-500">
-                {t.state}
-              </p>
+          </section>
 
-              <p className="mt-1 font-semibold text-gray-900">
-                {account.state}
-              </p>
+          {/* =========================
+              LATEST ANNOUNCEMENTS
+          ========================= */}
+
+          <section className="mt-8 border-t border-white/10 pt-7">
+
+            <div className="mb-4 flex items-center justify-between px-1">
+
+              <h2 className="text-xl font-bold sm:text-2xl">
+                {t.latestAnnouncements}
+              </h2>
+
+              <button
+                onClick={openAnnouncements}
+                className="text-sm font-semibold text-[#91a4c9] transition hover:text-white sm:text-base"
+              >
+                {t.viewAll} →
+              </button>
+
             </div>
 
-          </div>
+            <div className="space-y-3">
+
+              {latestAnnouncements.length > 0 ? (
+                latestAnnouncements.map((announcement) => (
+
+                  <button
+                    key={announcement.id}
+                    onClick={openAnnouncements}
+                    className="relative flex w-full items-start gap-4 overflow-hidden rounded-[18px] border border-white/10 bg-[#1a2334]/90 p-4 text-left shadow-xl transition active:scale-[0.99]"
+                  >
+
+                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-[#24304a] text-2xl">
+                      📣
+                    </div>
+
+                    <div className="min-w-0 flex-1">
+
+                      <h3 className="text-base font-bold sm:text-lg">
+                        {announcement.title}
+                      </h3>
+
+                      <p className="mt-1 line-clamp-2 text-sm leading-5 text-white/55">
+                        {announcement.message}
+                      </p>
+
+                      <p className="mt-2 text-xs text-white/35">
+                        {formatDate(
+                          announcement.created_at
+                        )}
+                      </p>
+
+                    </div>
+
+                  </button>
+
+                ))
+              ) : (
+                <div className="rounded-[18px] border border-white/10 bg-[#1a2334] p-6 text-center text-white/50">
+                  {t.noAnnouncements}
+                </div>
+              )}
+
+            </div>
+
+          </section>
+
         </div>
 
       </div>
+
+      {/* =========================
+          MOBILE BOTTOM NAV
+      ========================= */}
+
+      <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-black/10 bg-[#f7f6f2] px-2 pb-[env(safe-area-inset-bottom)] shadow-[0_-8px_30px_rgba(0,0,0,0.25)] lg:hidden">
+
+        <div className="mx-auto flex h-[76px] max-w-xl items-center justify-around">
+
+          {/* DASHBOARD */}
+
+          <button
+            onClick={() => router.push("/dashboard")}
+            className="flex min-w-[65px] flex-col items-center justify-center gap-1 text-[#252d3a]"
+          >
+            <span className="text-2xl leading-none">
+              🏠
+            </span>
+
+            <span className="text-[11px] font-bold">
+              {t.dashboard}
+            </span>
+
+            <span className="h-0.5 w-8 rounded-full bg-[#ff6b00]" />
+          </button>
+
+          {/* MEMBERS */}
+
+          <button
+            onClick={openMembers}
+            className="flex min-w-[65px] flex-col items-center justify-center gap-1 text-[#252d3a]"
+          >
+            <span className="text-2xl leading-none">
+              👥
+            </span>
+
+            <span className="text-[11px] font-semibold">
+              {t.members}
+            </span>
+          </button>
+
+          {/* EVENTS */}
+
+          <button
+            onClick={openEvents}
+            className="flex min-w-[65px] flex-col items-center justify-center gap-1 text-[#252d3a]"
+          >
+            <span className="text-2xl leading-none">
+              📅
+            </span>
+
+            <span className="text-[11px] font-semibold">
+              {t.events}
+            </span>
+          </button>
+
+          {/* ANNOUNCEMENTS */}
+
+          <button
+            onClick={openAnnouncements}
+            className="flex min-w-[65px] flex-col items-center justify-center gap-1 text-[#252d3a]"
+          >
+            <span className="text-2xl leading-none">
+              📣
+            </span>
+
+            <span className="text-[11px] font-semibold">
+              {t.announcements}
+            </span>
+          </button>
+
+          {/* PROFILE */}
+
+          <button
+            onClick={openProfile}
+            className="flex min-w-[65px] flex-col items-center justify-center gap-1 text-[#252d3a]"
+          >
+            <span className="text-2xl leading-none">
+              👤
+            </span>
+
+            <span className="text-[11px] font-semibold">
+              {t.profile}
+            </span>
+          </button>
+
+        </div>
+
+      </nav>
+
     </main>
   );
 }

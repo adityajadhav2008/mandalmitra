@@ -3,10 +3,9 @@
 import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import {
-  useLanguage,
-  type Language,
-} from "../language-provider";
+import { useLanguage } from "../language-provider";
+
+type PaymentMode = "Cash" | "UPI";
 
 type Collection = {
   id: string;
@@ -14,6 +13,7 @@ type Collection = {
   amount: number;
   date: string;
   purpose?: string;
+  payment_mode?: PaymentMode;
 };
 
 const translations = {
@@ -28,6 +28,9 @@ const translations = {
     amount: "Amount",
     date: "Date",
     purpose: "Purpose",
+    paymentMode: "Payment Mode",
+    cash: "Cash",
+    upi: "UPI",
     updateCollection: "Update Collection",
     addCollectionButton: "Add Collection",
     cancel: "Cancel",
@@ -35,15 +38,23 @@ const translations = {
     noCollection: "No collection added yet.",
     edit: "Edit",
     delete: "Delete",
+    viewReceipt: "View Receipt",
+    close: "Close",
     loading: "Loading Collection...",
-    enterDetails:
-      "Please enter member, amount and date.",
+    enterDetails: "Please enter member, amount and date.",
     loadFailed: "Collection data load failed.",
     updateFailed: "Collection update failed.",
     saveFailed: "Collection save failed.",
     deleteFailed: "Collection delete failed.",
     deleteConfirm:
       "Are you sure you want to delete this collection?",
+
+    receipt: "RECEIPT",
+    receiptNo: "Receipt No.",
+    receivedFrom: "Received From",
+    amountReceived: "Amount Received",
+    thankYou: "Thank you for your valuable contribution!",
+    authorized: "Authorized",
   },
 
   Marathi: {
@@ -57,6 +68,9 @@ const translations = {
     amount: "रक्कम",
     date: "दिनांक",
     purpose: "कारण",
+    paymentMode: "पेमेंट मोड",
+    cash: "Cash",
+    upi: "UPI",
     updateCollection: "वर्गणी अपडेट करा",
     addCollectionButton: "वर्गणी जोडा",
     cancel: "रद्द करा",
@@ -64,6 +78,8 @@ const translations = {
     noCollection: "अजून कोणतीही वर्गणी जोडलेली नाही.",
     edit: "संपादित करा",
     delete: "हटवा",
+    viewReceipt: "पावती पहा",
+    close: "बंद करा",
     loading: "वर्गणी लोड होत आहे...",
     enterDetails:
       "कृपया सदस्य, रक्कम आणि दिनांक टाका.",
@@ -73,6 +89,13 @@ const translations = {
     deleteFailed: "वर्गणी हटवता आली नाही.",
     deleteConfirm:
       "तुम्हाला ही वर्गणी नक्की हटवायची आहे का?",
+
+    receipt: "पावती",
+    receiptNo: "पावती क्र.",
+    receivedFrom: "प्राप्तकर्त्याचे नाव",
+    amountReceived: "प्राप्त रक्कम",
+    thankYou: "आपल्या अमूल्य योगदानाबद्दल धन्यवाद!",
+    authorized: "अधिकृत",
   },
 
   Hindi: {
@@ -86,6 +109,9 @@ const translations = {
     amount: "राशि",
     date: "दिनांक",
     purpose: "उद्देश्य",
+    paymentMode: "भुगतान का तरीका",
+    cash: "Cash",
+    upi: "UPI",
     updateCollection: "संग्रह अपडेट करें",
     addCollectionButton: "संग्रह जोड़ें",
     cancel: "रद्द करें",
@@ -93,6 +119,8 @@ const translations = {
     noCollection: "अभी तक कोई संग्रह नहीं जोड़ा गया है।",
     edit: "संपादित करें",
     delete: "हटाएं",
+    viewReceipt: "रसीद देखें",
+    close: "बंद करें",
     loading: "संग्रह लोड हो रहा है...",
     enterDetails:
       "कृपया सदस्य, राशि और दिनांक दर्ज करें।",
@@ -102,6 +130,13 @@ const translations = {
     deleteFailed: "संग्रह हटाया नहीं जा सका।",
     deleteConfirm:
       "क्या आप इस संग्रह को हटाना चाहते हैं?",
+
+    receipt: "रसीद",
+    receiptNo: "रसीद क्र.",
+    receivedFrom: "प्राप्तकर्ता का नाम",
+    amountReceived: "प्राप्त राशि",
+    thankYou: "आपके अमूल्य योगदान के लिए धन्यवाद!",
+    authorized: "अधिकृत",
   },
 };
 
@@ -110,7 +145,6 @@ export default function CollectionPage() {
   const supabase = createClient();
 
   const { language } = useLanguage();
-
   const t = translations[language];
 
   const [collections, setCollections] =
@@ -120,16 +154,58 @@ export default function CollectionPage() {
   const [amount, setAmount] = useState("");
   const [date, setDate] = useState("");
   const [purpose, setPurpose] = useState("");
+  const [paymentMode, setPaymentMode] =
+    useState<PaymentMode>("Cash");
 
   const [editingId, setEditingId] =
     useState<string | null>(null);
+
+  const [viewingReceipt, setViewingReceipt] =
+    useState<Collection | null>(null);
+
+  const [mandalName, setMandalName] =
+    useState("मंडळ");
+
+  const [mandalLogo, setMandalLogo] =
+    useState("");
 
   const [loading, setLoading] =
     useState(true);
 
   useEffect(() => {
     loadCollections();
+    loadMandalData();
   }, [language]);
+
+  async function loadMandalData() {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (!user) {
+      router.replace("/login");
+      return;
+    }
+
+    const { data: mandal } = await supabase
+      .from("mandals")
+      .select("*")
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+    if (mandal) {
+      setMandalName(
+        mandal.mandal_name || "मंडळ"
+      );
+    }
+
+    const savedLogo =
+      localStorage.getItem("mandalLogo");
+
+    if (savedLogo) {
+      setMandalLogo(savedLogo);
+    }
+  }
 
   async function loadCollections() {
     setLoading(true);
@@ -164,6 +240,10 @@ export default function CollectionPage() {
           amount: Number(item.amount || 0),
           date: item.date || "",
           purpose: item.purpose || "",
+          payment_mode:
+            item.payment_mode === "UPI"
+              ? "UPI"
+              : "Cash",
         }))
       );
     }
@@ -206,6 +286,7 @@ export default function CollectionPage() {
           amount: numericAmount,
           date: date,
           purpose: cleanPurpose,
+          payment_mode: paymentMode,
         })
         .eq("id", editingId)
         .eq("user_id", user.id);
@@ -232,6 +313,7 @@ export default function CollectionPage() {
         amount: numericAmount,
         date: date,
         purpose: cleanPurpose,
+        payment_mode: paymentMode,
       });
 
     if (error) {
@@ -245,6 +327,7 @@ export default function CollectionPage() {
     setAmount("");
     setDate("");
     setPurpose("");
+    setPaymentMode("Cash");
 
     await loadCollections();
   }
@@ -256,6 +339,11 @@ export default function CollectionPage() {
     setAmount(String(item.amount || ""));
     setDate(item.date || "");
     setPurpose(item.purpose || "");
+    setPaymentMode(
+      item.payment_mode === "UPI"
+        ? "UPI"
+        : "Cash"
+    );
 
     window.scrollTo({
       top: 0,
@@ -270,6 +358,7 @@ export default function CollectionPage() {
     setAmount("");
     setDate("");
     setPurpose("");
+    setPaymentMode("Cash");
   }
 
   async function deleteCollection(
@@ -305,11 +394,48 @@ export default function CollectionPage() {
       return;
     }
 
+    if (viewingReceipt?.id === id) {
+      setViewingReceipt(null);
+    }
+
     if (editingId === id) {
       cancelEdit();
     }
 
     await loadCollections();
+  }
+
+  function formatDate(value: string) {
+    if (!value) return "";
+
+    const d = new Date(
+      `${value}T00:00:00`
+    );
+
+    return d.toLocaleDateString(
+      language === "Marathi"
+        ? "mr-IN"
+        : language === "Hindi"
+        ? "hi-IN"
+        : "en-IN",
+      {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      }
+    );
+  }
+
+  function getReceiptNumber(
+    item: Collection
+  ) {
+    return (
+      "MR-" +
+      item.id
+        .replace(/\D/g, "")
+        .slice(-6)
+        .padStart(6, "0")
+    );
   }
 
   const total = collections.reduce(
@@ -349,7 +475,6 @@ export default function CollectionPage() {
         <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
 
           <div>
-
             <h1 className="text-3xl font-bold text-gray-900">
               {t.title}
             </h1>
@@ -357,11 +482,9 @@ export default function CollectionPage() {
             <p className="mt-2 text-gray-500">
               {t.subtitle}
             </p>
-
           </div>
 
           <div className="rounded-2xl bg-green-500 px-6 py-4 text-white">
-
             <p className="text-sm">
               {t.totalCollection}
             </p>
@@ -369,7 +492,6 @@ export default function CollectionPage() {
             <p className="text-2xl font-bold">
               ₹{total}
             </p>
-
           </div>
 
         </div>
@@ -380,7 +502,6 @@ export default function CollectionPage() {
           onSubmit={handleSubmit}
           className="mt-8 rounded-2xl border bg-white p-6 shadow-sm"
         >
-
           <h2 className="text-xl font-bold">
             {editingId !== null
               ? t.editCollection
@@ -388,6 +509,8 @@ export default function CollectionPage() {
           </h2>
 
           <div className="mt-5 grid gap-4 sm:grid-cols-2">
+
+            {/* MEMBER */}
 
             <input
               value={member}
@@ -398,6 +521,8 @@ export default function CollectionPage() {
               className="rounded-xl border px-4 py-3 outline-none focus:border-orange-500"
               required
             />
+
+            {/* AMOUNT */}
 
             <input
               type="number"
@@ -411,6 +536,8 @@ export default function CollectionPage() {
               required
             />
 
+            {/* DATE */}
+
             <input
               type="date"
               value={date}
@@ -421,14 +548,60 @@ export default function CollectionPage() {
               required
             />
 
-            <input
+            {/* PURPOSE */}
+
+            <select
               value={purpose}
               onChange={(e) =>
                 setPurpose(e.target.value)
               }
-              placeholder={t.purpose}
               className="rounded-xl border px-4 py-3 outline-none focus:border-orange-500"
-            />
+              required
+            >
+              <option value="">
+                {t.purpose}
+              </option>
+
+              <option value="Mandal Collection">
+                Mandal Collection
+              </option>
+
+              <option value="Donation">
+                Donation
+              </option>
+
+              <option value="Program">
+                Program
+              </option>
+
+              <option value="Event">
+                Event
+              </option>
+
+              <option value="Other">
+                Other
+              </option>
+            </select>
+
+            {/* PAYMENT MODE */}
+
+            <select
+              value={paymentMode}
+              onChange={(e) =>
+                setPaymentMode(
+                  e.target.value as PaymentMode
+                )
+              }
+              className="rounded-xl border px-4 py-3 outline-none focus:border-orange-500 sm:col-span-2"
+            >
+              <option value="Cash">
+                {t.cash}
+              </option>
+
+              <option value="UPI">
+                {t.upi}
+              </option>
+            </select>
 
           </div>
 
@@ -454,7 +627,6 @@ export default function CollectionPage() {
             )}
 
           </div>
-
         </form>
 
         {/* COLLECTION HISTORY */}
@@ -483,24 +655,42 @@ export default function CollectionPage() {
                 >
 
                   <div>
-
                     <p className="font-bold">
                       {item.member}
                     </p>
 
                     <p className="text-sm text-gray-500">
                       {item.date}
+
                       {item.purpose &&
                         ` • ${item.purpose}`}
-                    </p>
 
+                      {` • ${
+                        item.payment_mode ||
+                        "Cash"
+                      }`}
+                    </p>
                   </div>
 
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
 
                     <span className="mr-2 font-bold text-green-600">
                       ₹{item.amount}
                     </span>
+
+                    {/* VIEW RECEIPT */}
+
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setViewingReceipt(item)
+                      }
+                      className="cursor-pointer rounded-lg bg-blue-50 px-4 py-2 font-semibold text-blue-600"
+                    >
+                      👁 {t.viewReceipt}
+                    </button>
+
+                    {/* EDIT */}
 
                     <button
                       type="button"
@@ -511,6 +701,8 @@ export default function CollectionPage() {
                     >
                       {t.edit}
                     </button>
+
+                    {/* DELETE */}
 
                     <button
                       type="button"
@@ -537,6 +729,235 @@ export default function CollectionPage() {
         </div>
 
       </div>
+
+      {/* ========================= */}
+      {/* RECEIPT VIEW MODAL */}
+      {/* ========================= */}
+
+      {viewingReceipt && (
+
+        <div
+          className="fixed inset-0 z-50 overflow-y-auto bg-black/60 px-4 py-8"
+          onClick={() =>
+            setViewingReceipt(null)
+          }
+        >
+
+          <div
+            className="mx-auto w-full max-w-xl"
+            onClick={(e) =>
+              e.stopPropagation()
+            }
+          >
+
+            {/* CLOSE */}
+
+            <div className="mb-3 flex justify-end">
+              <button
+                type="button"
+                onClick={() =>
+                  setViewingReceipt(null)
+                }
+                className="rounded-full bg-white px-4 py-2 font-bold text-gray-700 shadow"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* RECEIPT */}
+
+            <div
+              className="relative overflow-hidden rounded-[28px] border-[6px] border-orange-500 bg-white shadow-2xl"
+            >
+
+              {/* FAINT LOGO BACKGROUND */}
+
+              {mandalLogo && (
+                <img
+                  src={mandalLogo}
+                  alt=""
+                  className="pointer-events-none absolute left-1/2 top-1/2 z-0 h-64 w-64 -translate-x-1/2 -translate-y-1/2 object-contain opacity-[0.055]"
+                />
+              )}
+
+              <div className="relative z-10">
+
+                {/* HEADER */}
+
+                <div className="bg-orange-500 px-6 py-7 text-center text-white">
+
+                  {mandalLogo ? (
+                    <div className="mx-auto mb-4 flex h-24 w-24 items-center justify-center rounded-full bg-white p-2">
+                      <img
+                        src={mandalLogo}
+                        alt="Mandal Logo"
+                        className="h-full w-full rounded-full object-contain"
+                      />
+                    </div>
+                  ) : (
+                    <div className="mx-auto mb-4 flex h-24 w-24 items-center justify-center rounded-full bg-white text-4xl">
+                      🏛️
+                    </div>
+                  )}
+
+                  <h2 className="text-3xl font-black">
+                    {mandalName}
+                  </h2>
+
+                  <div className="mx-auto mt-4 inline-block rounded-full bg-white px-8 py-2 text-sm font-black text-orange-500">
+                    {t.receipt}
+                  </div>
+
+                </div>
+
+                {/* RECEIPT CONTENT */}
+
+                <div className="relative px-6 py-7 sm:px-8">
+
+                  {/* RECEIPT NO + DATE */}
+
+                  <div className="mb-6 flex justify-between gap-4 border-b border-gray-200 pb-5">
+
+                    <div>
+                      <p className="text-[11px] font-bold text-gray-400">
+                        {t.receiptNo}
+                      </p>
+
+                      <p className="mt-1 text-base font-black">
+                        {getReceiptNumber(
+                          viewingReceipt
+                        )}
+                      </p>
+                    </div>
+
+                    <div className="text-right">
+                      <p className="text-[11px] font-bold text-gray-400">
+                        {t.date}
+                      </p>
+
+                      <p className="mt-1 text-base font-black">
+                        {formatDate(
+                          viewingReceipt.date
+                        )}
+                      </p>
+                    </div>
+
+                  </div>
+
+                  {/* MEMBER */}
+
+                  <div className="mb-6 rounded-2xl border border-orange-200 bg-orange-50 p-5">
+
+                    <p className="text-[11px] font-bold text-orange-500">
+                      {t.receivedFrom}
+                    </p>
+
+                    <p className="mt-2 break-words text-2xl font-black text-gray-900">
+                      {viewingReceipt.member}
+                    </p>
+
+                  </div>
+
+                  {/* PURPOSE + PAYMENT */}
+
+                  <div className="mb-6 grid grid-cols-2 gap-4 border-b border-gray-200 pb-5">
+
+                    <div>
+                      <p className="text-[11px] font-bold text-gray-400">
+                        {t.purpose}
+                      </p>
+
+                      <p className="mt-1 break-words text-base font-black text-gray-900">
+                        {viewingReceipt.purpose ||
+                          "-"}
+                      </p>
+                    </div>
+
+                    <div className="text-right">
+                      <p className="text-[11px] font-bold text-gray-400">
+                        {t.paymentMode}
+                      </p>
+
+                      <p className="mt-1 text-base font-black text-gray-900">
+                        {viewingReceipt.payment_mode ===
+                        "UPI"
+                          ? "UPI"
+                          : "Cash"}
+                      </p>
+                    </div>
+
+                  </div>
+
+                  {/* AMOUNT */}
+
+                  <div className="rounded-3xl bg-orange-500 px-5 py-7 text-center text-white">
+
+                    <p className="text-sm font-semibold">
+                      {t.amountReceived}
+                    </p>
+
+                    <p className="mt-1 text-5xl font-black">
+                      ₹{viewingReceipt.amount}
+                    </p>
+
+                  </div>
+
+                  {/* THANK YOU */}
+
+                  <div className="mt-8 text-center">
+
+                    <p className="text-base font-bold text-gray-800">
+                      {t.thankYou}
+                    </p>
+
+                    <p className="mt-2 text-sm font-semibold text-gray-500">
+                      {mandalName}
+                    </p>
+
+                  </div>
+
+                  {/* APP NAME */}
+
+                  <div className="mt-7 border-t border-gray-100 pt-4 text-center">
+
+                    <p className="text-[10px] font-bold tracking-[0.25em] text-gray-400">
+                      POWERED BY
+                    </p>
+
+                    <p className="mt-1 text-xs font-black tracking-wide text-orange-500">
+                      MandalSetu
+                    </p>
+
+                  </div>
+
+                </div>
+
+                {/* BOTTOM ORANGE */}
+
+                <div className="h-3 bg-orange-500" />
+
+              </div>
+
+            </div>
+
+            {/* CLOSE BUTTON */}
+
+            <button
+              type="button"
+              onClick={() =>
+                setViewingReceipt(null)
+              }
+              className="mt-4 w-full rounded-xl bg-white px-5 py-3 font-bold text-gray-700 shadow"
+            >
+              {t.close}
+            </button>
+
+          </div>
+
+        </div>
+
+      )}
+
     </main>
   );
 }

@@ -26,6 +26,9 @@ type Translation = {
   program: string;
   event: string;
   other: string;
+  paymentMode: string;
+  cash: string;
+  upi: string;
   note: string;
   optional: string;
   download: string;
@@ -37,7 +40,6 @@ type Translation = {
   receivedFrom: string;
   amountLabel: string;
   thankYou: string;
-  authorized: string;
   language: string;
   enterName: string;
   enterMobile: string;
@@ -65,6 +67,9 @@ const translations: Record<Language, Translation> = {
     program: "Program",
     event: "Event",
     other: "Other",
+    paymentMode: "Payment Mode",
+    cash: "Cash",
+    upi: "UPI",
     note: "Note",
     optional: "Optional",
     download: "Download Receipt",
@@ -76,7 +81,6 @@ const translations: Record<Language, Translation> = {
     receivedFrom: "Received From",
     amountLabel: "Amount Received",
     thankYou: "Thank you for your valuable contribution!",
-    authorized: "Authorized Signature",
     language: "Receipt Language",
     enterName: "Enter member name",
     enterMobile: "Enter mobile number",
@@ -103,6 +107,9 @@ const translations: Record<Language, Translation> = {
     program: "कार्यक्रम",
     event: "उत्सव",
     other: "इतर",
+    paymentMode: "पेमेंट पद्धत",
+    cash: "रोख",
+    upi: "UPI",
     note: "नोंद",
     optional: "ऐच्छिक",
     download: "पावती डाउनलोड करा",
@@ -114,7 +121,6 @@ const translations: Record<Language, Translation> = {
     receivedFrom: "प्राप्तकर्त्याचे नाव",
     amountLabel: "प्राप्त रक्कम",
     thankYou: "आपल्या अमूल्य योगदानाबद्दल धन्यवाद!",
-    authorized: "अधिकृत स्वाक्षरी",
     language: "पावतीची भाषा",
     enterName: "सदस्याचे नाव टाका",
     enterMobile: "मोबाईल नंबर टाका",
@@ -141,6 +147,9 @@ const translations: Record<Language, Translation> = {
     program: "कार्यक्रम",
     event: "उत्सव",
     other: "अन्य",
+    paymentMode: "भुगतान का तरीका",
+    cash: "नकद",
+    upi: "UPI",
     note: "नोट",
     optional: "वैकल्पिक",
     download: "रसीद डाउनलोड करें",
@@ -152,7 +161,6 @@ const translations: Record<Language, Translation> = {
     receivedFrom: "प्राप्तकर्ता का नाम",
     amountLabel: "प्राप्त राशि",
     thankYou: "आपके अमूल्य योगदान के लिए धन्यवाद!",
-    authorized: "अधिकृत हस्ताक्षर",
     language: "रसीद की भाषा",
     enterName: "सदस्य का नाम दर्ज करें",
     enterMobile: "मोबाइल नंबर दर्ज करें",
@@ -170,12 +178,15 @@ export default function CreateReceiptPage() {
   const [language, setLanguage] = useState<Language>("Marathi");
   const [mandalName, setMandalName] = useState("मंडळ");
   const [logo, setLogo] = useState("");
+
   const [memberName, setMemberName] = useState("");
   const [mobile, setMobile] = useState("");
   const [amount, setAmount] = useState("");
   const [purpose, setPurpose] = useState("");
+  const [paymentMode, setPaymentMode] = useState<"Cash" | "UPI">("Cash");
   const [date, setDate] = useState("");
   const [note, setNote] = useState("");
+
   const [receiptNumber, setReceiptNumber] = useState("");
   const [generating, setGenerating] = useState(false);
 
@@ -301,6 +312,7 @@ export default function CreateReceiptPage() {
           ? "कृपया 10 अंकों का मोबाइल नंबर दर्ज करें."
           : "Please enter a valid 10 digit mobile number."
       );
+
       return false;
     }
 
@@ -394,6 +406,14 @@ export default function CreateReceiptPage() {
     }
   }
 
+  function getPaymentModeText() {
+    if (paymentMode === "Cash") {
+      return t.cash;
+    }
+
+    return t.upi;
+  }
+
   function getWhatsAppMessage() {
     if (language === "Marathi") {
       return `नमस्कार 🙏
@@ -404,6 +424,7 @@ ${mandalName} ची पावती
 नाव: ${memberName}
 रक्कम: ₹${amount}
 उद्देश: ${purpose}
+पेमेंट पद्धत: ${getPaymentModeText()}
 तारीख: ${formatDate(date)}
 
 आपल्या अमूल्य योगदानाबद्दल मनःपूर्वक धन्यवाद! 🙏
@@ -420,6 +441,7 @@ ${mandalName} की रसीद
 नाम: ${memberName}
 राशि: ₹${amount}
 उद्देश्य: ${purpose}
+भुगतान का तरीका: ${getPaymentModeText()}
 तारीख: ${formatDate(date)}
 
 आपके अमूल्य योगदान के लिए हार्दिक धन्यवाद! 🙏
@@ -435,6 +457,7 @@ Receipt No.: ${receiptNumber}
 Name: ${memberName}
 Amount: ₹${amount}
 Purpose: ${purpose}
+Payment Mode: ${getPaymentModeText()}
 Date: ${formatDate(date)}
 
 Thank you sincerely for your valuable contribution! 🙏
@@ -468,11 +491,6 @@ MandalSetu — One Simple Platform for Every Mandal`;
       const message =
         getWhatsAppMessage();
 
-      /*
-       * On devices that support file sharing,
-       * open the native share sheet with the
-       * generated receipt image.
-       */
       if (
         typeof navigator !== "undefined" &&
         navigator.share
@@ -503,11 +521,6 @@ MandalSetu — One Simple Platform for Every Mandal`;
         }
       }
 
-      /*
-       * Browser fallback:
-       * download receipt and open WhatsApp
-       * with the selected person's number.
-       */
       const downloadUrl =
         URL.createObjectURL(blob);
 
@@ -649,6 +662,8 @@ MandalSetu — One Simple Platform for Every Mandal`;
           margin: "0 auto",
         }}
       >
+        {/* BACK */}
+
         <button
           type="button"
           onClick={() =>
@@ -666,6 +681,8 @@ MandalSetu — One Simple Platform for Every Mandal`;
         >
           {t.back}
         </button>
+
+        {/* PAGE TITLE */}
 
         <div
           style={{
@@ -703,7 +720,7 @@ MandalSetu — One Simple Platform for Every Mandal`;
             alignItems: "start",
           }}
         >
-          {/* FORM */}
+          {/* ================= FORM ================= */}
 
           <div
             style={{
@@ -715,6 +732,8 @@ MandalSetu — One Simple Platform for Every Mandal`;
                 "0 4px 15px rgba(0,0,0,0.06)",
             }}
           >
+            {/* LANGUAGE */}
+
             <div
               style={{
                 marginBottom: "24px",
@@ -1044,6 +1063,55 @@ MandalSetu — One Simple Platform for Every Mandal`;
               </select>
             </div>
 
+            {/* PAYMENT MODE */}
+
+            <div
+              style={{
+                marginBottom: "20px",
+              }}
+            >
+              <label
+                style={{
+                  display: "block",
+                  marginBottom: "8px",
+                  fontSize: "14px",
+                  fontWeight: 700,
+                  color: "#374151",
+                }}
+              >
+                {t.paymentMode}
+              </label>
+
+              <select
+                value={paymentMode}
+                onChange={(e) =>
+                  setPaymentMode(
+                    e.target.value as
+                      | "Cash"
+                      | "UPI"
+                  )
+                }
+                style={{
+                  width: "100%",
+                  padding: "12px 16px",
+                  borderRadius: "12px",
+                  border:
+                    "1px solid #d1d5db",
+                  backgroundColor:
+                    "#ffffff",
+                  fontSize: "15px",
+                }}
+              >
+                <option value="Cash">
+                  {t.cash}
+                </option>
+
+                <option value="UPI">
+                  {t.upi}
+                </option>
+              </select>
+            </div>
+
             {/* DATE */}
 
             <div
@@ -1113,7 +1181,9 @@ MandalSetu — One Simple Platform for Every Mandal`;
               <textarea
                 value={note}
                 onChange={(e) =>
-                  setNote(e.target.value)
+                  setNote(
+                    e.target.value
+                  )
                 }
                 placeholder={t.enterNote}
                 rows={3}
@@ -1131,7 +1201,7 @@ MandalSetu — One Simple Platform for Every Mandal`;
             </div>
           </div>
 
-          {/* RECEIPT AREA */}
+          {/* ================= RECEIPT ================= */}
 
           <div
             style={{
@@ -1145,6 +1215,7 @@ MandalSetu — One Simple Platform for Every Mandal`;
                 maxWidth: "560px",
                 margin: "0 auto",
                 overflow: "hidden",
+                position: "relative",
                 border:
                   "6px solid #f97316",
                 borderRadius: "28px",
@@ -1153,10 +1224,36 @@ MandalSetu — One Simple Platform for Every Mandal`;
                 boxSizing: "border-box",
               }}
             >
+              {/* FAINT MANDAL LOGO BACKGROUND */}
+
+              {logo && (
+                <img
+                  src={logo}
+                  alt=""
+                  aria-hidden="true"
+                  style={{
+                    position:
+                      "absolute",
+                    top: "50%",
+                    left: "50%",
+                    width: "380px",
+                    height: "380px",
+                    objectFit: "contain",
+                    transform:
+                      "translate(-50%, -50%)",
+                    opacity: 0.055,
+                    pointerEvents: "none",
+                    zIndex: 0,
+                  }}
+                />
+              )}
+
               {/* HEADER */}
 
               <div
                 style={{
+                  position: "relative",
+                  zIndex: 1,
                   padding:
                     "32px 28px",
                   textAlign: "center",
@@ -1244,11 +1341,15 @@ MandalSetu — One Simple Platform for Every Mandal`;
 
               <div
                 style={{
+                  position: "relative",
+                  zIndex: 1,
                   padding:
                     "28px 32px",
                   color: "#111827",
                 }}
               >
+                {/* RECEIPT NUMBER + DATE */}
+
                 <div
                   style={{
                     display: "flex",
@@ -1325,6 +1426,8 @@ MandalSetu — One Simple Platform for Every Mandal`;
                   </div>
                 </div>
 
+                {/* RECEIVED FROM */}
+
                 <div
                   style={{
                     marginBottom:
@@ -1382,6 +1485,8 @@ MandalSetu — One Simple Platform for Every Mandal`;
                   )}
                 </div>
 
+                {/* PURPOSE */}
+
                 <div
                   style={{
                     display: "flex",
@@ -1419,6 +1524,8 @@ MandalSetu — One Simple Platform for Every Mandal`;
                         fontSize:
                           "18px",
                         fontWeight: 900,
+                        wordBreak:
+                          "break-word",
                       }}
                     >
                       {purpose ||
@@ -1430,6 +1537,7 @@ MandalSetu — One Simple Platform for Every Mandal`;
                     style={{
                       width: "44px",
                       height: "44px",
+                      flexShrink: 0,
                       display:
                         "flex",
                       alignItems:
@@ -1444,7 +1552,78 @@ MandalSetu — One Simple Platform for Every Mandal`;
                         "#ea580c",
                       fontSize:
                         "20px",
+                      fontWeight: 900,
+                    }}
+                  >
+                    ✓
+                  </div>
+                </div>
+
+                {/* PAYMENT MODE */}
+
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems:
+                      "center",
+                    justifyContent:
+                      "space-between",
+                    gap: "20px",
+                    borderBottom:
+                      "1px solid #e5e7eb",
+                    paddingBottom:
+                      "20px",
+                    marginBottom:
+                      "24px",
+                  }}
+                >
+                  <div>
+                    <p
+                      style={{
+                        margin: 0,
+                        fontSize:
+                          "11px",
+                        fontWeight: 700,
+                        color:
+                          "#9ca3af",
+                      }}
+                    >
+                      {t.paymentMode}
+                    </p>
+
+                    <p
+                      style={{
+                        margin:
+                          "4px 0 0",
+                        fontSize:
+                          "18px",
                         fontWeight: 900,
+                      }}
+                    >
+                      {getPaymentModeText()}
+                    </p>
+                  </div>
+
+                  <div
+                    style={{
+                      width: "44px",
+                      height: "44px",
+                      flexShrink: 0,
+                      display:
+                        "flex",
+                      alignItems:
+                        "center",
+                      justifyContent:
+                        "center",
+                      borderRadius:
+                        "50%",
+                      backgroundColor:
+                        "#fff7ed",
+                      color:
+                        "#ea580c",
+                      fontSize:
+                        "20px",
+                      fontWeight: 900,
                     }}
                   >
                     ✓
@@ -1491,6 +1670,8 @@ MandalSetu — One Simple Platform for Every Mandal`;
                   </p>
                 </div>
 
+                {/* NOTE */}
+
                 {note && (
                   <div
                     style={{
@@ -1524,6 +1705,8 @@ MandalSetu — One Simple Platform for Every Mandal`;
                           "14px",
                         color:
                           "#4b5563",
+                        wordBreak:
+                          "break-word",
                       }}
                     >
                       {note}
@@ -1531,79 +1714,82 @@ MandalSetu — One Simple Platform for Every Mandal`;
                   </div>
                 )}
 
+                {/* FOOTER */}
+
                 <div
                   style={{
-                    display: "flex",
-                    alignItems:
-                      "flex-end",
-                    justifyContent:
-                      "space-between",
-                    gap: "20px",
+                    textAlign:
+                      "center",
                     marginTop:
                       "36px",
+                    paddingTop:
+                      "24px",
+                    borderTop:
+                      "1px dashed #d1d5db",
                   }}
                 >
-                  <div>
-                    <p
-                      style={{
-                        margin: 0,
-                        fontSize:
-                          "14px",
-                        fontWeight: 700,
-                      }}
-                    >
-                      {t.thankYou}
-                    </p>
-
-                    <p
-                      style={{
-                        margin:
-                          "4px 0 0",
-                        fontSize:
-                          "11px",
-                        color:
-                          "#9ca3af",
-                      }}
-                    >
-                      {mandalName}
-                    </p>
-                  </div>
+                  <p
+                    style={{
+                      margin: 0,
+                      fontSize:
+                        "18px",
+                      fontWeight: 800,
+                      color:
+                        "#111827",
+                    }}
+                  >
+                    Thank you for your valuable contribution!
+                  </p>
 
                   <div
                     style={{
-                      textAlign:
-                        "center",
+                      width: "100%",
+                      height: "1px",
+                      backgroundColor:
+                        "#f97316",
+                      margin:
+                        "20px 0 14px",
+                      opacity: 0.7,
+                    }}
+                  />
+
+                  <p
+                    style={{
+                      margin: 0,
+                      fontSize:
+                        "22px",
+                      fontWeight: 900,
+                      color:
+                        "#ea580c",
                     }}
                   >
-                    <div
-                      style={{
-                        width:
-                          "112px",
-                        height: "1px",
-                        backgroundColor:
-                          "#9ca3af",
-                        marginBottom:
-                          "8px",
-                      }}
-                    />
+                    {mandalName}
+                  </p>
 
-                    <p
-                      style={{
-                        margin: 0,
-                        fontSize:
-                          "11px",
-                        color:
-                          "#6b7280",
-                      }}
-                    >
-                      {t.authorized}
-                    </p>
-                  </div>
+                  <p
+                    style={{
+                      margin:
+                        "14px 0 0",
+                      fontSize:
+                        "10px",
+                      color:
+                        "#6b7280",
+                      letterSpacing:
+                        "0.5px",
+                    }}
+                  >
+                    MandalSetu — One Simple Platform for Every Mandal
+                  </p>
                 </div>
               </div>
 
+              {/* BOTTOM ORANGE STRIP */}
+
               <div
                 style={{
+                  position:
+                    "relative",
+                  zIndex: 1,
                   height: "12px",
                   backgroundColor:
                     "#f97316",
@@ -1624,6 +1810,8 @@ MandalSetu — One Simple Platform for Every Mandal`;
                 gap: "10px",
               }}
             >
+              {/* DOWNLOAD */}
+
               <button
                 type="button"
                 onClick={
@@ -1654,6 +1842,8 @@ MandalSetu — One Simple Platform for Every Mandal`;
                 {t.download}
               </button>
 
+              {/* WHATSAPP */}
+
               <button
                 type="button"
                 onClick={
@@ -1683,6 +1873,8 @@ MandalSetu — One Simple Platform for Every Mandal`;
                 <br />
                 {t.whatsapp}
               </button>
+
+              {/* SHARE */}
 
               <button
                 type="button"

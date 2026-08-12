@@ -7,9 +7,7 @@ import {
 } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import {
-  useLanguage,
-} from "../language-provider";
+import { useLanguage } from "../language-provider";
 
 type Member = {
   id: string;
@@ -17,7 +15,10 @@ type Member = {
   name: string;
   mobile: string;
   address?: string;
+  created_at?: string;
 };
+
+type UserRole = "admin" | "member";
 
 const translations = {
   English: {
@@ -47,6 +48,9 @@ const translations = {
     deleteConfirm:
       "Are you sure you want to delete this member?",
     notificationTitle: "👤 New Member",
+    admin: "Admin",
+    member: "Member",
+    adminOnly: "Only Admin can manage members.",
   },
 
   Marathi: {
@@ -76,6 +80,9 @@ const translations = {
     deleteConfirm:
       "तुम्हाला हा सदस्य नक्की हटवायचा आहे का?",
     notificationTitle: "👤 नवीन सदस्य",
+    admin: "Admin",
+    member: "सदस्य",
+    adminOnly: "फक्त Admin सदस्य व्यवस्थापित करू शकतो.",
   },
 
   Hindi: {
@@ -105,6 +112,9 @@ const translations = {
     deleteConfirm:
       "क्या आप इस सदस्य को हटाना चाहते हैं?",
     notificationTitle: "👤 नया सदस्य",
+    admin: "Admin",
+    member: "सदस्य",
+    adminOnly: "सिर्फ Admin सदस्य प्रबंधित कर सकता है।",
   },
 };
 
@@ -113,11 +123,9 @@ export default function MembersPage() {
   const supabase = createClient();
 
   const { language } = useLanguage();
-
   const t = translations[language];
 
-  const [members, setMembers] =
-    useState<Member[]>([]);
+  const [members, setMembers] = useState<Member[]>([]);
 
   const [name, setName] = useState("");
   const [mobile, setMobile] = useState("");
@@ -126,11 +134,21 @@ export default function MembersPage() {
   const [editingId, setEditingId] =
     useState<string | null>(null);
 
-  const [loading, setLoading] =
-    useState(true);
+  const [loading, setLoading] = useState(true);
+
+  const [currentUserRole, setCurrentUserRole] =
+    useState<UserRole>("member");
+
+  const isAdmin = currentUserRole === "admin";
+
+  // =========================================
+  // LOAD MEMBERS + ROLE
+  // =========================================
 
   useEffect(() => {
     async function loadMembers() {
+      setLoading(true);
+
       const {
         data: { user },
       } = await supabase.auth.getUser();
@@ -140,14 +158,80 @@ export default function MembersPage() {
         return;
       }
 
-      const { data, error } =
-        await supabase
-          .from("members")
-          .select("*")
+      // =====================================
+      // LOAD ROLE FROM PROFILES
+      // =====================================
+
+      const {
+        data: profile,
+        error: profileError,
+      } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", user.id)
+        .maybeSingle();
+
+      if (profileError) {
+        console.error(
+          "PROFILE ROLE ERROR:",
+          profileError
+        );
+      }
+
+      let role: UserRole = "member";
+
+      if (
+        profile?.role === "admin" ||
+        profile?.role === "member"
+      ) {
+        role = profile.role;
+      }
+
+      // =====================================
+      // FALLBACK
+      // Existing Mandal owner = Admin
+      // =====================================
+
+      if (!profile) {
+        const {
+          data: mandal,
+          error: mandalError,
+        } = await supabase
+          .from("mandals")
+          .select("user_id")
           .eq("user_id", user.id)
-          .order("created_at", {
-            ascending: false,
-          });
+          .maybeSingle();
+
+        if (mandalError) {
+          console.error(
+            "MANDAL ROLE ERROR:",
+            mandalError
+          );
+        }
+
+        if (mandal) {
+          role = "admin";
+        }
+      }
+
+      setCurrentUserRole(role);
+
+      // =====================================
+      // LOAD MEMBERS
+      // =====================================
+
+      const {
+        data,
+        error,
+      } = await supabase
+        .from("members")
+        .select(
+          "id, user_id, name, mobile, address, created_at"
+        )
+        .eq("user_id", user.id)
+        .order("created_at", {
+          ascending: false,
+        });
 
       if (error) {
         console.error(
@@ -158,7 +242,9 @@ export default function MembersPage() {
         alert(t.unableLoad);
         setMembers([]);
       } else {
-        setMembers(data || []);
+        setMembers(
+          (data || []) as Member[]
+        );
       }
 
       setLoading(false);
@@ -166,6 +252,10 @@ export default function MembersPage() {
 
     loadMembers();
   }, [router, language]);
+
+  // =========================================
+  // NOTIFICATION
+  // =========================================
 
   function showMemberNotification(
     memberName: string
@@ -208,16 +298,24 @@ export default function MembersPage() {
     );
   }
 
+  // =========================================
+  // ADD / EDIT MEMBER
+  // =========================================
+
   async function handleSubmit(
     e: FormEvent
   ) {
     e.preventDefault();
 
+    // Only Admin
+    if (!isAdmin) {
+      alert(t.adminOnly);
+      return;
+    }
+
     const cleanName = name.trim();
-    const cleanMobile =
-      mobile.trim();
-    const cleanAddress =
-      address.trim();
+    const cleanMobile = mobile.trim();
+    const cleanAddress = address.trim();
 
     if (
       !cleanName ||
@@ -236,19 +334,25 @@ export default function MembersPage() {
       return;
     }
 
+    // =====================================
+    // EDIT MEMBER
+    // =====================================
+
     if (editingId !== null) {
-      const { data, error } =
-        await supabase
-          .from("members")
-          .update({
-            name: cleanName,
-            mobile: cleanMobile,
-            address: cleanAddress,
-          })
-          .eq("id", editingId)
-          .eq("user_id", user.id)
-          .select()
-          .single();
+      const {
+        data,
+        error,
+      } = await supabase
+        .from("members")
+        .update({
+          name: cleanName,
+          mobile: cleanMobile,
+          address: cleanAddress,
+        })
+        .eq("id", editingId)
+        .eq("user_id", user.id)
+        .select()
+        .single();
 
       if (error) {
         console.error(
@@ -263,7 +367,7 @@ export default function MembersPage() {
       setMembers((current) =>
         current.map((member) =>
           member.id === editingId
-            ? data
+            ? (data as Member)
             : member
         )
       );
@@ -272,17 +376,23 @@ export default function MembersPage() {
       return;
     }
 
-    const { data, error } =
-      await supabase
-        .from("members")
-        .insert({
-          user_id: user.id,
-          name: cleanName,
-          mobile: cleanMobile,
-          address: cleanAddress,
-        })
-        .select()
-        .single();
+    // =====================================
+    // ADD MEMBER
+    // =====================================
+
+    const {
+      data,
+      error,
+    } = await supabase
+      .from("members")
+      .insert({
+        user_id: user.id,
+        name: cleanName,
+        mobile: cleanMobile,
+        address: cleanAddress,
+      })
+      .select()
+      .single();
 
     if (error) {
       console.error(
@@ -290,12 +400,16 @@ export default function MembersPage() {
         error
       );
 
-      alert(t.unableAdd);
+      alert(
+        error.message ||
+          t.unableAdd
+      );
+
       return;
     }
 
     setMembers((current) => [
-      data,
+      data as Member,
       ...current,
     ]);
 
@@ -308,9 +422,17 @@ export default function MembersPage() {
     setAddress("");
   }
 
+  // =========================================
+  // EDIT
+  // =========================================
+
   function startEdit(
     member: Member
   ) {
+    if (!isAdmin) {
+      return;
+    }
+
     setEditingId(member.id);
     setName(member.name || "");
     setMobile(member.mobile || "");
@@ -324,6 +446,10 @@ export default function MembersPage() {
     });
   }
 
+  // =========================================
+  // CANCEL
+  // =========================================
+
   function cancelEdit() {
     setEditingId(null);
     setName("");
@@ -331,9 +457,17 @@ export default function MembersPage() {
     setAddress("");
   }
 
+  // =========================================
+  // DELETE
+  // =========================================
+
   async function deleteMember(
     id: string
   ) {
+    if (!isAdmin) {
+      return;
+    }
+
     const {
       data: { user },
     } = await supabase.auth.getUser();
@@ -381,6 +515,10 @@ export default function MembersPage() {
     }
   }
 
+  // =========================================
+  // LOADING
+  // =========================================
+
   if (loading) {
     return (
       <main className="min-h-screen bg-gray-50 px-4 py-8">
@@ -391,9 +529,15 @@ export default function MembersPage() {
     );
   }
 
+  // =========================================
+  // PAGE
+  // =========================================
+
   return (
     <main className="min-h-screen bg-gray-50 px-4 py-8">
       <div className="mx-auto max-w-4xl">
+
+        {/* BACK */}
 
         <button
           type="button"
@@ -405,92 +549,126 @@ export default function MembersPage() {
           {t.back}
         </button>
 
-        <h1 className="text-3xl font-bold text-gray-900">
-          {t.title}
-        </h1>
+        {/* TITLE */}
 
-        <p className="mt-2 text-gray-500">
-          {t.subtitle}
-        </p>
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
 
-        <form
-          onSubmit={handleSubmit}
-          className="mt-8 rounded-2xl border bg-white p-6 shadow-sm"
-        >
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">
+              {t.title}
+            </h1>
 
-          <h2 className="text-xl font-bold">
-            {editingId !== null
-              ? t.editMember
-              : t.addMember}
-          </h2>
-
-          <div className="mt-5 grid gap-4 sm:grid-cols-2">
-
-            <input
-              value={name}
-              onChange={(e) =>
-                setName(
-                  e.target.value
-                )
-              }
-              placeholder={
-                t.memberName
-              }
-              className="rounded-xl border px-4 py-3 outline-none focus:border-orange-500"
-              required
-            />
-
-            <input
-              value={mobile}
-              onChange={(e) =>
-                setMobile(
-                  e.target.value
-                )
-              }
-              placeholder={
-                t.mobileNumber
-              }
-              className="rounded-xl border px-4 py-3 outline-none focus:border-orange-500"
-              required
-            />
-
-            <input
-              value={address}
-              onChange={(e) =>
-                setAddress(
-                  e.target.value
-                )
-              }
-              placeholder={t.address}
-              className="rounded-xl border px-4 py-3 outline-none focus:border-orange-500 sm:col-span-2"
-            />
-
+            <p className="mt-2 text-gray-500">
+              {t.subtitle}
+            </p>
           </div>
 
-          <div className="mt-5 flex flex-wrap gap-3">
+          {/* ROLE BADGE */}
 
-            <button
-              type="submit"
-              className="cursor-pointer rounded-xl bg-orange-500 px-6 py-3 font-semibold text-white hover:bg-orange-600"
-            >
+          <span
+            className={`w-fit rounded-full px-4 py-2 text-sm font-bold ${
+              isAdmin
+                ? "bg-orange-100 text-orange-700"
+                : "bg-gray-100 text-gray-700"
+            }`}
+          >
+            {isAdmin
+              ? `👑 ${t.admin}`
+              : `👤 ${t.member}`}
+          </span>
+
+        </div>
+
+        {/* =====================================
+            ADMIN ADD / EDIT FORM
+        ===================================== */}
+
+        {isAdmin && (
+          <form
+            onSubmit={handleSubmit}
+            className="mt-8 rounded-2xl border bg-white p-6 shadow-sm"
+          >
+
+            <h2 className="text-xl font-bold">
               {editingId !== null
-                ? t.updateMember
-                : t.addMemberButton}
-            </button>
+                ? t.editMember
+                : t.addMember}
+            </h2>
 
-            {editingId !== null && (
+            <div className="mt-5 grid gap-4 sm:grid-cols-2">
+
+              <input
+                value={name}
+                onChange={(e) =>
+                  setName(
+                    e.target.value
+                  )
+                }
+                placeholder={
+                  t.memberName
+                }
+                className="rounded-xl border px-4 py-3 outline-none focus:border-orange-500"
+                required
+              />
+
+              <input
+                value={mobile}
+                onChange={(e) =>
+                  setMobile(
+                    e.target.value
+                  )
+                }
+                placeholder={
+                  t.mobileNumber
+                }
+                inputMode="numeric"
+                className="rounded-xl border px-4 py-3 outline-none focus:border-orange-500"
+                required
+              />
+
+              <input
+                value={address}
+                onChange={(e) =>
+                  setAddress(
+                    e.target.value
+                  )
+                }
+                placeholder={
+                  t.address
+                }
+                className="rounded-xl border px-4 py-3 outline-none focus:border-orange-500 sm:col-span-2"
+              />
+
+            </div>
+
+            <div className="mt-5 flex flex-wrap gap-3">
+
               <button
-                type="button"
-                onClick={cancelEdit}
-                className="cursor-pointer rounded-xl border px-6 py-3 font-semibold text-gray-700 hover:bg-gray-50"
+                type="submit"
+                className="cursor-pointer rounded-xl bg-orange-500 px-6 py-3 font-semibold text-white hover:bg-orange-600"
               >
-                {t.cancel}
+                {editingId !== null
+                  ? t.updateMember
+                  : t.addMemberButton}
               </button>
-            )}
 
-          </div>
+              {editingId !== null && (
+                <button
+                  type="button"
+                  onClick={cancelEdit}
+                  className="cursor-pointer rounded-xl border px-6 py-3 font-semibold text-gray-700 hover:bg-gray-50"
+                >
+                  {t.cancel}
+                </button>
+              )}
 
-        </form>
+            </div>
+          </form>
+        )}
+
+        {/* =====================================
+            MEMBERS LIST
+        ===================================== */}
 
         <div className="mt-8 rounded-2xl border bg-white p-6 shadow-sm">
 
@@ -517,62 +695,76 @@ export default function MembersPage() {
 
             <div className="mt-5 space-y-3">
 
-              {members.map((member) => (
+              {members.map(
+                (member) => (
 
-                <div
-                  key={member.id}
-                  className="flex flex-col gap-4 rounded-xl border p-4 sm:flex-row sm:items-center sm:justify-between"
-                >
+                  <div
+                    key={member.id}
+                    className="flex flex-col gap-4 rounded-xl border p-4 sm:flex-row sm:items-center sm:justify-between"
+                  >
 
-                  <div>
+                    {/* MEMBER DETAILS */}
 
-                    <h3 className="font-bold text-gray-900">
-                      {member.name}
-                    </h3>
+                    <div>
 
-                    <p className="text-sm text-gray-500">
-                      {member.mobile}
-                    </p>
+                      <h3 className="font-bold text-gray-900">
+                        {member.name}
+                      </h3>
 
-                    {member.address && (
                       <p className="text-sm text-gray-500">
-                        {member.address}
+                        📱 {member.mobile}
                       </p>
+
+                      {member.address && (
+                        <p className="text-sm text-gray-500">
+                          📍 {member.address}
+                        </p>
+                      )}
+
+                      <div className="mt-2">
+                        <span className="inline-flex rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-600">
+                          👤 {t.member}
+                        </span>
+                      </div>
+
+                    </div>
+
+                    {/* ADMIN CONTROLS */}
+
+                    {isAdmin && (
+                      <div className="flex gap-2">
+
+                        <button
+                          type="button"
+                          onClick={() =>
+                            startEdit(
+                              member
+                            )
+                          }
+                          className="cursor-pointer rounded-lg bg-orange-50 px-4 py-2 font-semibold text-orange-600"
+                        >
+                          {t.edit}
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() =>
+                            deleteMember(
+                              member.id
+                            )
+                          }
+                          className="cursor-pointer rounded-lg bg-red-50 px-4 py-2 font-semibold text-red-600"
+                        >
+                          {t.delete}
+                        </button>
+
+                      </div>
                     )}
 
                   </div>
 
-                  <div className="flex gap-2">
-
-                    <button
-                      type="button"
-                      onClick={() =>
-                        startEdit(
-                          member
-                        )
-                      }
-                      className="cursor-pointer rounded-lg bg-orange-50 px-4 py-2 font-semibold text-orange-600"
-                    >
-                      {t.edit}
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() =>
-                        deleteMember(
-                          member.id
-                        )
-                      }
-                      className="cursor-pointer rounded-lg bg-red-50 px-4 py-2 font-semibold text-red-600"
-                    >
-                      {t.delete}
-                    </button>
-
-                  </div>
-
-                </div>
-
-              ))}
+                )
+              )}
 
             </div>
 
