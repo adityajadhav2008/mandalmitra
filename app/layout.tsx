@@ -1,10 +1,11 @@
+import type { Metadata } from "next";
 import "./globals.css";
+import BottomNav from "./components/BottomNav";
 import { LanguageProvider } from "./language-provider";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "MandalSetu",
-  description: "Every Mandal, One Simple Platform",
-  manifest: "/manifest.json",
+  description: "Mandal management made simple.",
 };
 
 export default function RootLayout({
@@ -14,9 +15,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="bg-gray-50 text-gray-900">
+      <body className="min-h-screen bg-white pb-[76px] lg:pb-0">
         <LanguageProvider>
           {children}
+
+          <BottomNav />
         </LanguageProvider>
       </body>
     </html>

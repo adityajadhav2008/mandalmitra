@@ -17,6 +17,8 @@ type Translation = {
   memberName: string;
   mobile: string;
   amount: string;
+  jama: string;
+  baki: string;
   purpose: string;
   date: string;
   receiptNo: string;
@@ -44,6 +46,7 @@ type Translation = {
   enterName: string;
   enterMobile: string;
   enterAmount: string;
+  enterBaki: string;
   enterNote: string;
 };
 
@@ -58,6 +61,8 @@ const translations: Record<Language, Translation> = {
     memberName: "Member Name",
     mobile: "Mobile Number",
     amount: "Amount",
+    jama: "Jama",
+    baki: "Baki",
     purpose: "Purpose",
     date: "Date",
     receiptNo: "Receipt No.",
@@ -85,6 +90,7 @@ const translations: Record<Language, Translation> = {
     enterName: "Enter member name",
     enterMobile: "Enter mobile number",
     enterAmount: "Enter amount",
+    enterBaki: "Enter baki amount",
     enterNote: "Enter note",
   },
 
@@ -97,7 +103,9 @@ const translations: Record<Language, Translation> = {
     changeLogo: "लोगो बदला",
     memberName: "सदस्याचे नाव",
     mobile: "मोबाईल नंबर",
-    amount: "रक्कम",
+    amount: "जमा रक्कम",
+    jama: "जमा",
+    baki: "बाकी",
     purpose: "उद्देश",
     date: "तारीख",
     receiptNo: "पावती क्र.",
@@ -119,12 +127,13 @@ const translations: Record<Language, Translation> = {
     sending: "WhatsApp साठी तयार होत आहे...",
     receipt: "पावती",
     receivedFrom: "प्राप्तकर्त्याचे नाव",
-    amountLabel: "प्राप्त रक्कम",
+    amountLabel: "जमा रक्कम",
     thankYou: "आपल्या अमूल्य योगदानाबद्दल धन्यवाद!",
     language: "पावतीची भाषा",
     enterName: "सदस्याचे नाव टाका",
     enterMobile: "मोबाईल नंबर टाका",
-    enterAmount: "रक्कम टाका",
+    enterAmount: "जमा रक्कम टाका",
+    enterBaki: "बाकी रक्कम टाका",
     enterNote: "नोंद टाका",
   },
 
@@ -137,7 +146,9 @@ const translations: Record<Language, Translation> = {
     changeLogo: "लोगो बदलें",
     memberName: "सदस्य का नाम",
     mobile: "मोबाइल नंबर",
-    amount: "राशि",
+    amount: "जमा राशि",
+    jama: "जमा",
+    baki: "बाकी",
     purpose: "उद्देश्य",
     date: "तारीख",
     receiptNo: "रसीद क्र.",
@@ -159,12 +170,13 @@ const translations: Record<Language, Translation> = {
     sending: "WhatsApp के लिए तैयार हो रहा है...",
     receipt: "रसीद",
     receivedFrom: "प्राप्तकर्ता का नाम",
-    amountLabel: "प्राप्त राशि",
+    amountLabel: "जमा राशि",
     thankYou: "आपके अमूल्य योगदान के लिए धन्यवाद!",
     language: "रसीद की भाषा",
     enterName: "सदस्य का नाम दर्ज करें",
     enterMobile: "मोबाइल नंबर दर्ज करें",
-    enterAmount: "राशि दर्ज करें",
+    enterAmount: "जमा राशि दर्ज करें",
+    enterBaki: "बाकी राशि दर्ज करें",
     enterNote: "नोट दर्ज करें",
   },
 };
@@ -182,6 +194,7 @@ export default function CreateReceiptPage() {
   const [memberName, setMemberName] = useState("");
   const [mobile, setMobile] = useState("");
   const [amount, setAmount] = useState("");
+  const [baki, setBaki] = useState("");
   const [purpose, setPurpose] = useState("");
   const [paymentMode, setPaymentMode] = useState<"Cash" | "UPI">("Cash");
   const [date, setDate] = useState("");
@@ -235,9 +248,7 @@ export default function CreateReceiptPage() {
 
       setDate(today);
 
-      setReceiptNumber(
-        "MR-" + Date.now().toString().slice(-6)
-      );
+      setReceiptNumber("MR-" + Date.now().toString().slice(-6));
     }
 
     loadData();
@@ -247,9 +258,7 @@ export default function CreateReceiptPage() {
     };
   }, [router, supabase]);
 
-  function handleLogoUpload(
-    event: React.ChangeEvent<HTMLInputElement>
-  ) {
+  function handleLogoUpload(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
 
     if (!file) return;
@@ -265,7 +274,6 @@ export default function CreateReceiptPage() {
       const result = reader.result as string;
 
       setLogo(result);
-
       localStorage.setItem("mandalLogo", result);
     };
 
@@ -326,6 +334,11 @@ export default function CreateReceiptPage() {
       return false;
     }
 
+    if (baki.trim() && Number(baki) < 0) {
+      alert(t.enterBaki);
+      return false;
+    }
+
     if (!purpose) {
       alert(t.selectPurpose);
       return false;
@@ -342,26 +355,20 @@ export default function CreateReceiptPage() {
       throw new Error("Receipt preview not found.");
     }
 
-    await new Promise((resolve) =>
-      setTimeout(resolve, 200)
-    );
+    await new Promise((resolve) => setTimeout(resolve, 200));
 
-    const canvas = await html2canvas(
-      receiptRef.current,
-      {
-        scale: 2,
-        backgroundColor: "#ffffff",
-        useCORS: false,
-        allowTaint: false,
-        logging: false,
-        foreignObjectRendering: false,
-      }
-    );
+    const canvas = await html2canvas(receiptRef.current, {
+      scale: 2,
+      backgroundColor: "#ffffff",
+      useCORS: false,
+      allowTaint: false,
+      logging: false,
+      foreignObjectRendering: false,
+    });
 
     const dataUrl = canvas.toDataURL("image/png");
 
     const response = await fetch(dataUrl);
-
     const blob = await response.blob();
 
     return {
@@ -376,42 +383,27 @@ export default function CreateReceiptPage() {
     try {
       setGenerating(true);
 
-      const { dataUrl } =
-        await createReceiptImage();
+      const { dataUrl } = await createReceiptImage();
 
-      const link =
-        document.createElement("a");
+      const link = document.createElement("a");
 
       link.href = dataUrl;
-
-      link.download =
-        `mandal-receipt-${receiptNumber}.png`;
+      link.download = `mandal-receipt-${receiptNumber}.png`;
 
       document.body.appendChild(link);
-
       link.click();
-
       document.body.removeChild(link);
     } catch (error) {
-      console.error(
-        "Receipt generation error:",
-        error
-      );
+      console.error("Receipt generation error:", error);
 
-      alert(
-        "Receipt generate होत नाहीये. Please try again."
-      );
+      alert("Receipt generate होत नाहीये. Please try again.");
     } finally {
       setGenerating(false);
     }
   }
 
   function getPaymentModeText() {
-    if (paymentMode === "Cash") {
-      return t.cash;
-    }
-
-    return t.upi;
+    return paymentMode === "Cash" ? t.cash : t.upi;
   }
 
   function getWhatsAppMessage() {
@@ -422,7 +414,8 @@ ${mandalName} ची पावती
 
 पावती क्र.: ${receiptNumber}
 नाव: ${memberName}
-रक्कम: ₹${amount}
+जमा: ₹${amount}
+बाकी: ₹${baki || "0"}
 उद्देश: ${purpose}
 पेमेंट पद्धत: ${getPaymentModeText()}
 तारीख: ${formatDate(date)}
@@ -439,7 +432,8 @@ ${mandalName} की रसीद
 
 रसीद क्र.: ${receiptNumber}
 नाम: ${memberName}
-राशि: ₹${amount}
+जमा: ₹${amount}
+बाकी: ₹${baki || "0"}
 उद्देश्य: ${purpose}
 भुगतान का तरीका: ${getPaymentModeText()}
 तारीख: ${formatDate(date)}
@@ -455,7 +449,8 @@ ${mandalName} Receipt
 
 Receipt No.: ${receiptNumber}
 Name: ${memberName}
-Amount: ₹${amount}
+Jama: ₹${amount}
+Baki: ₹${baki || "0"}
 Purpose: ${purpose}
 Payment Mode: ${getPaymentModeText()}
 Date: ${formatDate(date)}
@@ -471,8 +466,7 @@ MandalSetu — One Simple Platform for Every Mandal`;
     try {
       setGenerating(true);
 
-      const { blob } =
-        await createReceiptImage();
+      const { blob } = await createReceiptImage();
 
       const file = new File(
         [blob],
@@ -482,31 +476,25 @@ MandalSetu — One Simple Platform for Every Mandal`;
         }
       );
 
-      const cleanMobile =
-        mobile.replace(/\D/g, "");
+      const cleanMobile = mobile.replace(/\D/g, "");
+      const formattedMobile = `91${cleanMobile}`;
 
-      const formattedMobile =
-        `91${cleanMobile}`;
-
-      const message =
-        getWhatsAppMessage();
+      const message = getWhatsAppMessage();
 
       if (
         typeof navigator !== "undefined" &&
         navigator.share
       ) {
         try {
-          const canShareFile =
-            navigator.canShare
-              ? navigator.canShare({
-                  files: [file],
-                })
-              : false;
+          const canShareFile = navigator.canShare
+            ? navigator.canShare({
+                files: [file],
+              })
+            : false;
 
           if (canShareFile) {
             await navigator.share({
-              title:
-                `${mandalName} Receipt`,
+              title: `${mandalName} Receipt`,
               text: message,
               files: [file],
             });
@@ -514,52 +502,32 @@ MandalSetu — One Simple Platform for Every Mandal`;
             return;
           }
         } catch (shareError) {
-          console.log(
-            "Native share cancelled:",
-            shareError
-          );
+          console.log("Native share cancelled:", shareError);
         }
       }
 
-      const downloadUrl =
-        URL.createObjectURL(blob);
+      const downloadUrl = URL.createObjectURL(blob);
 
-      const link =
-        document.createElement("a");
+      const link = document.createElement("a");
 
       link.href = downloadUrl;
-
-      link.download =
-        `mandal-receipt-${receiptNumber}.png`;
+      link.download = `mandal-receipt-${receiptNumber}.png`;
 
       document.body.appendChild(link);
-
       link.click();
-
       document.body.removeChild(link);
 
       URL.revokeObjectURL(downloadUrl);
 
-      const encodedMessage =
-        encodeURIComponent(message);
+      const encodedMessage = encodeURIComponent(message);
 
-      const whatsappUrl =
-        `https://wa.me/${formattedMobile}?text=${encodedMessage}`;
+      const whatsappUrl = `https://wa.me/${formattedMobile}?text=${encodedMessage}`;
 
-      window.open(
-        whatsappUrl,
-        "_blank",
-        "noopener,noreferrer"
-      );
+      window.open(whatsappUrl, "_blank", "noopener,noreferrer");
     } catch (error) {
-      console.error(
-        "WhatsApp receipt error:",
-        error
-      );
+      console.error("WhatsApp receipt error:", error);
 
-      alert(
-        "WhatsApp साठी receipt तयार करता आली नाही."
-      );
+      alert("WhatsApp साठी receipt तयार करता आली नाही.");
     } finally {
       setGenerating(false);
     }
@@ -571,8 +539,7 @@ MandalSetu — One Simple Platform for Every Mandal`;
     try {
       setGenerating(true);
 
-      const { blob } =
-        await createReceiptImage();
+      const { blob } = await createReceiptImage();
 
       const file = new File(
         [blob],
@@ -582,24 +549,21 @@ MandalSetu — One Simple Platform for Every Mandal`;
         }
       );
 
-      const message =
-        getWhatsAppMessage();
+      const message = getWhatsAppMessage();
 
       if (
         typeof navigator !== "undefined" &&
         navigator.share
       ) {
-        const canShareFile =
-          navigator.canShare
-            ? navigator.canShare({
-                files: [file],
-              })
-            : false;
+        const canShareFile = navigator.canShare
+          ? navigator.canShare({
+              files: [file],
+            })
+          : false;
 
         if (canShareFile) {
           await navigator.share({
-            title:
-              `${mandalName} Receipt`,
+            title: `${mandalName} Receipt`,
             text: message,
             files: [file],
           });
@@ -608,29 +572,22 @@ MandalSetu — One Simple Platform for Every Mandal`;
         }
 
         await navigator.share({
-          title:
-            `${mandalName} Receipt`,
+          title: `${mandalName} Receipt`,
           text: message,
         });
 
         return;
       }
 
-      const { dataUrl } =
-        await createReceiptImage();
+      const { dataUrl } = await createReceiptImage();
 
-      const link =
-        document.createElement("a");
+      const link = document.createElement("a");
 
       link.href = dataUrl;
-
-      link.download =
-        `mandal-receipt-${receiptNumber}.png`;
+      link.download = `mandal-receipt-${receiptNumber}.png`;
 
       document.body.appendChild(link);
-
       link.click();
-
       document.body.removeChild(link);
 
       alert(
@@ -639,10 +596,7 @@ MandalSetu — One Simple Platform for Every Mandal`;
           : "Direct sharing is not available. Receipt has been downloaded."
       );
     } catch (error) {
-      console.error(
-        "Share receipt error:",
-        error
-      );
+      console.error("Share receipt error:", error);
     } finally {
       setGenerating(false);
     }
@@ -666,9 +620,7 @@ MandalSetu — One Simple Platform for Every Mandal`;
 
         <button
           type="button"
-          onClick={() =>
-            router.push("/dashboard")
-          }
+          onClick={() => router.push("/dashboard")}
           style={{
             marginBottom: "24px",
             border: "none",
@@ -728,17 +680,12 @@ MandalSetu — One Simple Platform for Every Mandal`;
               border: "1px solid #e5e7eb",
               borderRadius: "24px",
               padding: "24px",
-              boxShadow:
-                "0 4px 15px rgba(0,0,0,0.06)",
+              boxShadow: "0 4px 15px rgba(0,0,0,0.06)",
             }}
           >
             {/* LANGUAGE */}
 
-            <div
-              style={{
-                marginBottom: "24px",
-              }}
-            >
+            <div style={{ marginBottom: "24px" }}>
               <label
                 style={{
                   display: "block",
@@ -754,42 +701,27 @@ MandalSetu — One Simple Platform for Every Mandal`;
               <select
                 value={language}
                 onChange={(e) =>
-                  setLanguage(
-                    e.target.value as Language
-                  )
+                  setLanguage(e.target.value as Language)
                 }
                 style={{
                   width: "100%",
                   padding: "12px 16px",
                   borderRadius: "12px",
-                  border:
-                    "1px solid #d1d5db",
+                  border: "1px solid #d1d5db",
                   backgroundColor: "#ffffff",
                   color: "#111827",
                   fontSize: "15px",
                 }}
               >
-                <option value="Marathi">
-                  मराठी
-                </option>
-
-                <option value="Hindi">
-                  हिंदी
-                </option>
-
-                <option value="English">
-                  English
-                </option>
+                <option value="Marathi">मराठी</option>
+                <option value="Hindi">हिंदी</option>
+                <option value="English">English</option>
               </select>
             </div>
 
             {/* LOGO */}
 
-            <div
-              style={{
-                marginBottom: "24px",
-              }}
-            >
+            <div style={{ marginBottom: "24px" }}>
               <label
                 style={{
                   display: "block",
@@ -817,12 +749,10 @@ MandalSetu — One Simple Platform for Every Mandal`;
                       width: "80px",
                       height: "80px",
                       borderRadius: "16px",
-                      border:
-                        "1px solid #d1d5db",
+                      border: "1px solid #d1d5db",
                       objectFit: "contain",
                       padding: "8px",
-                      backgroundColor:
-                        "#ffffff",
+                      backgroundColor: "#ffffff",
                     }}
                   />
                 ) : (
@@ -832,10 +762,8 @@ MandalSetu — One Simple Platform for Every Mandal`;
                       height: "80px",
                       display: "flex",
                       alignItems: "center",
-                      justifyContent:
-                        "center",
-                      border:
-                        "2px dashed #d1d5db",
+                      justifyContent: "center",
+                      border: "2px dashed #d1d5db",
                       borderRadius: "16px",
                       fontSize: "30px",
                     }}
@@ -847,25 +775,19 @@ MandalSetu — One Simple Platform for Every Mandal`;
                 <label
                   style={{
                     cursor: "pointer",
-                    backgroundColor:
-                      "#f97316",
+                    backgroundColor: "#f97316",
                     color: "#ffffff",
-                    padding:
-                      "12px 16px",
+                    padding: "12px 16px",
                     borderRadius: "12px",
                     fontWeight: 700,
                   }}
                 >
-                  {logo
-                    ? t.changeLogo
-                    : t.uploadLogo}
+                  {logo ? t.changeLogo : t.uploadLogo}
 
                   <input
                     type="file"
                     accept="image/*"
-                    onChange={
-                      handleLogoUpload
-                    }
+                    onChange={handleLogoUpload}
                     style={{
                       display: "none",
                     }}
@@ -876,11 +798,7 @@ MandalSetu — One Simple Platform for Every Mandal`;
 
             {/* NAME */}
 
-            <div
-              style={{
-                marginBottom: "20px",
-              }}
-            >
+            <div style={{ marginBottom: "20px" }}>
               <label
                 style={{
                   display: "block",
@@ -896,19 +814,14 @@ MandalSetu — One Simple Platform for Every Mandal`;
               <input
                 type="text"
                 value={memberName}
-                onChange={(e) =>
-                  setMemberName(
-                    e.target.value
-                  )
-                }
+                onChange={(e) => setMemberName(e.target.value)}
                 placeholder={t.enterName}
                 style={{
                   width: "100%",
                   boxSizing: "border-box",
                   padding: "12px 16px",
                   borderRadius: "12px",
-                  border:
-                    "1px solid #d1d5db",
+                  border: "1px solid #d1d5db",
                   fontSize: "15px",
                 }}
               />
@@ -916,11 +829,7 @@ MandalSetu — One Simple Platform for Every Mandal`;
 
             {/* MOBILE */}
 
-            <div
-              style={{
-                marginBottom: "20px",
-              }}
-            >
+            <div style={{ marginBottom: "20px" }}>
               <label
                 style={{
                   display: "block",
@@ -937,31 +846,22 @@ MandalSetu — One Simple Platform for Every Mandal`;
                 type="tel"
                 inputMode="numeric"
                 value={mobile}
-                onChange={(e) =>
-                  setMobile(
-                    e.target.value
-                  )
-                }
+                onChange={(e) => setMobile(e.target.value)}
                 placeholder={t.enterMobile}
                 style={{
                   width: "100%",
                   boxSizing: "border-box",
                   padding: "12px 16px",
                   borderRadius: "12px",
-                  border:
-                    "1px solid #d1d5db",
+                  border: "1px solid #d1d5db",
                   fontSize: "15px",
                 }}
               />
             </div>
 
-            {/* AMOUNT */}
+            {/* JAMA */}
 
-            <div
-              style={{
-                marginBottom: "20px",
-              }}
-            >
+            <div style={{ marginBottom: "20px" }}>
               <label
                 style={{
                   display: "block",
@@ -971,26 +871,53 @@ MandalSetu — One Simple Platform for Every Mandal`;
                   color: "#374151",
                 }}
               >
-                {t.amount}
+                {t.jama}
               </label>
 
               <input
                 type="number"
                 min="1"
                 value={amount}
-                onChange={(e) =>
-                  setAmount(
-                    e.target.value
-                  )
-                }
+                onChange={(e) => setAmount(e.target.value)}
                 placeholder={t.enterAmount}
                 style={{
                   width: "100%",
                   boxSizing: "border-box",
                   padding: "12px 16px",
                   borderRadius: "12px",
-                  border:
-                    "1px solid #d1d5db",
+                  border: "1px solid #d1d5db",
+                  fontSize: "15px",
+                }}
+              />
+            </div>
+
+            {/* BAKI */}
+
+            <div style={{ marginBottom: "20px" }}>
+              <label
+                style={{
+                  display: "block",
+                  marginBottom: "8px",
+                  fontSize: "14px",
+                  fontWeight: 700,
+                  color: "#374151",
+                }}
+              >
+                {t.baki}
+              </label>
+
+              <input
+                type="number"
+                min="0"
+                value={baki}
+                onChange={(e) => setBaki(e.target.value)}
+                placeholder={t.enterBaki}
+                style={{
+                  width: "100%",
+                  boxSizing: "border-box",
+                  padding: "12px 16px",
+                  borderRadius: "12px",
+                  border: "1px solid #d1d5db",
                   fontSize: "15px",
                 }}
               />
@@ -998,11 +925,7 @@ MandalSetu — One Simple Platform for Every Mandal`;
 
             {/* PURPOSE */}
 
-            <div
-              style={{
-                marginBottom: "20px",
-              }}
-            >
+            <div style={{ marginBottom: "20px" }}>
               <label
                 style={{
                   display: "block",
@@ -1017,59 +940,32 @@ MandalSetu — One Simple Platform for Every Mandal`;
 
               <select
                 value={purpose}
-                onChange={(e) =>
-                  setPurpose(
-                    e.target.value
-                  )
-                }
+                onChange={(e) => setPurpose(e.target.value)}
                 style={{
                   width: "100%",
                   padding: "12px 16px",
                   borderRadius: "12px",
-                  border:
-                    "1px solid #d1d5db",
-                  backgroundColor:
-                    "#ffffff",
+                  border: "1px solid #d1d5db",
+                  backgroundColor: "#ffffff",
                   fontSize: "15px",
                 }}
               >
-                <option value="">
-                  {t.selectPurpose}
-                </option>
+                <option value="">{t.selectPurpose}</option>
 
-                <option
-                  value={
-                    t.mandalCollection
-                  }
-                >
+                <option value={t.mandalCollection}>
                   {t.mandalCollection}
                 </option>
 
-                <option value={t.donation}>
-                  {t.donation}
-                </option>
-
-                <option value={t.program}>
-                  {t.program}
-                </option>
-
-                <option value={t.event}>
-                  {t.event}
-                </option>
-
-                <option value={t.other}>
-                  {t.other}
-                </option>
+                <option value={t.donation}>{t.donation}</option>
+                <option value={t.program}>{t.program}</option>
+                <option value={t.event}>{t.event}</option>
+                <option value={t.other}>{t.other}</option>
               </select>
             </div>
 
             {/* PAYMENT MODE */}
 
-            <div
-              style={{
-                marginBottom: "20px",
-              }}
-            >
+            <div style={{ marginBottom: "20px" }}>
               <label
                 style={{
                   display: "block",
@@ -1086,39 +982,26 @@ MandalSetu — One Simple Platform for Every Mandal`;
                 value={paymentMode}
                 onChange={(e) =>
                   setPaymentMode(
-                    e.target.value as
-                      | "Cash"
-                      | "UPI"
+                    e.target.value as "Cash" | "UPI"
                   )
                 }
                 style={{
                   width: "100%",
                   padding: "12px 16px",
                   borderRadius: "12px",
-                  border:
-                    "1px solid #d1d5db",
-                  backgroundColor:
-                    "#ffffff",
+                  border: "1px solid #d1d5db",
+                  backgroundColor: "#ffffff",
                   fontSize: "15px",
                 }}
               >
-                <option value="Cash">
-                  {t.cash}
-                </option>
-
-                <option value="UPI">
-                  {t.upi}
-                </option>
+                <option value="Cash">{t.cash}</option>
+                <option value="UPI">{t.upi}</option>
               </select>
             </div>
 
             {/* DATE */}
 
-            <div
-              style={{
-                marginBottom: "20px",
-              }}
-            >
+            <div style={{ marginBottom: "20px" }}>
               <label
                 style={{
                   display: "block",
@@ -1134,18 +1017,13 @@ MandalSetu — One Simple Platform for Every Mandal`;
               <input
                 type="date"
                 value={date}
-                onChange={(e) =>
-                  setDate(
-                    e.target.value
-                  )
-                }
+                onChange={(e) => setDate(e.target.value)}
                 style={{
                   width: "100%",
                   boxSizing: "border-box",
                   padding: "12px 16px",
                   borderRadius: "12px",
-                  border:
-                    "1px solid #d1d5db",
+                  border: "1px solid #d1d5db",
                   fontSize: "15px",
                 }}
               />
@@ -1153,11 +1031,7 @@ MandalSetu — One Simple Platform for Every Mandal`;
 
             {/* NOTE */}
 
-            <div
-              style={{
-                marginBottom: "24px",
-              }}
-            >
+            <div style={{ marginBottom: "24px" }}>
               <label
                 style={{
                   display: "block",
@@ -1180,11 +1054,7 @@ MandalSetu — One Simple Platform for Every Mandal`;
 
               <textarea
                 value={note}
-                onChange={(e) =>
-                  setNote(
-                    e.target.value
-                  )
-                }
+                onChange={(e) => setNote(e.target.value)}
                 placeholder={t.enterNote}
                 rows={3}
                 style={{
@@ -1193,8 +1063,7 @@ MandalSetu — One Simple Platform for Every Mandal`;
                   resize: "none",
                   padding: "12px 16px",
                   borderRadius: "12px",
-                  border:
-                    "1px solid #d1d5db",
+                  border: "1px solid #d1d5db",
                   fontSize: "15px",
                 }}
               />
@@ -1203,11 +1072,7 @@ MandalSetu — One Simple Platform for Every Mandal`;
 
           {/* ================= RECEIPT ================= */}
 
-          <div
-            style={{
-              width: "100%",
-            }}
-          >
+          <div style={{ width: "100%" }}>
             <div
               ref={receiptRef}
               style={{
@@ -1216,11 +1081,9 @@ MandalSetu — One Simple Platform for Every Mandal`;
                 margin: "0 auto",
                 overflow: "hidden",
                 position: "relative",
-                border:
-                  "6px solid #f97316",
+                border: "6px solid #f97316",
                 borderRadius: "28px",
-                backgroundColor:
-                  "#ffffff",
+                backgroundColor: "#ffffff",
                 boxSizing: "border-box",
               }}
             >
@@ -1232,15 +1095,13 @@ MandalSetu — One Simple Platform for Every Mandal`;
                   alt=""
                   aria-hidden="true"
                   style={{
-                    position:
-                      "absolute",
+                    position: "absolute",
                     top: "50%",
                     left: "50%",
                     width: "380px",
                     height: "380px",
                     objectFit: "contain",
-                    transform:
-                      "translate(-50%, -50%)",
+                    transform: "translate(-50%, -50%)",
                     opacity: 0.055,
                     pointerEvents: "none",
                     zIndex: 0,
@@ -1254,11 +1115,9 @@ MandalSetu — One Simple Platform for Every Mandal`;
                 style={{
                   position: "relative",
                   zIndex: 1,
-                  padding:
-                    "32px 28px",
+                  padding: "32px 28px",
                   textAlign: "center",
-                  backgroundColor:
-                    "#f97316",
+                  backgroundColor: "#f97316",
                   color: "#ffffff",
                 }}
               >
@@ -1266,20 +1125,14 @@ MandalSetu — One Simple Platform for Every Mandal`;
                   style={{
                     width: "112px",
                     height: "112px",
-                    margin:
-                      "0 auto 16px",
+                    margin: "0 auto 16px",
                     display: "flex",
-                    alignItems:
-                      "center",
-                    justifyContent:
-                      "center",
-                    borderRadius:
-                      "50%",
-                    backgroundColor:
-                      "#ffffff",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderRadius: "50%",
+                    backgroundColor: "#ffffff",
                     padding: "8px",
-                    boxSizing:
-                      "border-box",
+                    boxSizing: "border-box",
                   }}
                 >
                   {logo ? (
@@ -1289,21 +1142,12 @@ MandalSetu — One Simple Platform for Every Mandal`;
                       style={{
                         width: "100%",
                         height: "100%",
-                        borderRadius:
-                          "50%",
-                        objectFit:
-                          "contain",
+                        borderRadius: "50%",
+                        objectFit: "contain",
                       }}
                     />
                   ) : (
-                    <span
-                      style={{
-                        fontSize:
-                          "48px",
-                      }}
-                    >
-                      🏛️
-                    </span>
+                    <span style={{ fontSize: "48px" }}>🏛️</span>
                   )}
                 </div>
 
@@ -1319,15 +1163,11 @@ MandalSetu — One Simple Platform for Every Mandal`;
 
                 <div
                   style={{
-                    display:
-                      "inline-block",
+                    display: "inline-block",
                     marginTop: "16px",
-                    padding:
-                      "10px 32px",
-                    borderRadius:
-                      "999px",
-                    backgroundColor:
-                      "#ffffff",
+                    padding: "10px 32px",
+                    borderRadius: "999px",
+                    backgroundColor: "#ffffff",
                     color: "#f97316",
                     fontSize: "14px",
                     fontWeight: 900,
@@ -1343,8 +1183,7 @@ MandalSetu — One Simple Platform for Every Mandal`;
                 style={{
                   position: "relative",
                   zIndex: 1,
-                  padding:
-                    "28px 32px",
+                  padding: "28px 32px",
                   color: "#111827",
                 }}
               >
@@ -1353,26 +1192,20 @@ MandalSetu — One Simple Platform for Every Mandal`;
                 <div
                   style={{
                     display: "flex",
-                    justifyContent:
-                      "space-between",
+                    justifyContent: "space-between",
                     gap: "20px",
-                    borderBottom:
-                      "1px solid #e5e7eb",
-                    paddingBottom:
-                      "20px",
-                    marginBottom:
-                      "24px",
+                    borderBottom: "1px solid #e5e7eb",
+                    paddingBottom: "20px",
+                    marginBottom: "24px",
                   }}
                 >
                   <div>
                     <p
                       style={{
                         margin: 0,
-                        fontSize:
-                          "11px",
+                        fontSize: "11px",
                         fontWeight: 700,
-                        color:
-                          "#9ca3af",
+                        color: "#9ca3af",
                       }}
                     >
                       {t.receiptNo}
@@ -1380,10 +1213,8 @@ MandalSetu — One Simple Platform for Every Mandal`;
 
                     <p
                       style={{
-                        margin:
-                          "4px 0 0",
-                        fontSize:
-                          "16px",
+                        margin: "4px 0 0",
+                        fontSize: "16px",
                         fontWeight: 900,
                       }}
                     >
@@ -1391,20 +1222,13 @@ MandalSetu — One Simple Platform for Every Mandal`;
                     </p>
                   </div>
 
-                  <div
-                    style={{
-                      textAlign:
-                        "right",
-                    }}
-                  >
+                  <div style={{ textAlign: "right" }}>
                     <p
                       style={{
                         margin: 0,
-                        fontSize:
-                          "11px",
+                        fontSize: "11px",
                         fontWeight: 700,
-                        color:
-                          "#9ca3af",
+                        color: "#9ca3af",
                       }}
                     >
                       {t.date}
@@ -1412,16 +1236,12 @@ MandalSetu — One Simple Platform for Every Mandal`;
 
                     <p
                       style={{
-                        margin:
-                          "4px 0 0",
-                        fontSize:
-                          "16px",
+                        margin: "4px 0 0",
+                        fontSize: "16px",
                         fontWeight: 900,
                       }}
                     >
-                      {formatDate(
-                        date
-                      )}
+                      {formatDate(date)}
                     </p>
                   </div>
                 </div>
@@ -1430,25 +1250,19 @@ MandalSetu — One Simple Platform for Every Mandal`;
 
                 <div
                   style={{
-                    marginBottom:
-                      "24px",
+                    marginBottom: "24px",
                     padding: "20px",
-                    borderRadius:
-                      "16px",
-                    backgroundColor:
-                      "#fff7ed",
-                    border:
-                      "1px solid #fed7aa",
+                    borderRadius: "16px",
+                    backgroundColor: "#fff7ed",
+                    border: "1px solid #fed7aa",
                   }}
                 >
                   <p
                     style={{
                       margin: 0,
-                      fontSize:
-                        "11px",
+                      fontSize: "11px",
                       fontWeight: 700,
-                      color:
-                        "#f97316",
+                      color: "#f97316",
                     }}
                   >
                     {t.receivedFrom}
@@ -1456,28 +1270,21 @@ MandalSetu — One Simple Platform for Every Mandal`;
 
                   <p
                     style={{
-                      margin:
-                        "8px 0 0",
-                      fontSize:
-                        "24px",
+                      margin: "8px 0 0",
+                      fontSize: "24px",
                       fontWeight: 900,
-                      wordBreak:
-                        "break-word",
+                      wordBreak: "break-word",
                     }}
                   >
-                    {memberName ||
-                      "________________"}
+                    {memberName || "________________"}
                   </p>
 
                   {mobile && (
                     <p
                       style={{
-                        margin:
-                          "6px 0 0",
-                        fontSize:
-                          "14px",
-                        color:
-                          "#6b7280",
+                        margin: "6px 0 0",
+                        fontSize: "14px",
+                        color: "#6b7280",
                       }}
                     >
                       📱 {mobile}
@@ -1490,28 +1297,21 @@ MandalSetu — One Simple Platform for Every Mandal`;
                 <div
                   style={{
                     display: "flex",
-                    alignItems:
-                      "center",
-                    justifyContent:
-                      "space-between",
+                    alignItems: "center",
+                    justifyContent: "space-between",
                     gap: "20px",
-                    borderBottom:
-                      "1px solid #e5e7eb",
-                    paddingBottom:
-                      "20px",
-                    marginBottom:
-                      "24px",
+                    borderBottom: "1px solid #e5e7eb",
+                    paddingBottom: "20px",
+                    marginBottom: "24px",
                   }}
                 >
                   <div>
                     <p
                       style={{
                         margin: 0,
-                        fontSize:
-                          "11px",
+                        fontSize: "11px",
                         fontWeight: 700,
-                        color:
-                          "#9ca3af",
+                        color: "#9ca3af",
                       }}
                     >
                       {t.purpose}
@@ -1519,17 +1319,13 @@ MandalSetu — One Simple Platform for Every Mandal`;
 
                     <p
                       style={{
-                        margin:
-                          "4px 0 0",
-                        fontSize:
-                          "18px",
+                        margin: "4px 0 0",
+                        fontSize: "18px",
                         fontWeight: 900,
-                        wordBreak:
-                          "break-word",
+                        wordBreak: "break-word",
                       }}
                     >
-                      {purpose ||
-                        "________________"}
+                      {purpose || "________________"}
                     </p>
                   </div>
 
@@ -1538,20 +1334,13 @@ MandalSetu — One Simple Platform for Every Mandal`;
                       width: "44px",
                       height: "44px",
                       flexShrink: 0,
-                      display:
-                        "flex",
-                      alignItems:
-                        "center",
-                      justifyContent:
-                        "center",
-                      borderRadius:
-                        "50%",
-                      backgroundColor:
-                        "#fff7ed",
-                      color:
-                        "#ea580c",
-                      fontSize:
-                        "20px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      borderRadius: "50%",
+                      backgroundColor: "#fff7ed",
+                      color: "#ea580c",
+                      fontSize: "20px",
                       fontWeight: 900,
                     }}
                   >
@@ -1564,28 +1353,21 @@ MandalSetu — One Simple Platform for Every Mandal`;
                 <div
                   style={{
                     display: "flex",
-                    alignItems:
-                      "center",
-                    justifyContent:
-                      "space-between",
+                    alignItems: "center",
+                    justifyContent: "space-between",
                     gap: "20px",
-                    borderBottom:
-                      "1px solid #e5e7eb",
-                    paddingBottom:
-                      "20px",
-                    marginBottom:
-                      "24px",
+                    borderBottom: "1px solid #e5e7eb",
+                    paddingBottom: "20px",
+                    marginBottom: "24px",
                   }}
                 >
                   <div>
                     <p
                       style={{
                         margin: 0,
-                        fontSize:
-                          "11px",
+                        fontSize: "11px",
                         fontWeight: 700,
-                        color:
-                          "#9ca3af",
+                        color: "#9ca3af",
                       }}
                     >
                       {t.paymentMode}
@@ -1593,10 +1375,8 @@ MandalSetu — One Simple Platform for Every Mandal`;
 
                     <p
                       style={{
-                        margin:
-                          "4px 0 0",
-                        fontSize:
-                          "18px",
+                        margin: "4px 0 0",
+                        fontSize: "18px",
                         fontWeight: 900,
                       }}
                     >
@@ -1609,20 +1389,13 @@ MandalSetu — One Simple Platform for Every Mandal`;
                       width: "44px",
                       height: "44px",
                       flexShrink: 0,
-                      display:
-                        "flex",
-                      alignItems:
-                        "center",
-                      justifyContent:
-                        "center",
-                      borderRadius:
-                        "50%",
-                      backgroundColor:
-                        "#fff7ed",
-                      color:
-                        "#ea580c",
-                      fontSize:
-                        "20px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      borderRadius: "50%",
+                      backgroundColor: "#fff7ed",
+                      color: "#ea580c",
+                      fontSize: "20px",
                       fontWeight: 900,
                     }}
                   >
@@ -1630,44 +1403,76 @@ MandalSetu — One Simple Platform for Every Mandal`;
                   </div>
                 </div>
 
-                {/* AMOUNT */}
+                {/* JAMA + BAKI */}
 
                 <div
                   style={{
-                    borderRadius:
-                      "24px",
-                    padding:
-                      "28px 20px",
-                    textAlign:
-                      "center",
-                    backgroundColor:
-                      "#f97316",
-                    color:
-                      "#ffffff",
+                    display: "grid",
+                    gridTemplateColumns: "1fr 1fr",
+                    gap: "12px",
+                    marginBottom: "24px",
                   }}
                 >
-                  <p
+                  <div
                     style={{
-                      margin: 0,
-                      fontSize:
-                        "14px",
-                      fontWeight: 600,
+                      borderRadius: "20px",
+                      padding: "20px 12px",
+                      textAlign: "center",
+                      backgroundColor: "#f97316",
+                      color: "#ffffff",
                     }}
                   >
-                    {t.amountLabel}
-                  </p>
+                    <p
+                      style={{
+                        margin: 0,
+                        fontSize: "13px",
+                        fontWeight: 700,
+                      }}
+                    >
+                      {t.jama}
+                    </p>
 
-                  <p
+                    <p
+                      style={{
+                        margin: "5px 0 0",
+                        fontSize: "32px",
+                        fontWeight: 900,
+                      }}
+                    >
+                      ₹{amount || "0"}
+                    </p>
+                  </div>
+
+                  <div
                     style={{
-                      margin:
-                        "4px 0 0",
-                      fontSize:
-                        "48px",
-                      fontWeight: 900,
+                      borderRadius: "20px",
+                      padding: "20px 12px",
+                      textAlign: "center",
+                      backgroundColor: "#fff7ed",
+                      color: "#ea580c",
+                      border: "1px solid #fed7aa",
                     }}
                   >
-                    ₹{amount || "0"}
-                  </p>
+                    <p
+                      style={{
+                        margin: 0,
+                        fontSize: "13px",
+                        fontWeight: 700,
+                      }}
+                    >
+                      {t.baki}
+                    </p>
+
+                    <p
+                      style={{
+                        margin: "5px 0 0",
+                        fontSize: "32px",
+                        fontWeight: 900,
+                      }}
+                    >
+                      ₹{baki || "0"}
+                    </p>
+                  </div>
                 </div>
 
                 {/* NOTE */}
@@ -1675,23 +1480,18 @@ MandalSetu — One Simple Platform for Every Mandal`;
                 {note && (
                   <div
                     style={{
-                      marginTop:
-                        "24px",
+                      marginTop: "24px",
                       padding: "16px",
-                      border:
-                        "1px dashed #d1d5db",
-                      borderRadius:
-                        "16px",
+                      border: "1px dashed #d1d5db",
+                      borderRadius: "16px",
                     }}
                   >
                     <p
                       style={{
                         margin: 0,
-                        fontSize:
-                          "11px",
+                        fontSize: "11px",
                         fontWeight: 700,
-                        color:
-                          "#9ca3af",
+                        color: "#9ca3af",
                       }}
                     >
                       {t.note}
@@ -1699,14 +1499,10 @@ MandalSetu — One Simple Platform for Every Mandal`;
 
                     <p
                       style={{
-                        margin:
-                          "4px 0 0",
-                        fontSize:
-                          "14px",
-                        color:
-                          "#4b5563",
-                        wordBreak:
-                          "break-word",
+                        margin: "4px 0 0",
+                        fontSize: "14px",
+                        color: "#4b5563",
+                        wordBreak: "break-word",
                       }}
                     >
                       {note}
@@ -1718,37 +1514,29 @@ MandalSetu — One Simple Platform for Every Mandal`;
 
                 <div
                   style={{
-                    textAlign:
-                      "center",
-                    marginTop:
-                      "36px",
-                    paddingTop:
-                      "24px",
-                    borderTop:
-                      "1px dashed #d1d5db",
+                    textAlign: "center",
+                    marginTop: "36px",
+                    paddingTop: "24px",
+                    borderTop: "1px dashed #d1d5db",
                   }}
                 >
                   <p
                     style={{
                       margin: 0,
-                      fontSize:
-                        "18px",
+                      fontSize: "18px",
                       fontWeight: 800,
-                      color:
-                        "#111827",
+                      color: "#111827",
                     }}
                   >
-                    Thank you for your valuable contribution!
+                    {t.thankYou}
                   </p>
 
                   <div
                     style={{
                       width: "100%",
                       height: "1px",
-                      backgroundColor:
-                        "#f97316",
-                      margin:
-                        "20px 0 14px",
+                      backgroundColor: "#f97316",
+                      margin: "20px 0 14px",
                       opacity: 0.7,
                     }}
                   />
@@ -1756,11 +1544,9 @@ MandalSetu — One Simple Platform for Every Mandal`;
                   <p
                     style={{
                       margin: 0,
-                      fontSize:
-                        "22px",
+                      fontSize: "22px",
                       fontWeight: 900,
-                      color:
-                        "#ea580c",
+                      color: "#ea580c",
                     }}
                   >
                     {mandalName}
@@ -1768,14 +1554,10 @@ MandalSetu — One Simple Platform for Every Mandal`;
 
                   <p
                     style={{
-                      margin:
-                        "14px 0 0",
-                      fontSize:
-                        "10px",
-                      color:
-                        "#6b7280",
-                      letterSpacing:
-                        "0.5px",
+                      margin: "14px 0 0",
+                      fontSize: "10px",
+                      color: "#6b7280",
+                      letterSpacing: "0.5px",
                     }}
                   >
                     MandalSetu — One Simple Platform for Every Mandal
@@ -1787,12 +1569,10 @@ MandalSetu — One Simple Platform for Every Mandal`;
 
               <div
                 style={{
-                  position:
-                    "relative",
+                  position: "relative",
                   zIndex: 1,
                   height: "12px",
-                  backgroundColor:
-                    "#f97316",
+                  backgroundColor: "#f97316",
                 }}
               />
             </div>
@@ -1802,11 +1582,9 @@ MandalSetu — One Simple Platform for Every Mandal`;
             <div
               style={{
                 maxWidth: "560px",
-                margin:
-                  "20px auto 0",
+                margin: "20px auto 0",
                 display: "grid",
-                gridTemplateColumns:
-                  "1fr 1fr 1fr",
+                gridTemplateColumns: "1fr 1fr 1fr",
                 gap: "10px",
               }}
             >
@@ -1814,27 +1592,19 @@ MandalSetu — One Simple Platform for Every Mandal`;
 
               <button
                 type="button"
-                onClick={
-                  downloadReceipt
-                }
+                onClick={downloadReceipt}
                 disabled={generating}
                 style={{
                   border: "none",
-                  borderRadius:
-                    "14px",
-                  backgroundColor:
-                    generating
-                      ? "#fdba74"
-                      : "#f97316",
+                  borderRadius: "14px",
+                  backgroundColor: generating
+                    ? "#fdba74"
+                    : "#f97316",
                   color: "#ffffff",
-                  padding:
-                    "14px 8px",
+                  padding: "14px 8px",
                   fontSize: "14px",
                   fontWeight: 900,
-                  cursor:
-                    generating
-                      ? "not-allowed"
-                      : "pointer",
+                  cursor: generating ? "not-allowed" : "pointer",
                 }}
               >
                 📥
@@ -1846,27 +1616,19 @@ MandalSetu — One Simple Platform for Every Mandal`;
 
               <button
                 type="button"
-                onClick={
-                  sendWhatsApp
-                }
+                onClick={sendWhatsApp}
                 disabled={generating}
                 style={{
                   border: "none",
-                  borderRadius:
-                    "14px",
-                  backgroundColor:
-                    generating
-                      ? "#86efac"
-                      : "#16a34a",
+                  borderRadius: "14px",
+                  backgroundColor: generating
+                    ? "#86efac"
+                    : "#16a34a",
                   color: "#ffffff",
-                  padding:
-                    "14px 8px",
+                  padding: "14px 8px",
                   fontSize: "14px",
                   fontWeight: 900,
-                  cursor:
-                    generating
-                      ? "not-allowed"
-                      : "pointer",
+                  cursor: generating ? "not-allowed" : "pointer",
                 }}
               >
                 🟢
@@ -1878,27 +1640,19 @@ MandalSetu — One Simple Platform for Every Mandal`;
 
               <button
                 type="button"
-                onClick={
-                  shareReceipt
-                }
+                onClick={shareReceipt}
                 disabled={generating}
                 style={{
                   border: "none",
-                  borderRadius:
-                    "14px",
-                  backgroundColor:
-                    generating
-                      ? "#9ca3af"
-                      : "#374151",
+                  borderRadius: "14px",
+                  backgroundColor: generating
+                    ? "#9ca3af"
+                    : "#374151",
                   color: "#ffffff",
-                  padding:
-                    "14px 8px",
+                  padding: "14px 8px",
                   fontSize: "14px",
                   fontWeight: 900,
-                  cursor:
-                    generating
-                      ? "not-allowed"
-                      : "pointer",
+                  cursor: generating ? "not-allowed" : "pointer",
                 }}
               >
                 📤

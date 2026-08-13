@@ -27,42 +27,24 @@ const translations = {
 
     account: "Account",
     accountText: "Your Mandal account information.",
-    editAccount: "Edit Account",
-    saveChanges: "Save Changes",
-    cancel: "Cancel",
-    saving: "Saving...",
-    accountUpdated: "Account updated successfully.",
-    accountUpdateError: "Account update failed.",
 
     mandal: "Mandal",
     leader: "Leader",
     mobile: "Mobile",
     location: "Location",
-    city: "City",
-    state: "State",
-
     noAccount: "No account information found.",
+
+    members: "Members",
+    membersText: "Add and manage Mandal members.",
+    openMembers: "Open Members →",
 
     notifications: "Notifications",
     notificationText: "Manage notification preferences.",
-    notificationPermission:
-      "Please allow browser notifications to receive reminders.",
-    notificationsNotSupported:
-      "Notifications are not supported by this browser.",
-    notificationsBlocked:
-      "Notifications are blocked. Please allow them from your browser settings.",
-    notificationEnabled:
-      "Notifications have been enabled successfully.",
-    notificationTestTitle: "MandalSetu Notification 🔔",
-    notificationTestBody:
-      "Notifications are working successfully.",
 
     about: "About",
     aboutText: "Mandal Management System",
     aboutSubText:
       "Manage members, collections, expenses and events.",
-    aboutDetails:
-      "MandalSetu helps Mandals manage members, collections, receipts, expenses, events and reports in one place.",
 
     logo: "Mandal Logo",
     logoText:
@@ -74,17 +56,6 @@ const translations = {
     logoSuccess: "Logo uploaded successfully.",
     logoRemoved: "Logo removed successfully.",
     logoError: "Logo upload failed.",
-
-    logout: "Logout",
-
-    deleteAccount: "Delete Account",
-    deleteAccountText:
-      "Permanently delete your Mandal account and all associated data.",
-    deletingAccount: "Deleting Account...",
-    deleteAccountConfirm:
-      "Are you sure you want to delete your account? This will permanently delete your Mandal data and cannot be undone.",
-    deleteAccountError:
-      "Account could not be deleted.",
   },
 
   Marathi: {
@@ -97,44 +68,24 @@ const translations = {
 
     account: "खाते",
     accountText: "तुमच्या मंडळाची माहिती.",
-    editAccount: "खाते संपादित करा",
-    saveChanges: "बदल जतन करा",
-    cancel: "रद्द करा",
-    saving: "जतन होत आहे...",
-    accountUpdated:
-      "खात्याची माहिती यशस्वीरित्या अपडेट झाली.",
-    accountUpdateError:
-      "खात्याची माहिती अपडेट करता आली नाही.",
 
     mandal: "मंडळ",
     leader: "प्रमुख",
     mobile: "मोबाईल",
     location: "ठिकाण",
-    city: "शहर",
-    state: "राज्य",
-
     noAccount: "खात्याची माहिती उपलब्ध नाही.",
+
+    members: "सदस्य",
+    membersText: "मंडळाचे सदस्य जोडा आणि व्यवस्थापित करा.",
+    openMembers: "सदस्य उघडा →",
 
     notifications: "सूचना",
     notificationText: "सूचनांची सेटिंग व्यवस्थापित करा.",
-    notificationPermission:
-      "रिमाइंडर मिळवण्यासाठी browser notifications ला Allow करा.",
-    notificationsNotSupported:
-      "या browser मध्ये notifications उपलब्ध नाहीत.",
-    notificationsBlocked:
-      "Notifications block आहेत. Browser settings मधून त्यांना Allow करा.",
-    notificationEnabled:
-      "Notifications यशस्वीरित्या सुरू झाल्या आहेत.",
-    notificationTestTitle: "MandalSetu सूचना 🔔",
-    notificationTestBody:
-      "Notifications व्यवस्थित काम करत आहेत.",
 
     about: "माहिती",
     aboutText: "मंडळ व्यवस्थापन प्रणाली",
     aboutSubText:
       "सदस्य, वर्गणी, खर्च आणि कार्यक्रम व्यवस्थापित करा.",
-    aboutDetails:
-      "मंडलमित्रच्या मदतीने मंडळातील सदस्य, वर्गणी, पावत्या, खर्च, कार्यक्रम आणि रिपोर्ट एकाच ठिकाणी व्यवस्थापित करता येतात.",
 
     logo: "मंडळाचा लोगो",
     logoText:
@@ -146,17 +97,6 @@ const translations = {
     logoSuccess: "लोगो यशस्वीरित्या अपलोड झाला.",
     logoRemoved: "लोगो काढला गेला.",
     logoError: "लोगो अपलोड करण्यात अडचण आली.",
-
-    logout: "लॉगआउट",
-
-    deleteAccount: "खाते डिलीट करा",
-    deleteAccountText:
-      "तुमचे मंडळाचे खाते आणि त्याच्याशी संबंधित सर्व माहिती कायमची डिलीट करा.",
-    deletingAccount: "खाते डिलीट होत आहे...",
-    deleteAccountConfirm:
-      "तुम्हाला तुमचे खाते डिलीट करायचे आहे का? मंडळाची सर्व माहिती कायमची डिलीट होईल आणि ती पुन्हा मिळवता येणार नाही.",
-    deleteAccountError:
-      "खाते डिलीट करता आले नाही.",
   },
 
   Hindi: {
@@ -169,44 +109,24 @@ const translations = {
 
     account: "खाता",
     accountText: "आपके मंडल की जानकारी।",
-    editAccount: "खाता संपादित करें",
-    saveChanges: "बदलाव सेव करें",
-    cancel: "रद्द करें",
-    saving: "सेव हो रहा है...",
-    accountUpdated:
-      "खाते की जानकारी सफलतापूर्वक अपडेट हो गई।",
-    accountUpdateError:
-      "खाते की जानकारी अपडेट नहीं हो सकी।",
 
     mandal: "मंडल",
     leader: "प्रमुख",
     mobile: "मोबाइल",
     location: "स्थान",
-    city: "शहर",
-    state: "राज्य",
-
     noAccount: "खाते की जानकारी उपलब्ध नहीं है।",
+
+    members: "सदस्य",
+    membersText: "मंडल के सदस्यों को जोड़ें और प्रबंधित करें।",
+    openMembers: "सदस्य खोलें →",
 
     notifications: "सूचनाएं",
     notificationText: "सूचना सेटिंग प्रबंधित करें।",
-    notificationPermission:
-      "रिमाइंडर पाने के लिए browser notifications को Allow करें।",
-    notificationsNotSupported:
-      "इस browser में notifications उपलब्ध नहीं हैं।",
-    notificationsBlocked:
-      "Notifications block हैं। Browser settings से उन्हें Allow करें।",
-    notificationEnabled:
-      "Notifications सफलतापूर्वक शुरू हो गई हैं।",
-    notificationTestTitle: "MandalSetu सूचना 🔔",
-    notificationTestBody:
-      "Notifications सही तरीके से काम कर रही हैं।",
 
     about: "जानकारी",
     aboutText: "मंडल प्रबंधन प्रणाली",
     aboutSubText:
       "सदस्य, संग्रह, खर्च और कार्यक्रम प्रबंधित करें।",
-    aboutDetails:
-      "मंडलमित्र की मदद से मंडल के सदस्य, संग्रह, रसीद, खर्च, कार्यक्रम और रिपोर्ट एक ही जगह पर प्रबंधित किए जा सकते हैं।",
 
     logo: "मंडल का लोगो",
     logoText:
@@ -218,17 +138,6 @@ const translations = {
     logoSuccess: "लोगो सफलतापूर्वक अपलोड हो गया।",
     logoRemoved: "लोगो हटा दिया गया।",
     logoError: "लोगो अपलोड करने में समस्या हुई।",
-
-    logout: "लॉगआउट",
-
-    deleteAccount: "खाता डिलीट करें",
-    deleteAccountText:
-      "अपने मंडल का खाता और उससे जुड़ी सभी जानकारी हमेशा के लिए डिलीट करें।",
-    deletingAccount: "खाता डिलीट हो रहा है...",
-    deleteAccountConfirm:
-      "क्या आप अपना खाता डिलीट करना चाहते हैं? मंडल की सभी जानकारी हमेशा के लिए डिलीट हो जाएगी और इसे वापस नहीं पाया जा सकेगा।",
-    deleteAccountError:
-      "खाता डिलीट नहीं किया जा सका।",
   },
 };
 
@@ -238,35 +147,12 @@ export default function SettingsPage() {
 
   const { language, setLanguage } = useLanguage();
 
-  const [notifications, setNotifications] =
-    useState(true);
-
-  const [notificationMessage, setNotificationMessage] =
-    useState("");
+  const [notifications, setNotifications] = useState(true);
 
   const [account, setAccount] =
     useState<Account | null>(null);
 
-  const [editingAccount, setEditingAccount] =
-    useState(false);
-
-  const [editAccount, setEditAccount] =
-    useState<Account | null>(null);
-
-  const [savingAccount, setSavingAccount] =
-    useState(false);
-
-  const [accountMessage, setAccountMessage] =
-    useState("");
-
-  const [accountError, setAccountError] =
-    useState("");
-
-  const [aboutOpen, setAboutOpen] =
-    useState(false);
-
-  const [logoUrl, setLogoUrl] =
-    useState("");
+  const [logoUrl, setLogoUrl] = useState("");
 
   const [uploadingLogo, setUploadingLogo] =
     useState(false);
@@ -281,12 +167,6 @@ export default function SettingsPage() {
     useState(false);
 
   const [languageError, setLanguageError] =
-    useState("");
-
-  const [deletingAccount, setDeletingAccount] =
-    useState(false);
-
-  const [deleteAccountError, setDeleteAccountError] =
     useState("");
 
   useEffect(() => {
@@ -319,16 +199,13 @@ export default function SettingsPage() {
       }
 
       if (mandal) {
-        const accountData = {
+        setAccount({
           mandalName: mandal.mandal_name || "",
           leaderName: mandal.leader_name || "",
           mobile: mandal.mobile || "",
           city: mandal.city || "",
           state: mandal.state || "",
-        };
-
-        setAccount(accountData);
-        setEditAccount(accountData);
+        });
 
         setLogoUrl(mandal.logo_url || "");
 
@@ -342,9 +219,7 @@ export default function SettingsPage() {
       }
 
       const savedNotifications =
-        localStorage.getItem(
-          "mandalNotifications"
-        );
+        localStorage.getItem("mandalNotifications");
 
       if (savedNotifications !== null) {
         setNotifications(
@@ -358,9 +233,7 @@ export default function SettingsPage() {
 
   const t = translations[language];
 
-  async function changeLanguage(
-    value: Language
-  ) {
+  async function changeLanguage(value: Language) {
     setLanguageError("");
     setSavingLanguage(true);
 
@@ -402,152 +275,6 @@ export default function SettingsPage() {
     setSavingLanguage(false);
   }
 
-  async function toggleNotifications() {
-    setNotificationMessage("");
-
-    if (notifications) {
-      setNotifications(false);
-
-      localStorage.setItem(
-        "mandalNotifications",
-        "false"
-      );
-
-      return;
-    }
-
-    if (!("Notification" in window)) {
-      setNotificationMessage(
-        t.notificationsNotSupported
-      );
-      return;
-    }
-
-    const permission =
-      await Notification.requestPermission();
-
-    if (permission !== "granted") {
-      setNotificationMessage(
-        t.notificationsBlocked
-      );
-      return;
-    }
-
-    if ("serviceWorker" in navigator) {
-      try {
-        await navigator.serviceWorker.register(
-          "/sw.js"
-        );
-      } catch (error) {
-        console.error(
-          "SERVICE WORKER ERROR:",
-          error
-        );
-      }
-    }
-
-    setNotifications(true);
-
-    localStorage.setItem(
-      "mandalNotifications",
-      "true"
-    );
-
-    setNotificationMessage(
-      t.notificationEnabled
-    );
-
-    new Notification(
-      t.notificationTestTitle,
-      {
-        body: t.notificationTestBody,
-      }
-    );
-  }
-
-  function startEditAccount() {
-    if (!account) {
-      return;
-    }
-
-    setEditAccount({
-      ...account,
-    });
-
-    setAccountMessage("");
-    setAccountError("");
-    setEditingAccount(true);
-  }
-
-  function cancelEditAccount() {
-    if (account) {
-      setEditAccount({
-        ...account,
-      });
-    }
-
-    setAccountMessage("");
-    setAccountError("");
-    setEditingAccount(false);
-  }
-
-  async function saveAccount() {
-    if (!editAccount) {
-      return;
-    }
-
-    setAccountMessage("");
-    setAccountError("");
-    setSavingAccount(true);
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) {
-      setSavingAccount(false);
-      router.replace("/login");
-      return;
-    }
-
-    const { error } = await supabase
-      .from("mandals")
-      .update({
-        mandal_name: editAccount.mandalName,
-        leader_name: editAccount.leaderName,
-        mobile: editAccount.mobile,
-        city: editAccount.city,
-        state: editAccount.state,
-      })
-      .eq("user_id", user.id);
-
-    if (error) {
-      console.error(
-        "ACCOUNT UPDATE ERROR:",
-        error
-      );
-
-      setAccountError(
-        t.accountUpdateError
-      );
-
-      setSavingAccount(false);
-      return;
-    }
-
-    setAccount({
-      ...editAccount,
-    });
-
-    setEditAccount({
-      ...editAccount,
-    });
-
-    setEditingAccount(false);
-    setAccountMessage(t.accountUpdated);
-    setSavingAccount(false);
-  }
-
   async function uploadLogo(
     event: React.ChangeEvent<HTMLInputElement>
   ) {
@@ -575,7 +302,6 @@ export default function SettingsPage() {
         setLogoError(
           "Please select an image file."
         );
-
         setUploadingLogo(false);
         return;
       }
@@ -584,7 +310,6 @@ export default function SettingsPage() {
         setLogoError(
           "Logo size must be less than 5 MB."
         );
-
         setUploadingLogo(false);
         return;
       }
@@ -690,104 +415,22 @@ export default function SettingsPage() {
     setLogoMessage(t.logoRemoved);
   }
 
-  async function logout() {
-    await supabase.auth.signOut();
+  function toggleNotifications() {
+    const newValue = !notifications;
 
-    localStorage.removeItem(
-      "mandalLoggedIn"
+    setNotifications(newValue);
+
+    localStorage.setItem(
+      "mandalNotifications",
+      String(newValue)
     );
-
-    localStorage.removeItem(
-      "mandalAccount"
-    );
-
-    localStorage.removeItem(
-      "mandalLanguage"
-    );
-
-    localStorage.removeItem(
-      "mandalNotifications"
-    );
-
-    router.replace("/");
-  }
-
-  async function deleteAccount() {
-    const confirmed = window.confirm(
-      t.deleteAccountConfirm
-    );
-
-    if (!confirmed) {
-      return;
-    }
-
-    setDeleteAccountError("");
-    setDeletingAccount(true);
-
-    try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      if (!user) {
-        router.replace("/login");
-        return;
-      }
-
-      const { error } = await supabase.rpc(
-        "delete_my_account"
-      );
-
-      if (error) {
-        console.error(
-          "DELETE ACCOUNT ERROR:",
-          error
-        );
-
-        setDeleteAccountError(
-          t.deleteAccountError
-        );
-
-        setDeletingAccount(false);
-        return;
-      }
-
-      localStorage.removeItem(
-        "mandalLoggedIn"
-      );
-
-      localStorage.removeItem(
-        "mandalAccount"
-      );
-
-      localStorage.removeItem(
-        "mandalLanguage"
-      );
-
-      localStorage.removeItem(
-        "mandalNotifications"
-      );
-
-      await supabase.auth.signOut();
-
-      router.replace("/");
-    } catch (error) {
-      console.error(
-        "DELETE ACCOUNT ERROR:",
-        error
-      );
-
-      setDeleteAccountError(
-        t.deleteAccountError
-      );
-
-      setDeletingAccount(false);
-    }
   }
 
   return (
-    <main className="min-h-screen bg-gray-50 px-4 py-8">
-      <div className="mx-auto max-w-5xl">
+    <main className="min-h-screen bg-gray-50 p-6">
+      <div className="mx-auto max-w-4xl">
+
+        {/* BACK */}
 
         <button
           type="button"
@@ -798,6 +441,8 @@ export default function SettingsPage() {
         >
           {t.back}
         </button>
+
+        {/* HEADER */}
 
         <h1 className="text-3xl font-bold text-gray-900">
           {t.settings}
@@ -825,19 +470,16 @@ export default function SettingsPage() {
               <div className="mt-5">
 
                 <div className="flex h-40 w-40 items-center justify-center overflow-hidden rounded-2xl border bg-gray-50 p-3">
-
                   <img
                     src={logoUrl}
                     alt="Mandal Logo"
                     className="max-h-full max-w-full object-contain"
                   />
-
                 </div>
 
                 <div className="mt-4 flex flex-wrap gap-3">
 
                   <label className="cursor-pointer rounded-xl bg-orange-500 px-5 py-3 font-semibold text-white transition hover:bg-orange-600">
-
                     {t.changeLogo}
 
                     <input
@@ -847,7 +489,6 @@ export default function SettingsPage() {
                       className="hidden"
                       disabled={uploadingLogo}
                     />
-
                   </label>
 
                   <button
@@ -863,10 +504,9 @@ export default function SettingsPage() {
 
               </div>
             ) : (
-
               <div className="mt-5">
 
-                <label className="inline-block cursor-pointer rounded-xl bg-orange-500 px-5 py-3 font-semibold text-white">
+                <label className="inline-block cursor-pointer rounded-xl bg-orange-500 px-5 py-3 font-semibold text-white transition hover:bg-orange-600">
 
                   {uploadingLogo
                     ? t.uploading
@@ -958,258 +598,104 @@ export default function SettingsPage() {
 
           <div className="rounded-2xl border bg-white p-6 shadow-sm">
 
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <h2 className="text-lg font-bold">
+              👤 {t.account}
+            </h2>
 
-              <div>
+            <p className="mt-1 text-sm text-gray-500">
+              {t.accountText}
+            </p>
 
-                <h2 className="text-lg font-bold">
-                  👤 {t.account}
-                </h2>
+            {account ? (
+              <div className="mt-4 space-y-2 text-sm">
 
-                <p className="mt-1 text-sm text-gray-500">
-                  {t.accountText}
+                <p>
+                  <b>{t.mandal}:</b>{" "}
+                  {account.mandalName}
+                </p>
+
+                <p>
+                  <b>{t.leader}:</b>{" "}
+                  {account.leaderName}
+                </p>
+
+                <p>
+                  <b>{t.mobile}:</b>{" "}
+                  {account.mobile}
+                </p>
+
+                <p>
+                  <b>{t.location}:</b>{" "}
+                  {account.city},{" "}
+                  {account.state}
                 </p>
 
               </div>
-
-              {account && !editingAccount && (
-                <button
-                  type="button"
-                  onClick={startEditAccount}
-                  className="rounded-xl bg-orange-500 px-5 py-3 font-semibold text-white transition hover:bg-orange-600"
-                >
-                  ✏️ {t.editAccount}
-                </button>
-              )}
-
-            </div>
-
-            {accountMessage && (
-              <p className="mt-4 rounded-xl bg-green-50 px-4 py-3 text-sm text-green-600">
-                {accountMessage}
-              </p>
-            )}
-
-            {accountError && (
-              <p className="mt-4 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-500">
-                {accountError}
-              </p>
-            )}
-
-            {account ? (
-              editingAccount && editAccount ? (
-
-                <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-2">
-
-                  <div>
-
-                    <label className="mb-2 block text-sm font-semibold text-gray-700">
-                      {t.mandal}
-                    </label>
-
-                    <input
-                      type="text"
-                      value={editAccount.mandalName}
-                      onChange={(e) =>
-                        setEditAccount({
-                          ...editAccount,
-                          mandalName: e.target.value,
-                        })
-                      }
-                      className="w-full rounded-xl border px-4 py-3 outline-none focus:border-orange-500"
-                    />
-
-                  </div>
-
-                  <div>
-
-                    <label className="mb-2 block text-sm font-semibold text-gray-700">
-                      {t.leader}
-                    </label>
-
-                    <input
-                      type="text"
-                      value={editAccount.leaderName}
-                      onChange={(e) =>
-                        setEditAccount({
-                          ...editAccount,
-                          leaderName: e.target.value,
-                        })
-                      }
-                      className="w-full rounded-xl border px-4 py-3 outline-none focus:border-orange-500"
-                    />
-
-                  </div>
-
-                  <div>
-
-                    <label className="mb-2 block text-sm font-semibold text-gray-700">
-                      {t.mobile}
-                    </label>
-
-                    <input
-                      type="tel"
-                      value={editAccount.mobile}
-                      onChange={(e) =>
-                        setEditAccount({
-                          ...editAccount,
-                          mobile: e.target.value,
-                        })
-                      }
-                      className="w-full rounded-xl border px-4 py-3 outline-none focus:border-orange-500"
-                    />
-
-                  </div>
-
-                  <div>
-
-                    <label className="mb-2 block text-sm font-semibold text-gray-700">
-                      {t.city}
-                    </label>
-
-                    <input
-                      type="text"
-                      value={editAccount.city}
-                      onChange={(e) =>
-                        setEditAccount({
-                          ...editAccount,
-                          city: e.target.value,
-                        })
-                      }
-                      className="w-full rounded-xl border px-4 py-3 outline-none focus:border-orange-500"
-                    />
-
-                  </div>
-
-                  <div>
-
-                    <label className="mb-2 block text-sm font-semibold text-gray-700">
-                      {t.state}
-                    </label>
-
-                    <input
-                      type="text"
-                      value={editAccount.state}
-                      onChange={(e) =>
-                        setEditAccount({
-                          ...editAccount,
-                          state: e.target.value,
-                        })
-                      }
-                      className="w-full rounded-xl border px-4 py-3 outline-none focus:border-orange-500"
-                    />
-
-                  </div>
-
-                  <div className="flex flex-wrap gap-3 md:col-span-2">
-
-                    <button
-                      type="button"
-                      onClick={saveAccount}
-                      disabled={savingAccount}
-                      className="rounded-xl bg-orange-500 px-6 py-3 font-semibold text-white transition hover:bg-orange-600 disabled:opacity-60"
-                    >
-                      {savingAccount
-                        ? t.saving
-                        : t.saveChanges}
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={cancelEditAccount}
-                      disabled={savingAccount}
-                      className="rounded-xl border px-6 py-3 font-semibold text-gray-700 transition hover:bg-gray-50 disabled:opacity-60"
-                    >
-                      {t.cancel}
-                    </button>
-
-                  </div>
-
-                </div>
-
-              ) : (
-
-                <div className="mt-5 space-y-3 text-sm">
-
-                  <p>
-                    <b>{t.mandal}:</b>{" "}
-                    {account.mandalName}
-                  </p>
-
-                  <p>
-                    <b>{t.leader}:</b>{" "}
-                    {account.leaderName}
-                  </p>
-
-                  <p>
-                    <b>{t.mobile}:</b>{" "}
-                    {account.mobile}
-                  </p>
-
-                  <p>
-                    <b>{t.location}:</b>{" "}
-                    {account.city},{" "}
-                    {account.state}
-                  </p>
-
-                </div>
-
-              )
             ) : (
-
               <p className="mt-4 text-sm text-gray-400">
                 {t.noAccount}
               </p>
-
             )}
 
           </div>
 
-          {/* NOTIFICATIONS */}
+          {/* MEMBERS */}
 
-          <div className="rounded-2xl border bg-white p-6 shadow-sm">
+          <button
+            type="button"
+            onClick={() =>
+              router.push("/members")
+            }
+            className="flex w-full items-center justify-between rounded-2xl border bg-white p-6 text-left shadow-sm transition hover:bg-gray-50 active:scale-[0.99]"
+          >
 
-            <div className="flex items-center justify-between gap-4">
+            <div className="min-w-0">
 
-              <div>
+              <h2 className="text-lg font-bold text-gray-900">
+                👥 {t.members}
+              </h2>
 
-                <h2 className="text-lg font-bold">
-                  🔔 {t.notifications}
-                </h2>
-
-                <p className="mt-1 text-sm text-gray-500">
-                  {t.notificationText}
-                </p>
-
-              </div>
-
-              <button
-                type="button"
-                onClick={toggleNotifications}
-                className={`rounded-xl px-5 py-3 font-semibold text-white ${
-                  notifications
-                    ? "bg-green-500"
-                    : "bg-gray-400"
-                }`}
-              >
-                {notifications
-                  ? "ON"
-                  : "OFF"}
-              </button>
+              <p className="mt-1 text-sm text-gray-500">
+                {t.membersText}
+              </p>
 
             </div>
 
-            {notificationMessage && (
-              <p
-                className={`mt-4 rounded-xl px-4 py-3 text-sm ${
-                  notifications
-                    ? "bg-green-50 text-green-600"
-                    : "bg-red-50 text-red-500"
-                }`}
-              >
-                {notificationMessage}
+            <span className="ml-4 shrink-0 text-xl font-bold text-orange-500">
+              →
+            </span>
+
+          </button>
+
+          {/* NOTIFICATIONS */}
+
+          <div className="flex items-center justify-between rounded-2xl border bg-white p-6 shadow-sm">
+
+            <div>
+
+              <h2 className="text-lg font-bold">
+                🔔 {t.notifications}
+              </h2>
+
+              <p className="mt-1 text-sm text-gray-500">
+                {t.notificationText}
               </p>
-            )}
+
+            </div>
+
+            <button
+              type="button"
+              onClick={toggleNotifications}
+              className={`rounded-xl px-5 py-3 font-semibold text-white ${
+                notifications
+                  ? "bg-green-500"
+                  : "bg-gray-400"
+              }`}
+            >
+              {notifications
+                ? "ON"
+                : "OFF"}
+            </button>
 
           </div>
 
@@ -1217,102 +703,22 @@ export default function SettingsPage() {
 
           <div className="rounded-2xl border bg-white p-6 shadow-sm">
 
-            <button
-              type="button"
-              onClick={() =>
-                setAboutOpen(!aboutOpen)
-              }
-              className="flex w-full items-center justify-between text-left"
-            >
-
-              <div>
-
-                <h2 className="text-lg font-bold">
-                  ℹ️ {t.about}
-                </h2>
-
-                <p className="mt-2 text-gray-500">
-                  {t.aboutText}
-                </p>
-
-              </div>
-
-              <span className="text-xl text-gray-500">
-                {aboutOpen ? "▲" : "▼"}
-              </span>
-
-            </button>
-
-            {aboutOpen && (
-              <div className="mt-4 rounded-xl bg-gray-50 p-4">
-
-                <p className="text-sm text-gray-500">
-                  {t.aboutSubText}
-                </p>
-
-                <p className="mt-3 text-sm leading-6 text-gray-600">
-                  {t.aboutDetails}
-                </p>
-
-                <div className="mt-4 border-t pt-4 text-sm text-gray-400">
-                  MandalSetu
-                </div>
-
-              </div>
-            )}
-
-          </div>
-
-          {/* LOGOUT */}
-
-          <div className="rounded-2xl border bg-white p-6 shadow-sm">
-
-            <h2 className="text-lg font-bold text-gray-900">
-              {t.logout}
+            <h2 className="text-lg font-bold">
+              ℹ️ {t.about}
             </h2>
 
-            <button
-              type="button"
-              onClick={logout}
-              className="mt-4 rounded-xl border px-5 py-3 font-semibold text-gray-700 transition hover:bg-gray-50"
-            >
-              {t.logout}
-            </button>
-
-          </div>
-
-          {/* DELETE ACCOUNT */}
-
-          <div className="rounded-2xl border border-red-200 bg-white p-6 shadow-sm">
-
-            <h2 className="text-lg font-bold text-red-600">
-              🗑️ {t.deleteAccount}
-            </h2>
-
-            <p className="mt-1 text-sm text-gray-500">
-              {t.deleteAccountText}
+            <p className="mt-2 text-gray-500">
+              {t.aboutText}
             </p>
 
-            {deleteAccountError && (
-              <p className="mt-4 rounded-xl bg-red-50 px-4 py-3 text-sm text-red-600">
-                {deleteAccountError}
-              </p>
-            )}
-
-            <button
-              type="button"
-              onClick={deleteAccount}
-              disabled={deletingAccount}
-              className="mt-5 rounded-xl bg-red-600 px-5 py-3 font-semibold text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {deletingAccount
-                ? t.deletingAccount
-                : t.deleteAccount}
-            </button>
+            <p className="mt-1 text-sm text-gray-400">
+              {t.aboutSubText}
+            </p>
 
           </div>
 
         </div>
+
       </div>
     </main>
   );

@@ -103,7 +103,6 @@ export default function Dashboard() {
   const [account, setAccount] = useState<Account | null>(null);
   const [logoUrl, setLogoUrl] = useState("");
 
-  const [memberCount, setMemberCount] = useState(0);
   const [collectionTotal, setCollectionTotal] = useState(0);
   const [expenseTotal, setExpenseTotal] = useState(0);
   const [balanceTotal, setBalanceTotal] = useState(0);
@@ -178,28 +177,6 @@ export default function Dashboard() {
         setLanguage(mandal.language);
       } else {
         setLanguage("English");
-      }
-
-      // =========================
-      // MEMBERS
-      // =========================
-
-      const {
-        count: membersCount,
-        error: membersError,
-      } = await supabase
-        .from("members")
-        .select("*", {
-          count: "exact",
-          head: true,
-        })
-        .eq("user_id", user.id);
-
-      if (membersError) {
-        console.error("MEMBERS COUNT ERROR:", membersError);
-        setMemberCount(0);
-      } else {
-        setMemberCount(membersCount || 0);
       }
 
       // =========================
@@ -364,10 +341,6 @@ export default function Dashboard() {
     router.push("/announcements");
   }
 
-  function openMembers() {
-    router.push("/members");
-  }
-
   function openCollection() {
     router.push("/collection");
   }
@@ -472,8 +445,6 @@ export default function Dashboard() {
 
         <nav className="space-y-2">
 
-          {/* DASHBOARD */}
-
           <button
             onClick={() => router.push("/dashboard")}
             className="flex w-full items-center gap-4 rounded-2xl bg-white/10 px-5 py-4 text-left font-semibold text-white shadow-lg"
@@ -481,38 +452,6 @@ export default function Dashboard() {
             <span className="text-2xl">⌂</span>
             {t.dashboard}
           </button>
-
-          {/* MEMBERS */}
-
-          <button
-            onClick={openMembers}
-            className="flex w-full items-center gap-4 rounded-2xl px-5 py-3 text-left text-white/75 transition hover:bg-white/10 hover:text-white"
-          >
-            <span className="text-2xl">👥</span>
-            {t.members}
-          </button>
-
-          {/* COLLECTION */}
-
-          <button
-            onClick={openCollection}
-            className="flex w-full items-center gap-4 rounded-2xl px-5 py-3 text-left text-white/75 transition hover:bg-white/10 hover:text-white"
-          >
-            <span className="text-2xl">💰</span>
-            {t.collection}
-          </button>
-
-          {/* EXPENSES */}
-
-          <button
-            onClick={openExpenses}
-            className="flex w-full items-center gap-4 rounded-2xl px-5 py-3 text-left text-white/75 transition hover:bg-white/10 hover:text-white"
-          >
-            <span className="text-2xl">💸</span>
-            {t.expenses}
-          </button>
-
-          {/* REPORTS */}
 
           <button
             onClick={openReports}
@@ -522,8 +461,6 @@ export default function Dashboard() {
             {t.reports}
           </button>
 
-          {/* ANNOUNCEMENTS */}
-
           <button
             onClick={openAnnouncements}
             className="flex w-full items-center gap-4 rounded-2xl px-5 py-3 text-left text-white/75 transition hover:bg-white/10 hover:text-white"
@@ -532,19 +469,7 @@ export default function Dashboard() {
             {t.announcements}
           </button>
 
-          {/* EVENTS */}
-
-          <button
-            onClick={openEvents}
-            className="flex w-full items-center gap-4 rounded-2xl px-5 py-3 text-left text-white/75 transition hover:bg-white/10 hover:text-white"
-          >
-            <span className="text-2xl">📅</span>
-            {t.events}
-          </button>
-
         </nav>
-
-        {/* PROFILE */}
 
         <button
           onClick={openProfile}
@@ -574,7 +499,7 @@ export default function Dashboard() {
 
             <div className="relative flex items-center gap-4">
 
-              {/* LOGO - SIZE UNCHANGED */}
+              {/* LOGO */}
 
               <button
                 onClick={openProfile}
@@ -595,12 +520,14 @@ export default function Dashboard() {
                 )}
               </button>
 
-              {/* ONLY MANDAL NAME */}
+              {/* MANDAL NAME */}
 
               <div className="min-w-0">
-                <h1 className="text-2xl font-extrabold leading-tight sm:text-4xl">
-                  {account.mandalName}
+
+                <h1 className="text-2xl font-bold leading-tight sm:text-3xl">
+                  {account.mandalName || "MandalMitra"}
                 </h1>
+
               </div>
 
             </div>
@@ -612,6 +539,23 @@ export default function Dashboard() {
           ========================= */}
 
           <section className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
+
+            {/* ANNOUNCEMENTS */}
+
+            <button
+              onClick={openAnnouncements}
+              className="relative min-h-[125px] overflow-hidden rounded-[22px] bg-gradient-to-br from-[#1677ee] to-[#0755c9] p-4 text-left shadow-xl transition active:scale-[0.98]"
+            >
+              <div className="absolute -right-5 -top-5 h-20 w-20 rounded-full bg-white/10" />
+
+              <p className="text-3xl font-extrabold sm:text-4xl">
+                {latestAnnouncements.length}
+              </p>
+
+              <p className="mt-3 text-sm font-bold leading-tight sm:text-base">
+                {t.announcements}
+              </p>
+            </button>
 
             {/* EVENTS */}
 
@@ -644,27 +588,6 @@ export default function Dashboard() {
 
               <p className="mt-3 text-sm font-bold leading-tight sm:text-base">
                 {t.collection}
-              </p>
-            </button>
-
-            {/* MEMBERS */}
-
-            <button
-              onClick={openMembers}
-              className="relative min-h-[125px] w-full overflow-hidden rounded-[22px] bg-gradient-to-br from-[#7140e8] to-[#5420b8] p-4 text-left shadow-xl transition active:scale-[0.98]"
-            >
-              <div className="absolute -right-5 -top-5 h-20 w-20 rounded-full bg-white/10" />
-
-              <p className="text-3xl font-extrabold sm:text-4xl">
-                {memberCount}
-              </p>
-
-              <p className="mt-3 text-sm font-bold leading-tight sm:text-base">
-                {t.members}
-              </p>
-
-              <p className="mt-1 text-xs text-white/60">
-                {t.manageMembers}
               </p>
             </button>
 
@@ -718,74 +641,6 @@ export default function Dashboard() {
                 {t.reports}
               </p>
             </button>
-
-          </section>
-
-          {/* =========================
-              LATEST ANNOUNCEMENTS
-              MOVED ABOVE EVENTS
-          ========================= */}
-
-          <section className="mt-8 border-t border-white/10 pt-7">
-
-            <div className="mb-4 flex items-center justify-between px-1">
-
-              <h2 className="text-xl font-bold sm:text-2xl">
-                {t.latestAnnouncements}
-              </h2>
-
-              <button
-                onClick={openAnnouncements}
-                className="text-sm font-semibold text-[#91a4c9] transition hover:text-white sm:text-base"
-              >
-                {t.viewAll} →
-              </button>
-
-            </div>
-
-            <div className="space-y-3">
-
-              {latestAnnouncements.length > 0 ? (
-                latestAnnouncements.map((announcement) => (
-
-                  <button
-                    key={announcement.id}
-                    onClick={openAnnouncements}
-                    className="relative flex w-full items-start gap-4 overflow-hidden rounded-[18px] border border-white/10 bg-[#1a2334]/90 p-4 text-left shadow-xl transition active:scale-[0.99]"
-                  >
-
-                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-[#24304a] text-2xl">
-                      📣
-                    </div>
-
-                    <div className="min-w-0 flex-1">
-
-                      <h3 className="text-base font-bold sm:text-lg">
-                        {announcement.title}
-                      </h3>
-
-                      <p className="mt-1 line-clamp-2 text-sm leading-5 text-white/55">
-                        {announcement.message}
-                      </p>
-
-                      <p className="mt-2 text-xs text-white/35">
-                        {formatDate(
-                          announcement.created_at
-                        )}
-                      </p>
-
-                    </div>
-
-                  </button>
-
-                ))
-              ) : (
-                <div className="rounded-[18px] border border-white/10 bg-[#1a2334] p-6 text-center text-white/50">
-                  {t.noAnnouncements}
-                </div>
-              )}
-
-            </div>
 
           </section>
 
@@ -858,98 +713,74 @@ export default function Dashboard() {
 
           </section>
 
+          {/* =========================
+              LATEST ANNOUNCEMENTS
+          ========================= */}
+
+          <section className="mt-8 border-t border-white/10 pt-7">
+
+            <div className="mb-4 flex items-center justify-between px-1">
+
+              <h2 className="text-xl font-bold sm:text-2xl">
+                {t.latestAnnouncements}
+              </h2>
+
+              <button
+                onClick={openAnnouncements}
+                className="text-sm font-semibold text-[#91a4c9] transition hover:text-white sm:text-base"
+              >
+                {t.viewAll} →
+              </button>
+
+            </div>
+
+            <div className="space-y-3">
+
+              {latestAnnouncements.length > 0 ? (
+                latestAnnouncements.map((announcement) => (
+
+                  <button
+                    key={announcement.id}
+                    onClick={openAnnouncements}
+                    className="relative flex w-full items-start gap-4 overflow-hidden rounded-[18px] border border-white/10 bg-[#1a2334]/90 p-4 text-left shadow-xl transition active:scale-[0.99]"
+                  >
+
+                    <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-[#24304a] text-2xl">
+                      📣
+                    </div>
+
+                    <div className="min-w-0 flex-1">
+
+                      <h3 className="text-base font-bold sm:text-lg">
+                        {announcement.title}
+                      </h3>
+
+                      <p className="mt-1 line-clamp-2 text-sm leading-5 text-white/55">
+                        {announcement.message}
+                      </p>
+
+                      <p className="mt-2 text-xs text-white/35">
+                        {formatDate(announcement.created_at)}
+                      </p>
+
+                    </div>
+
+                  </button>
+
+                ))
+              ) : (
+                <div className="rounded-[18px] border border-white/10 bg-[#1a2334] p-6 text-center text-white/50">
+                  {t.noAnnouncements}
+                </div>
+              )}
+
+            </div>
+
+          </section>
+
         </div>
 
       </div>
-
-      {/* =========================
-          MOBILE BOTTOM NAV
-      ========================= */}
-
-      <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-black/10 bg-[#f7f6f2] px-2 pb-[env(safe-area-inset-bottom)] shadow-[0_-8px_30px_rgba(0,0,0,0.25)] lg:hidden">
-
-        <div className="mx-auto flex h-[76px] max-w-xl items-center justify-around">
-
-          {/* DASHBOARD */}
-
-          <button
-            onClick={() => router.push("/dashboard")}
-            className="flex min-w-[65px] flex-col items-center justify-center gap-1 text-[#252d3a]"
-          >
-            <span className="text-2xl leading-none">
-              🏠
-            </span>
-
-            <span className="text-[11px] font-bold">
-              {t.dashboard}
-            </span>
-
-            <span className="h-0.5 w-8 rounded-full bg-[#ff6b00]" />
-          </button>
-
-          {/* MEMBERS */}
-
-          <button
-            onClick={openMembers}
-            className="flex min-w-[65px] flex-col items-center justify-center gap-1 text-[#252d3a]"
-          >
-            <span className="text-2xl leading-none">
-              👥
-            </span>
-
-            <span className="text-[11px] font-semibold">
-              {t.members}
-            </span>
-          </button>
-
-          {/* EVENTS */}
-
-          <button
-            onClick={openEvents}
-            className="flex min-w-[65px] flex-col items-center justify-center gap-1 text-[#252d3a]"
-          >
-            <span className="text-2xl leading-none">
-              📅
-            </span>
-
-            <span className="text-[11px] font-semibold">
-              {t.events}
-            </span>
-          </button>
-
-          {/* ANNOUNCEMENTS */}
-
-          <button
-            onClick={openAnnouncements}
-            className="flex min-w-[65px] flex-col items-center justify-center gap-1 text-[#252d3a]"
-          >
-            <span className="text-2xl leading-none">
-              📣
-            </span>
-
-            <span className="text-[11px] font-semibold">
-              {t.announcements}
-            </span>
-          </button>
-
-          {/* PROFILE */}
-
-          <button
-            onClick={openProfile}
-            className="flex min-w-[65px] flex-col items-center justify-center gap-1 text-[#252d3a]"
-          >
-            <span className="text-2xl leading-none">
-              👤
-            </span>
-
-            <span className="text-[11px] font-semibold">
-              {t.profile}
-            </span>
-          </button>
-
-        </div>
-
-      </nav>
 
     </main>
   );
