@@ -22,29 +22,13 @@ const translations = {
     subtitle: "Manage your Mandal settings.",
     back: "← Back to Dashboard",
 
-    language: "Language",
-    languageText: "Choose your preferred language.",
-
     account: "Account",
     accountText: "Your Mandal account information.",
-
     mandal: "Mandal",
     leader: "Leader",
     mobile: "Mobile",
     location: "Location",
     noAccount: "No account information found.",
-
-    members: "Members",
-    membersText: "Add and manage Mandal members.",
-    openMembers: "Open Members →",
-
-    notifications: "Notifications",
-    notificationText: "Manage notification preferences.",
-
-    about: "About",
-    aboutText: "Mandal Management System",
-    aboutSubText:
-      "Manage members, collections, expenses and events.",
 
     logo: "Mandal Logo",
     logoText:
@@ -56,6 +40,51 @@ const translations = {
     logoSuccess: "Logo uploaded successfully.",
     logoRemoved: "Logo removed successfully.",
     logoError: "Logo upload failed.",
+
+    documents: "Documents",
+    documentsText:
+      "Save important Mandal documents and photos.",
+    openDocuments: "Open Documents →",
+
+    members: "Members",
+    membersText: "Add and manage Mandal members.",
+
+    aboutReceipt: "About Receipt",
+    aboutReceiptText:
+      "Manage receipt language and receipt settings.",
+    openAboutReceipt: "Open About Receipt →",
+
+    language: "App Language",
+    languageText: "Choose your preferred app language.",
+
+    about: "About",
+    aboutText: "Mandal Management System",
+    aboutSubText:
+      "Manage members, collections, expenses and events.",
+
+    notifications: "Notifications",
+    notificationText:
+      "Turn Mandal notifications ON or OFF.",
+
+    changePassword: "Change Password",
+    changePasswordText:
+      "Update your account login password.",
+
+    accountActions: "Account Actions",
+    accountActionsText:
+      "Manage your login session and account.",
+    logout: "Logout",
+    logoutConfirm:
+      "Are you sure you want to logout?",
+    deleteAccount: "Delete Account",
+    deleteAccountText:
+      "Permanently delete your account and Mandal data.",
+    deleteAccountConfirm:
+      "Are you sure you want to delete your account? This action cannot be undone.",
+    deleteAccountFailed:
+      "Account deletion failed. Please try again.",
+    loggingOut: "Logging out...",
+    deletingAccount: "Deleting account...",
   },
 
   Marathi: {
@@ -63,29 +92,13 @@ const translations = {
     subtitle: "तुमच्या मंडळाची सेटिंग्ज व्यवस्थापित करा.",
     back: "← डॅशबोर्डवर जा",
 
-    language: "भाषा",
-    languageText: "तुमची आवडती भाषा निवडा.",
-
     account: "खाते",
     accountText: "तुमच्या मंडळाची माहिती.",
-
     mandal: "मंडळ",
     leader: "प्रमुख",
     mobile: "मोबाईल",
     location: "ठिकाण",
     noAccount: "खात्याची माहिती उपलब्ध नाही.",
-
-    members: "सदस्य",
-    membersText: "मंडळाचे सदस्य जोडा आणि व्यवस्थापित करा.",
-    openMembers: "सदस्य उघडा →",
-
-    notifications: "सूचना",
-    notificationText: "सूचनांची सेटिंग व्यवस्थापित करा.",
-
-    about: "माहिती",
-    aboutText: "मंडळ व्यवस्थापन प्रणाली",
-    aboutSubText:
-      "सदस्य, वर्गणी, खर्च आणि कार्यक्रम व्यवस्थापित करा.",
 
     logo: "मंडळाचा लोगो",
     logoText:
@@ -97,6 +110,52 @@ const translations = {
     logoSuccess: "लोगो यशस्वीरित्या अपलोड झाला.",
     logoRemoved: "लोगो काढला गेला.",
     logoError: "लोगो अपलोड करण्यात अडचण आली.",
+
+    documents: "कागदपत्रे",
+    documentsText:
+      "मंडळाची महत्त्वाची कागदपत्रे आणि फोटो जतन करा.",
+    openDocuments: "कागदपत्रे उघडा →",
+
+    members: "सदस्य",
+    membersText:
+      "मंडळाचे सदस्य जोडा आणि व्यवस्थापित करा.",
+
+    aboutReceipt: "पावती माहिती",
+    aboutReceiptText:
+      "पावतीची भाषा आणि पावती सेटिंग्ज व्यवस्थापित करा.",
+    openAboutReceipt: "पावती माहिती उघडा →",
+
+    language: "ॲपची भाषा",
+    languageText: "ॲपची आवडती भाषा निवडा.",
+
+    about: "माहिती",
+    aboutText: "मंडळ व्यवस्थापन प्रणाली",
+    aboutSubText:
+      "सदस्य, वर्गणी, खर्च आणि कार्यक्रम व्यवस्थापित करा.",
+
+    notifications: "सूचना",
+    notificationText:
+      "मंडळाच्या सूचना ON किंवा OFF करा.",
+
+    changePassword: "पासवर्ड बदला",
+    changePasswordText:
+      "तुमच्या खात्याचा लॉगिन पासवर्ड बदला.",
+
+    accountActions: "खाते पर्याय",
+    accountActionsText:
+      "तुमचे लॉगिन आणि खाते व्यवस्थापित करा.",
+    logout: "लॉगआउट",
+    logoutConfirm:
+      "तुम्हाला नक्की लॉगआउट करायचे आहे का?",
+    deleteAccount: "खाते हटवा",
+    deleteAccountText:
+      "तुमचे खाते आणि मंडळाची माहिती कायमची हटवा.",
+    deleteAccountConfirm:
+      "तुम्हाला तुमचे खाते नक्की हटवायचे आहे का? ही क्रिया पूर्ववत करता येणार नाही.",
+    deleteAccountFailed:
+      "खाते हटवता आले नाही. कृपया पुन्हा प्रयत्न करा.",
+    loggingOut: "लॉगआउट होत आहे...",
+    deletingAccount: "खाते हटवले जात आहे...",
   },
 
   Hindi: {
@@ -104,29 +163,13 @@ const translations = {
     subtitle: "अपने मंडल की सेटिंग्स प्रबंधित करें।",
     back: "← डैशबोर्ड पर जाएं",
 
-    language: "भाषा",
-    languageText: "अपनी पसंदीदा भाषा चुनें।",
-
     account: "खाता",
     accountText: "आपके मंडल की जानकारी।",
-
     mandal: "मंडल",
     leader: "प्रमुख",
     mobile: "मोबाइल",
     location: "स्थान",
     noAccount: "खाते की जानकारी उपलब्ध नहीं है।",
-
-    members: "सदस्य",
-    membersText: "मंडल के सदस्यों को जोड़ें और प्रबंधित करें।",
-    openMembers: "सदस्य खोलें →",
-
-    notifications: "सूचनाएं",
-    notificationText: "सूचना सेटिंग प्रबंधित करें।",
-
-    about: "जानकारी",
-    aboutText: "मंडल प्रबंधन प्रणाली",
-    aboutSubText:
-      "सदस्य, संग्रह, खर्च और कार्यक्रम प्रबंधित करें।",
 
     logo: "मंडल का लोगो",
     logoText:
@@ -138,6 +181,53 @@ const translations = {
     logoSuccess: "लोगो सफलतापूर्वक अपलोड हो गया।",
     logoRemoved: "लोगो हटा दिया गया।",
     logoError: "लोगो अपलोड करने में समस्या हुई।",
+
+    documents: "दस्तावेज़",
+    documentsText:
+      "मंडल के महत्वपूर्ण दस्तावेज़ और फोटो सुरक्षित रखें।",
+    openDocuments: "दस्तावेज़ खोलें →",
+
+    members: "सदस्य",
+    membersText:
+      "मंडल के सदस्यों को जोड़ें और प्रबंधित करें।",
+
+    aboutReceipt: "रसीद जानकारी",
+    aboutReceiptText:
+      "रसीद की भाषा और रसीद सेटिंग्स प्रबंधित करें।",
+    openAboutReceipt: "रसीद जानकारी खोलें →",
+
+    language: "ऐप की भाषा",
+    languageText:
+      "अपनी पसंदीदा ऐप भाषा चुनें।",
+
+    about: "जानकारी",
+    aboutText: "मंडल प्रबंधन प्रणाली",
+    aboutSubText:
+      "सदस्य, संग्रह, खर्च और कार्यक्रम प्रबंधित करें।",
+
+    notifications: "सूचनाएं",
+    notificationText:
+      "मंडल की सूचनाएं ON या OFF करें।",
+
+    changePassword: "पासवर्ड बदलें",
+    changePasswordText:
+      "अपने खाते का लॉगिन पासवर्ड बदलें।",
+
+    accountActions: "खाता विकल्प",
+    accountActionsText:
+      "अपना लॉगिन और खाता प्रबंधित करें.",
+    logout: "लॉगआउट",
+    logoutConfirm:
+      "क्या आप लॉगआउट करना चाहते हैं?",
+    deleteAccount: "खाता हटाएं",
+    deleteAccountText:
+      "अपना खाता और मंडल की जानकारी हमेशा के लिए हटाएं।",
+    deleteAccountConfirm:
+      "क्या आप अपना खाता हटाना चाहते हैं? यह कार्रवाई वापस नहीं की जा सकती।",
+    deleteAccountFailed:
+      "खाता हटाया नहीं जा सका। कृपया फिर से प्रयास करें।",
+    loggingOut: "लॉगआउट हो रहा है...",
+    deletingAccount: "खाता हटाया जा रहा है...",
   },
 };
 
@@ -147,12 +237,14 @@ export default function SettingsPage() {
 
   const { language, setLanguage } = useLanguage();
 
-  const [notifications, setNotifications] = useState(true);
+  const [notifications, setNotifications] =
+    useState(true);
 
   const [account, setAccount] =
     useState<Account | null>(null);
 
-  const [logoUrl, setLogoUrl] = useState("");
+  const [logoUrl, setLogoUrl] =
+    useState("");
 
   const [uploadingLogo, setUploadingLogo] =
     useState(false);
@@ -169,6 +261,12 @@ export default function SettingsPage() {
   const [languageError, setLanguageError] =
     useState("");
 
+  const [loggingOut, setLoggingOut] =
+    useState(false);
+
+  const [deletingAccount, setDeletingAccount] =
+    useState(false);
+
   useEffect(() => {
     async function loadSettings() {
       const {
@@ -180,21 +278,19 @@ export default function SettingsPage() {
         return;
       }
 
-      const {
-        data: mandal,
-        error: mandalError,
-      } = await supabase
-        .from("mandals")
-        .select(
-          "mandal_name, leader_name, mobile, city, state, language, logo_url"
-        )
-        .eq("user_id", user.id)
-        .maybeSingle();
+      const { data: mandal, error } =
+        await supabase
+          .from("mandals")
+          .select(
+            "mandal_name, leader_name, mobile, city, state, language, logo_url"
+          )
+          .eq("user_id", user.id)
+          .maybeSingle();
 
-      if (mandalError) {
+      if (error) {
         console.error(
-          "Settings mandal error:",
-          mandalError
+          "SETTINGS ERROR:",
+          error
         );
       }
 
@@ -219,7 +315,9 @@ export default function SettingsPage() {
       }
 
       const savedNotifications =
-        localStorage.getItem("mandalNotifications");
+        localStorage.getItem(
+          "mandalNotifications"
+        );
 
       if (savedNotifications !== null) {
         setNotifications(
@@ -233,7 +331,9 @@ export default function SettingsPage() {
 
   const t = translations[language];
 
-  async function changeLanguage(value: Language) {
+  async function changeLanguage(
+    value: Language
+  ) {
     setLanguageError("");
     setSavingLanguage(true);
 
@@ -254,12 +354,13 @@ export default function SettingsPage() {
       return;
     }
 
-    const { error } = await supabase
-      .from("mandals")
-      .update({
-        language: value,
-      })
-      .eq("user_id", user.id);
+    const { error } =
+      await supabase
+        .from("mandals")
+        .update({
+          language: value,
+        })
+        .eq("user_id", user.id);
 
     if (error) {
       console.error(
@@ -278,11 +379,10 @@ export default function SettingsPage() {
   async function uploadLogo(
     event: React.ChangeEvent<HTMLInputElement>
   ) {
-    const file = event.target.files?.[0];
+    const file =
+      event.target.files?.[0];
 
-    if (!file) {
-      return;
-    }
+    if (!file) return;
 
     setLogoMessage("");
     setLogoError("");
@@ -323,10 +423,14 @@ export default function SettingsPage() {
       const { error: uploadError } =
         await supabase.storage
           .from("mandal-logos")
-          .upload(filePath, file, {
-            upsert: true,
-            contentType: file.type,
-          });
+          .upload(
+            filePath,
+            file,
+            {
+              upsert: true,
+              contentType: file.type,
+            }
+          );
 
       if (uploadError) {
         console.error(
@@ -341,9 +445,10 @@ export default function SettingsPage() {
 
       const {
         data: publicUrlData,
-      } = supabase.storage
-        .from("mandal-logos")
-        .getPublicUrl(filePath);
+      } =
+        supabase.storage
+          .from("mandal-logos")
+          .getPublicUrl(filePath);
 
       const publicUrl =
         publicUrlData.publicUrl;
@@ -394,12 +499,13 @@ export default function SettingsPage() {
       return;
     }
 
-    const { error } = await supabase
-      .from("mandals")
-      .update({
-        logo_url: null,
-      })
-      .eq("user_id", user.id);
+    const { error } =
+      await supabase
+        .from("mandals")
+        .update({
+          logo_url: null,
+        })
+        .eq("user_id", user.id);
 
     if (error) {
       console.error(
@@ -416,7 +522,8 @@ export default function SettingsPage() {
   }
 
   function toggleNotifications() {
-    const newValue = !notifications;
+    const newValue =
+      !notifications;
 
     setNotifications(newValue);
 
@@ -424,6 +531,126 @@ export default function SettingsPage() {
       "mandalNotifications",
       String(newValue)
     );
+  }
+
+  async function handleLogout() {
+    const confirmed =
+      window.confirm(
+        t.logoutConfirm
+      );
+
+    if (!confirmed) return;
+
+    setLoggingOut(true);
+
+    try {
+      const { error } =
+        await supabase.auth.signOut();
+
+      if (error) {
+        console.error(
+          "LOGOUT ERROR:",
+          error
+        );
+
+        setLoggingOut(false);
+        return;
+      }
+
+      localStorage.removeItem(
+        "mandalLoggedIn"
+      );
+
+      router.replace("/login");
+      router.refresh();
+    } catch (error) {
+      console.error(
+        "LOGOUT ERROR:",
+        error
+      );
+
+      setLoggingOut(false);
+    }
+  }
+
+  async function handleDeleteAccount() {
+    const confirmed =
+      window.confirm(
+        t.deleteAccountConfirm
+      );
+
+    if (!confirmed) return;
+
+    setDeletingAccount(true);
+
+    try {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user) {
+        router.replace("/login");
+        return;
+      }
+
+      const { error: mandalError } =
+        await supabase
+          .from("mandals")
+          .delete()
+          .eq("user_id", user.id);
+
+      if (mandalError) {
+        console.error(
+          "DELETE MANDAL ERROR:",
+          mandalError
+        );
+
+        alert(
+          t.deleteAccountFailed
+        );
+
+        setDeletingAccount(false);
+        return;
+      }
+
+      await supabase
+        .from("collections")
+        .delete()
+        .eq("user_id", user.id);
+
+      await supabase
+        .from("members")
+        .delete()
+        .eq("user_id", user.id);
+
+      await supabase
+        .from("events")
+        .delete()
+        .eq("user_id", user.id);
+
+      await supabase
+        .from("expenses")
+        .delete()
+        .eq("user_id", user.id);
+
+      await supabase.auth.signOut();
+
+      localStorage.clear();
+
+      router.replace("/login");
+      router.refresh();
+    } catch (error) {
+      console.error(
+        "DELETE ACCOUNT ERROR:",
+        error
+      );
+
+      alert(
+        t.deleteAccountFailed
+      );
+
+      setDeletingAccount(false);
+    }
   }
 
   return (
@@ -454,10 +681,50 @@ export default function SettingsPage() {
 
         <div className="mt-8 space-y-4">
 
+          {/* ACCOUNT */}
+
+          <div className="rounded-2xl border bg-white p-6 shadow-sm">
+            <h2 className="text-lg font-bold">
+              👤 {t.account}
+            </h2>
+
+            <p className="mt-1 text-sm text-gray-500">
+              {t.accountText}
+            </p>
+
+            {account ? (
+              <div className="mt-4 space-y-2 text-sm">
+                <p>
+                  <b>{t.mandal}:</b>{" "}
+                  {account.mandalName}
+                </p>
+
+                <p>
+                  <b>{t.leader}:</b>{" "}
+                  {account.leaderName}
+                </p>
+
+                <p>
+                  <b>{t.mobile}:</b>{" "}
+                  {account.mobile}
+                </p>
+
+                <p>
+                  <b>{t.location}:</b>{" "}
+                  {account.city},{" "}
+                  {account.state}
+                </p>
+              </div>
+            ) : (
+              <p className="mt-4 text-sm text-gray-400">
+                {t.noAccount}
+              </p>
+            )}
+          </div>
+
           {/* LOGO */}
 
           <div className="rounded-2xl border bg-white p-6 shadow-sm">
-
             <h2 className="text-lg font-bold">
               🖼️ {t.logo}
             </h2>
@@ -501,13 +768,10 @@ export default function SettingsPage() {
                   </button>
 
                 </div>
-
               </div>
             ) : (
               <div className="mt-5">
-
                 <label className="inline-block cursor-pointer rounded-xl bg-orange-500 px-5 py-3 font-semibold text-white transition hover:bg-orange-600">
-
                   {uploadingLogo
                     ? t.uploading
                     : t.chooseLogo}
@@ -519,9 +783,7 @@ export default function SettingsPage() {
                     className="hidden"
                     disabled={uploadingLogo}
                   />
-
                 </label>
-
               </div>
             )}
 
@@ -542,13 +804,83 @@ export default function SettingsPage() {
                 {logoError}
               </p>
             )}
-
           </div>
 
-          {/* LANGUAGE */}
+          {/* DOCUMENTS */}
+
+          <button
+            type="button"
+            onClick={() =>
+              router.push("/documents")
+            }
+            className="flex w-full items-center justify-between rounded-2xl border bg-white p-6 text-left shadow-sm transition hover:bg-gray-50 active:scale-[0.99]"
+          >
+            <div className="min-w-0">
+              <h2 className="text-lg font-bold text-gray-900">
+                📁 {t.documents}
+              </h2>
+
+              <p className="mt-1 text-sm text-gray-500">
+                {t.documentsText}
+              </p>
+            </div>
+
+            <span className="ml-4 shrink-0 text-xl font-bold text-orange-500">
+              →
+            </span>
+          </button>
+
+          {/* MEMBERS */}
+
+          <button
+            type="button"
+            onClick={() =>
+              router.push("/members")
+            }
+            className="flex w-full items-center justify-between rounded-2xl border bg-white p-6 text-left shadow-sm transition hover:bg-gray-50 active:scale-[0.99]"
+          >
+            <div className="min-w-0">
+              <h2 className="text-lg font-bold text-gray-900">
+                👥 {t.members}
+              </h2>
+
+              <p className="mt-1 text-sm text-gray-500">
+                {t.membersText}
+              </p>
+            </div>
+
+            <span className="ml-4 shrink-0 text-xl font-bold text-orange-500">
+              →
+            </span>
+          </button>
+
+          {/* ABOUT RECEIPT */}
+
+          <button
+            type="button"
+            onClick={() =>
+              router.push("/about-receipt")
+            }
+            className="flex w-full items-center justify-between rounded-2xl border bg-white p-6 text-left shadow-sm transition hover:bg-gray-50 active:scale-[0.99]"
+          >
+            <div className="min-w-0">
+              <h2 className="text-lg font-bold text-gray-900">
+                🧾 {t.aboutReceipt}
+              </h2>
+
+              <p className="mt-1 text-sm text-gray-500">
+                {t.aboutReceiptText}
+              </p>
+            </div>
+
+            <span className="ml-4 shrink-0 text-xl font-bold text-orange-500">
+              →
+            </span>
+          </button>
+
+          {/* APP LANGUAGE */}
 
           <div className="rounded-2xl border bg-white p-6 shadow-sm">
-
             <h2 className="text-lg font-bold">
               🌐 {t.language}
             </h2>
@@ -591,88 +923,28 @@ export default function SettingsPage() {
                 {languageError}
               </p>
             )}
-
           </div>
 
-          {/* ACCOUNT */}
+          {/* ABOUT */}
 
           <div className="rounded-2xl border bg-white p-6 shadow-sm">
-
             <h2 className="text-lg font-bold">
-              👤 {t.account}
+              ℹ️ {t.about}
             </h2>
 
-            <p className="mt-1 text-sm text-gray-500">
-              {t.accountText}
+            <p className="mt-2 text-gray-500">
+              {t.aboutText}
             </p>
 
-            {account ? (
-              <div className="mt-4 space-y-2 text-sm">
-
-                <p>
-                  <b>{t.mandal}:</b>{" "}
-                  {account.mandalName}
-                </p>
-
-                <p>
-                  <b>{t.leader}:</b>{" "}
-                  {account.leaderName}
-                </p>
-
-                <p>
-                  <b>{t.mobile}:</b>{" "}
-                  {account.mobile}
-                </p>
-
-                <p>
-                  <b>{t.location}:</b>{" "}
-                  {account.city},{" "}
-                  {account.state}
-                </p>
-
-              </div>
-            ) : (
-              <p className="mt-4 text-sm text-gray-400">
-                {t.noAccount}
-              </p>
-            )}
-
+            <p className="mt-1 text-sm text-gray-400">
+              {t.aboutSubText}
+            </p>
           </div>
-
-          {/* MEMBERS */}
-
-          <button
-            type="button"
-            onClick={() =>
-              router.push("/members")
-            }
-            className="flex w-full items-center justify-between rounded-2xl border bg-white p-6 text-left shadow-sm transition hover:bg-gray-50 active:scale-[0.99]"
-          >
-
-            <div className="min-w-0">
-
-              <h2 className="text-lg font-bold text-gray-900">
-                👥 {t.members}
-              </h2>
-
-              <p className="mt-1 text-sm text-gray-500">
-                {t.membersText}
-              </p>
-
-            </div>
-
-            <span className="ml-4 shrink-0 text-xl font-bold text-orange-500">
-              →
-            </span>
-
-          </button>
 
           {/* NOTIFICATIONS */}
 
           <div className="flex items-center justify-between rounded-2xl border bg-white p-6 shadow-sm">
-
             <div>
-
               <h2 className="text-lg font-bold">
                 🔔 {t.notifications}
               </h2>
@@ -680,7 +952,6 @@ export default function SettingsPage() {
               <p className="mt-1 text-sm text-gray-500">
                 {t.notificationText}
               </p>
-
             </div>
 
             <button
@@ -696,29 +967,81 @@ export default function SettingsPage() {
                 ? "ON"
                 : "OFF"}
             </button>
-
           </div>
 
-          {/* ABOUT */}
+          {/* CHANGE PASSWORD */}
+
+          <button
+            type="button"
+            onClick={() =>
+              router.push("/change-password")
+            }
+            className="flex w-full items-center justify-between rounded-2xl border bg-white p-6 text-left shadow-sm transition hover:bg-gray-50 active:scale-[0.99]"
+          >
+            <div>
+              <h2 className="text-lg font-bold text-gray-900">
+                🔐 {t.changePassword}
+              </h2>
+
+              <p className="mt-1 text-sm text-gray-500">
+                {t.changePasswordText}
+              </p>
+            </div>
+
+            <span className="ml-4 shrink-0 text-xl font-bold text-orange-500">
+              →
+            </span>
+          </button>
+
+          {/* LOGOUT */}
 
           <div className="rounded-2xl border bg-white p-6 shadow-sm">
-
             <h2 className="text-lg font-bold">
-              ℹ️ {t.about}
+              🚪 {t.logout}
             </h2>
 
-            <p className="mt-2 text-gray-500">
-              {t.aboutText}
+            <button
+              type="button"
+              onClick={handleLogout}
+              disabled={
+                loggingOut ||
+                deletingAccount
+              }
+              className="mt-4 rounded-xl bg-orange-500 px-6 py-3 font-semibold text-white transition hover:bg-orange-600 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {loggingOut
+                ? t.loggingOut
+                : t.logout}
+            </button>
+          </div>
+
+          {/* DELETE ACCOUNT */}
+
+          <div className="rounded-2xl border bg-white p-6 shadow-sm">
+            <h2 className="text-lg font-bold text-red-600">
+              🗑️ {t.deleteAccount}
+            </h2>
+
+            <p className="mt-1 text-sm text-gray-500">
+              {t.deleteAccountText}
             </p>
 
-            <p className="mt-1 text-sm text-gray-400">
-              {t.aboutSubText}
-            </p>
-
+            <button
+              type="button"
+              onClick={handleDeleteAccount}
+              disabled={
+                loggingOut ||
+                deletingAccount
+              }
+              className="mt-4 rounded-xl border border-red-200 bg-red-50 px-6 py-3 font-semibold text-red-600 transition hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {deletingAccount
+                ? t.deletingAccount
+                : t.deleteAccount}
+            </button>
           </div>
 
         </div>
-
       </div>
     </main>
   );
